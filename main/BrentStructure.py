@@ -1,6 +1,11 @@
 import random
-from pandas import *
+from pandas import DataFrame
 
+import os
+
+
+# Put the fold selector algo here. "from algorithms.algo_type import fold_selecto"r"
+from algorithms.RandomAlgo import fold_selector, get_legal_moves
 
 # Represents a single amino-acid.
 class Amino(object):
@@ -60,7 +65,7 @@ class Protein(object):
         self.char_counter = 1
         # Skips the first char the index.
         while self.char_counter < len(amino_string):
-            print(str(self.char_counter))
+            # print(str(self.char_counter))
             char = amino_string[self.char_counter]
             # Get the location the last amino folded to.
             # Note: an index of -1 gets the last object in a list.
@@ -85,17 +90,17 @@ class Protein(object):
             self.chain.append(Amino(char, fold, amino_xy))
             self.char_counter += 1
 
-        for amino in self.chain:
-            print(str(amino))
+        # for amino in self.chain:
+            # print(str(amino))
         # Save a matrix version of the chain.
         # We also update the chain to a ofsetted version of the chain.(it now starts from x, y = 0, 0)
         self.matrix, self.chain = get_matrix(self.chain)
 
-        for amino in self.chain:
-            print(amino.get_amino_output())
+        # for amino in self.chain:
+            # print(amino.get_amino_output())
 
         # Get the score of the protein and print it.
-        self.score = self.get_score()
+        self.score = get_score(self.chain, self.matrix)
 
     # Prints the matrix of the protein.
     def print_map(self):
@@ -113,13 +118,32 @@ class Protein(object):
             print(str(amino.get_amino_output()))
         print("")
 
+    def redo_last_fold(self):
+        # Store the illegal fold in the amino class.
+        last_amino = self.chain[-1]
+        last_amino.illegal_folds.append(last_amino.fold)
 
-    def get_score(self):
+        # Get new move with illegal moves excluded.
+        fold = fold_selector(last_amino.coordinates, last_amino.atype, self.chain[:-1], last_amino.illegal_folds)
+
+        # Replace the previous illegal fold with a new fold
+        last_amino.fold = fold
+
+
+        # If still no fold found, also redo move before that. Char loop in init needs to go back 1 step.
+        if not fold:
+            self.chain.remove(last_amino)
+            self.char_counter -= 1
+            self.redo_last_fold()
+
+
+# This function calculates and returns the score of the chain
+def get_score(chain, matrix):
     
         total_score = 0
         
         # Iterate over all aminos and add the score of all of them.
-        for index, amino in enumerate(self.chain):
+        for index, amino in enumerate(chain):
             
             # P has no effect on stability
             if amino.atype == "P":
@@ -137,93 +161,18 @@ class Protein(object):
             if amino.get_fold_coordinates() in xy_tocheck:
                 xy_tocheck.remove(amino.get_fold_coordinates())
             
-            if self.chain[index - 1].coordinates in xy_tocheck:
-                xy_tocheck.remove(self.chain[index - 1].coordinates)
+            if chain[index - 1].coordinates in xy_tocheck:
+                xy_tocheck.remove(chain[index - 1].coordinates)
 
             # Check all coordinates around it and adjust score if a H is next to it.
             for x, y in xy_tocheck:
-                if y < len(self.matrix) and y >= 0:
-                    if  x < len(self.matrix[0]) and x >= 0:
-                        if isinstance(self.matrix[y][x], Amino):
-                            if self.matrix[y][x].atype == "H":
-                                print("the parent amino:" + str(amino) + " " + str(index) + "th amino.")
-                                print("the range of xy's its checking:" + str(xy_tocheck))
-                                print("x and y with H found:" + str(x) + str(y))
+                if y < len(matrix) and y >= 0:
+                    if  x < len(matrix[0]) and x >= 0:
+                        if isinstance(matrix[y][x], Amino):
+                            if matrix[y][x].atype == "H":
                                 total_score -= 1
         total_score = total_score // 2
-        return total_score           
-
-
-    def redo_last_fold(self):
-        print("redo")
-        # Store the illegal fold in the amino class.
-        last_amino = self.chain[-1]
-        last_amino.illegal_folds.append(last_amino.fold)
-
-        print(last_amino.fold)
-
-        # Get new move with illegal moves excluded.
-        fold = fold_selector(last_amino.coordinates, last_amino.atype, self.chain[:-1], last_amino.illegal_folds)
-
-        # Replace the previous illegal fold with a new fold
-        last_amino.fold = fold
-        print(fold)
-        print("test34")
-
-
-        # If still no fold found, also redo move before that. Char loop in init needs to go back 1 step.
-        if not fold:
-            self.chain.remove(last_amino)
-            self.char_counter -= 1
-            self.redo_last_fold()
-
-
-
-# The actual algo for selecting the fold the chain will make.
-def fold_selector(xy, char, chain, illegal_moves):
-
-    legal_moves = get_legal_moves(xy, chain)
-
-    # Remove illegal moves from legal moves list.
-    if illegal_moves:
-        for move in illegal_moves:
-            if move in legal_moves:
-                legal_moves.remove(move)
-
-    # Selects a random move if at least 1 legal moves exists
-    if legal_moves:
-        return random.choice(legal_moves)
-
-    # If no legal moves exist, return False
-    return False
-
-
-    # Finds all the legal moves that can be made from the current position.
-def get_legal_moves(xy, chain):
-
-    # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
-    moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
-
-    # Check if the legal moves interfere with any of the current amino coordinates.
-    # Note: we iterate over a COPY of the list because you cant delete items from a list while iterating over it.
-    for amino in list(chain):
-        # Check for every legal move left.
-        for move in moves_xydelta:
-
-            # If the move delta plus current xy is equal to another amino's xy remove it from the legal moves list.
-            coordinates_sum = []
-            coordinates_sum.append(move[1][0] + xy[0])
-            coordinates_sum.append(move[1][1] + xy[1])
-
-            if coordinates_sum == list(amino.coordinates):
-                moves_xydelta.remove(move)
-
-    # Only return the move int of the legal moves remaining.
-    legal_moves = []
-    for moves in moves_xydelta:
-        legal_moves.append(moves[0])
-
-    return legal_moves
+        return total_score 
 
 # Takes the chain and makes a 2d matrix out of it. Returns a matrix and a ofsetted chain
 def get_matrix(chain):
@@ -259,15 +208,20 @@ def get_matrix(chain):
     
     # Adds aminos to matrix.
     for amino in chain:
-        print(amino.coordinates)
         matrix[amino.coordinates[1]][amino.coordinates[0]] = amino
 
     return matrix, chain
 
 
 if __name__ == "__main__":
-    protein1 = Protein("HHPHPHH")
-    protein1.get_output_list()
-    protein1.print_map()
-    print(protein1.score)
+    protein1 = Protein("HHPHPPHPHPHPHPHPHHH")
+    
+    lowest_score = 0
+    for i in range(10):
+        for i in range(5000):
+            protein1 = Protein("HHPHPPPPHPHPHPHPHPHPHPHPPHPHPHPHHH")
+            if protein1.score < lowest_score:
+                lowest_score = protein1.score
+        print( str(i) + " runs, lowest score:" + str(lowest_score))
 
+    protein1.print_map()
