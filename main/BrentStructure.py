@@ -89,7 +89,7 @@ class Protein(object):
         # We need to reverse the y of the rows because of python printing from the top.
         matrix.reverse()
 
-        # Print matrix using pandas 
+        # Print matrix using pandas
         print(DataFrame(matrix))
 
     # Outputs a list like the excercise requires
@@ -218,6 +218,6 @@ def get_matrix(chain):
 
 
 if __name__ == "__main__":
-    protein1 = Protein("HPHPHPHHHPPHPPHPHPHPHHPPHP")
+    protein1 = Protein("HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH")
     protein1.get_output_list()
     protein1.print_map()
