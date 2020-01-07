@@ -78,7 +78,10 @@ class Protein(object):
     def print_map(self):
         matrix = self.matrix
 
+        # We need to reverse the y of the rows because of python printing from the top.
         matrix.reverse()
+
+        
         s = [[str(e) for e in row] for row in matrix]
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)

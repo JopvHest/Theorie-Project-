@@ -77,9 +77,23 @@ class Protein(object):
             # Adds amino to the protein chain. 
             self.chain.append(Amino(char, fold, amino_xy))
             self.char_counter += 1
-           
         
+        # Also save a matrix version of the chain.
+        self.matrix = get_matrix(self.chain)
 
+    # Prints the matrix of the protein.
+    def print_map(self):
+        matrix = self.matrix
+
+        # We need to reverse the y of the rows because of python printing from the top.
+        matrix.reverse()
+        
+        s = [[str(e) for e in row] for row in matrix]
+        lens = [max(map(len, col)) for col in zip(*s)]
+        fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
+        table = [fmt.format(*row) for row in s]
+        print('\n'.join(table))
+    
     # Outputs a list like the excercise requires
     def get_output_list(self):
 
@@ -88,63 +102,6 @@ class Protein(object):
             print(amino.atype + ", " + str(amino.fold) + str(amino.coordinates))
         print("")
 
-    # Prints a very shitty 2d map of the protein.
-    def print_map(self):
-        
-        # Here we shift the coordinates to start from 0 and not go under that.
-        x_range = [0, 0]
-        y_range = [0, 0]
-
-        chain_shifted = self.chain
-        
-        # Find lowest and highest values for x and y
-        for amino in chain_shifted:
-            
-            if amino.coordinates[0] > x_range[1]:
-                x_range[1] = amino.coordinates[0]
-            if amino.coordinates[0] < x_range[0]:
-                x_range[0] = amino.coordinates[0]
-            
-            if amino.coordinates[1] > y_range[1]:
-                y_range[1] = amino.coordinates[1]
-            if amino.coordinates[1] < y_range[0]:
-                y_range[0] = amino.coordinates[1]
-        print("x-range =" + str(x_range) + ", y-range =" + str(y_range))
-        print("")
-
-        # Adjust the amino coordinates to start at 0
-        for amino in chain_shifted:
-            amino.coordinates[0] -= x_range[0]
-            amino.coordinates[1] -= y_range[0]
-        
-        print("adjusted x/y: ")
-        for amino in chain_shifted:
-            print(str(amino.coordinates))
-        print("")
-        
-        # Print the x coordinates
-        for x in range(x_range[1] - x_range[0] + 1):
-            print( "       " + str(x) + "       ", end="")
-        print("")
-
-        for row in range(0, y_range[1] - y_range[0] + 1):
-            
-            # Print the y coordinates
-            print( str(row), end="")
-            
-            for column in range(x_range[1] - x_range[0] + 1):
-                
-                #Iterate through all the aminos to see if one has these coordinates
-                print_x = True
-                for amino in chain_shifted:
-                    if amino.coordinates == [column, row]:
-                        print(amino, end="")
-                        print_x = False
-                        break
-                if print_x:
-                    print("       x       ", end="")
- 
-            print("")
 
     def get_score(self):
         #TODO
@@ -220,6 +177,45 @@ def get_legal_moves(xy, chain):
         legal_moves.append(moves[0])
 
     return legal_moves
+
+# Takes the chain and makes a 2d matrix out of it.
+def get_matrix(chain):
+
+    x_range = [0, 0]
+    y_range = [0, 0]
+
+    # Define min/max x and y values over all aminos.
+    for amino in chain:
+        if amino.coordinates[0] > x_range[1]:
+            x_range[1] = amino.coordinates[0]
+        elif amino.coordinates[0] < x_range[0]:
+            x_range[0] = amino.coordinates[0]
+        if amino.coordinates[1] > y_range[1]:
+            y_range[1] = amino.coordinates[1]
+        elif amino.coordinates[1] < y_range[0]:
+            y_range[0] = amino.coordinates[1]
+
+    # Adjust amino coordinates so no negative values remain.
+    for amino in chain:
+        amino.coordinates[0] -= x_range[0]
+        amino.coordinates[1] -= y_range[0]
+
+    matrix = []
+
+    # Fill matrix with placeholder values.
+    for i in range(y_range[1] - y_range[0] + 1):
+        row = []
+        for j in range(x_range[1] - x_range[0] + 1):
+            row.append("x")
+        matrix.append(row)
+
+    # Adds aminos to matrix.
+    for amino in chain:
+        print(amino.coordinates)
+        matrix[amino.coordinates[1]][amino.coordinates[0]] = [amino.atype, amino.fold, amino.coordinates]
+
+    return matrix
+
 
 if __name__ == "__main__":
     protein1 = Protein("HPHPHPHHHPPHPPHPHPHPHHPPHP")
