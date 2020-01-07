@@ -14,6 +14,12 @@ class Amino(object):
         self.illegal_folds = []
 
     def __str__(self):
+        directions = {"0":"@", "2":"^", "-2":"v", "1":">", "-1":"<"}
+        string = str(self.atype) + " " + directions[str(self.fold)]
+        return string
+
+    # Get the amino output for the standard output we need.
+    def get_amino_output(self):
         return str((self.atype, self.fold, self.coordinates))
 
     # Gets the x,y of the next amino in the chain.
@@ -79,8 +85,12 @@ class Protein(object):
             self.chain.append(Amino(char, fold, amino_xy))
             self.char_counter += 1
 
-        # Also save a matrix version of the chain.
-        self.matrix = get_matrix(self.chain)
+        # Save a matrix version of the chain.
+        # We also update the chain to a ofsetted version of the chain.(it now starts from x, y = 0, 0)
+        self.matrix, self.chain = get_matrix(self.chain)
+
+        # Get the score of the protein and print it.
+        self.score = self.get_score()
 
     # Prints the matrix of the protein.
     def print_map(self):
@@ -97,13 +107,49 @@ class Protein(object):
 
         print("amino, fold")
         for amino in self.chain:
-            print(amino.atype + ", " + str(amino.fold) + str(amino.coordinates))
+            print(str(amino.get_amino_output()))
         print("")
 
 
     def get_score(self):
-        #TODO
-        pass
+    
+        total_score = 0
+        
+        # Iterate over all aminos and add the score of all of them.
+        for index, amino in enumerate(self.chain):
+            
+            # P has no effect on stability
+            if amino.atype == "P":
+                continue
+            
+            # Creates a list with all coordinates that need to be checked.
+            xy_tocheck = []
+            amino_x, amino_y = amino.coordinates
+            xy_tocheck.append([amino_x + 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y + 1])
+            xy_tocheck.append([amino_x - 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y - 1])
+
+            # Aminos to and from that amino dont add to the score so remove them.
+            if amino.get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates())
+            
+            if self.chain[index - 1].get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates)
+
+            # Check all coordinates around it and adjust score if a H is next to it.
+            for x, y in xy_tocheck:
+                if y < len(self.matrix) and y >= 0:
+                    if  x < len(self.matrix[0]) and x >= 0:
+                        if isinstance(self.matrix[y][x], Amino):
+                            if self.matrix[y][x].atype == "H":
+                                print(x, y)
+                                print(str(xy_tocheck))
+                                print()
+                                total_score -= 1
+
+        return total_score           
+
 
     def redo_last_fold(self):
         print("redo")
@@ -176,7 +222,7 @@ def get_legal_moves(xy, chain):
 
     return legal_moves
 
-# Takes the chain and makes a 2d matrix out of it.
+# Takes the chain and makes a 2d matrix out of it. Returns a matrix and a ofsetted chain
 def get_matrix(chain):
 
     x_range = [0, 0]
@@ -207,17 +253,18 @@ def get_matrix(chain):
             row.append(" ")
         matrix.append(row)
 
-    directions = {"0":"END", "2":"^", "-2":"v", "1":">", "-1":"<"}
-
+    
     # Adds aminos to matrix.
     for amino in chain:
         print(amino.coordinates)
-        matrix[amino.coordinates[1]][amino.coordinates[0]] = str(amino.atype) + " " + directions[str(amino.fold)]
+        matrix[amino.coordinates[1]][amino.coordinates[0]] = amino
 
-    return matrix
+    return matrix, chain
 
 
 if __name__ == "__main__":
-    protein1 = Protein("HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH")
+    protein1 = Protein("HHPHPHH")
     protein1.get_output_list()
     protein1.print_map()
+    print(protein1.score)
+

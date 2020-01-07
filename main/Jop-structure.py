@@ -81,7 +81,7 @@ class Protein(object):
         # We need to reverse the y of the rows because of python printing from the top.
         matrix.reverse()
 
-        
+        # We found the following solution on stackoverflow: https://stackoverflow.com/questions/13214809/pretty-print-2d-python-list
         s = [[str(e) for e in row] for row in matrix]
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
@@ -90,8 +90,33 @@ class Protein(object):
 
 
     def get_score(self):
-        #TODO
-        pass
+        
+        Total_score = 0
+        
+        # Iterate over all aminos and add the score of all of them.
+        for index, amino in enumerate(self.chain):
+            
+            # P has no effect on stability
+            if amino.atype == "P":
+                continue
+            
+            # Creates a list with all coordinates that need to be checked.
+            xy_tocheck = []
+            amino_x, amino_y = amino.coordinate
+            xy_tocheck.append([amino_x + 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y + 1])
+            xy_tocheck.append([amino_x - 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y - 1])
+
+            # Aminos to and from that amino dont add to the score so remove them.
+            if amino.get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates)
+            
+            if self.chain[index - 1].get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates)
+
+            for x, y in xy_tocheck:
+                if self.matrix[y][x].
 
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain):
