@@ -53,7 +53,6 @@ class Protein(object):
             # Note: an index of -1 gets the last object in a list.
             amino_xy = self.chain[-1].get_fold_coordinates()
 
-
             # Determines which fold to pick.
             fold = fold_selector(amino_xy, char, self.chain)
 
@@ -65,6 +64,8 @@ class Protein(object):
         fold = 0
         self.chain.append(Amino(char, fold, amino_xy))
 
+        self.matrix = get_matrix(self.chain)
+
     # Outputs a list like the excercise requires
     def get_output_list(self):
 
@@ -73,42 +74,10 @@ class Protein(object):
             print(amino.atype + ", " + str(amino.fold) + str(amino.coordinates))
         print("")
 
-    # Prints a very shitty 2d map of the protein.
+    # Prints the matrix of the protein.
     def print_map(self):
-        x_range = [0, 0]
-        y_range = [0, 0]
+        matrix = self.matrix
 
-        # Define min/max x and y values over all aminos.
-        for amino in self.chain:
-            if amino.coordinates[0] > x_range[1]:
-                x_range[1] = amino.coordinates[0]
-            elif amino.coordinates[0] < x_range[0]:
-                x_range[0] = amino.coordinates[0]
-            if amino.coordinates[1] > y_range[1]:
-                y_range[1] = amino.coordinates[1]
-            elif amino.coordinates[1] < y_range[0]:
-                y_range[0] = amino.coordinates[1]
-
-        # Adjust amino coordinates so no negative values remain.
-        for amino in self.chain:
-            amino.coordinates[0] -= x_range[0]
-            amino.coordinates[1] -= y_range[0]
-
-        matrix = []
-
-        # Fill matrix with placeholder values.
-        for i in range(y_range[1] - y_range[0] + 1):
-            row = []
-            for j in range(x_range[1] - x_range[0] + 1):
-                row.append("x")
-            matrix.append(row)
-
-        # Adds aminos to matrix.
-        for amino in self.chain:
-            print(amino.coordinates)
-            matrix[amino.coordinates[1]][amino.coordinates[0]] = [amino.atype, amino.fold, amino.coordinates]
-
-        # Prints formatted matrix. 
         matrix.reverse()
         s = [[str(e) for e in row] for row in matrix]
         lens = [max(map(len, col)) for col in zip(*s)]
@@ -131,6 +100,42 @@ def fold_selector(xy, char, chain):
 
     return selected_move
 
+def get_matrix(chain):
+
+    x_range = [0, 0]
+    y_range = [0, 0]
+
+    # Define min/max x and y values over all aminos.
+    for amino in chain:
+        if amino.coordinates[0] > x_range[1]:
+            x_range[1] = amino.coordinates[0]
+        elif amino.coordinates[0] < x_range[0]:
+            x_range[0] = amino.coordinates[0]
+        if amino.coordinates[1] > y_range[1]:
+            y_range[1] = amino.coordinates[1]
+        elif amino.coordinates[1] < y_range[0]:
+            y_range[0] = amino.coordinates[1]
+
+    # Adjust amino coordinates so no negative values remain.
+    for amino in chain:
+        amino.coordinates[0] -= x_range[0]
+        amino.coordinates[1] -= y_range[0]
+
+    matrix = []
+
+    # Fill matrix with placeholder values.
+    for i in range(y_range[1] - y_range[0] + 1):
+        row = []
+        for j in range(x_range[1] - x_range[0] + 1):
+            row.append("x")
+        matrix.append(row)
+
+    # Adds aminos to matrix.
+    for amino in chain:
+        print(amino.coordinates)
+        matrix[amino.coordinates[1]][amino.coordinates[0]] = [amino.atype, amino.fold, amino.coordinates]
+
+    return matrix
 
     # Finds all the legal moves that can be made from the current position.
 def get_legal_moves(xy, chain):
