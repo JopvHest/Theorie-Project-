@@ -1,23 +1,24 @@
 import random
+from pandas import *
 
 
 # Represents a single amino-acid.
 class Amino(object):
-    
+
     def __init__(self, atype, fold, coordinates):
         self.atype = atype
         self.fold = fold
         self.coordinates = coordinates
-        
+
         # Contains illegal folds for this amino based on that the next location wouldnt have legal moves.
         self.illegal_folds = []
-    
+
     def __str__(self):
         return str((self.atype, self.fold, self.coordinates))
 
     # Gets the x,y of the next amino in the chain.
     def get_fold_coordinates(self):
-        
+
         # Amino has no fold because its the last in the chain.
         if self.fold == 0:
             return False
@@ -30,26 +31,26 @@ class Amino(object):
             # We want the coordinates to stay a int.
             fold_coordinates[1] += int(self.fold / 2)
             return fold_coordinates
-        
+
         # Fold is in x direction.
         if abs(self.fold) == 1:
             fold_coordinates[0] += self.fold
             return fold_coordinates
-        
+
         raise Exception("fold of: " + str(self.fold) + " is invalid")
-    
+
 
 # Represents a chain of amino acids and orders them.
 class Protein(object):
 
     def __init__(self, amino_string):
-        
+
         # The list which contains the ordered and conneceted aminos.
         self.chain = []
 
         # Adds the first amino to the chain, direction is hard-coded as "up".
         self.chain.append(Amino(amino_string[0], 2, [0,0]))
-    	
+
         self.char_counter = 1
         # Skips the first char the index.
         while self.char_counter < len(amino_string):
@@ -59,11 +60,11 @@ class Protein(object):
             # Note: an index of -1 gets the last object in a list.
             amino_xy = self.chain[-1].get_fold_coordinates()
 
-            
+
             # Last amino always has fold of 0.
             if self.char_counter + 1 == len(amino_string):
                 fold = 0
-            
+
             # Determine which fold to pick
             else:
                 illegal_folds = None
@@ -73,11 +74,11 @@ class Protein(object):
                 if not fold:
                     self.redo_last_fold()
                     continue
-            
-            # Adds amino to the protein chain. 
+
+            # Adds amino to the protein chain.
             self.chain.append(Amino(char, fold, amino_xy))
             self.char_counter += 1
-        
+
         # Also save a matrix version of the chain.
         self.matrix = get_matrix(self.chain)
 
@@ -87,13 +88,10 @@ class Protein(object):
 
         # We need to reverse the y of the rows because of python printing from the top.
         matrix.reverse()
-        
-        s = [[str(e) for e in row] for row in matrix]
-        lens = [max(map(len, col)) for col in zip(*s)]
-        fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
-        table = [fmt.format(*row) for row in s]
-        print('\n'.join(table))
-    
+
+        # Print matrix using pandas 
+        print(DataFrame(matrix))
+
     # Outputs a list like the excercise requires
     def get_output_list(self):
 
@@ -117,7 +115,7 @@ class Protein(object):
 
         # Get new move with illegal moves excluded.
         fold = fold_selector(last_amino.coordinates, last_amino.atype, self.chain[:-1], last_amino.illegal_folds)
-        
+
         # Replace the previous illegal fold with a new fold
         last_amino.fold = fold
         print(fold)
@@ -129,31 +127,31 @@ class Protein(object):
             self.chain.remove(last_amino)
             self.char_counter -= 1
             self.redo_last_fold()
-                
+
 
 
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain, illegal_moves):
-    
+
     legal_moves = get_legal_moves(xy, chain)
-    
+
     # Remove illegal moves from legal moves list.
-    if illegal_moves:  
+    if illegal_moves:
         for move in illegal_moves:
             if move in legal_moves:
                 legal_moves.remove(move)
-            
+
     # Selects a random move if at least 1 legal moves exists
     if legal_moves:
         return random.choice(legal_moves)
 
     # If no legal moves exist, return False
     return False
-    
+
 
     # Finds all the legal moves that can be made from the current position.
 def get_legal_moves(xy, chain):
-    
+
     # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
     moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
 
@@ -162,15 +160,15 @@ def get_legal_moves(xy, chain):
     for amino in list(chain):
         # Check for every legal move left.
         for move in moves_xydelta:
-            
+
             # If the move delta plus current xy is equal to another amino's xy remove it from the legal moves list.
             coordinates_sum = []
             coordinates_sum.append(move[1][0] + xy[0])
             coordinates_sum.append(move[1][1] + xy[1])
-    
+
             if coordinates_sum == list(amino.coordinates):
                 moves_xydelta.remove(move)
-    
+
     # Only return the move int of the legal moves remaining.
     legal_moves = []
     for moves in moves_xydelta:
@@ -206,13 +204,15 @@ def get_matrix(chain):
     for i in range(y_range[1] - y_range[0] + 1):
         row = []
         for j in range(x_range[1] - x_range[0] + 1):
-            row.append("x")
+            row.append(" ")
         matrix.append(row)
+
+    directions = {"0":"END", "2":"^", "-2":"v", "1":">", "-1":"<"}
 
     # Adds aminos to matrix.
     for amino in chain:
         print(amino.coordinates)
-        matrix[amino.coordinates[1]][amino.coordinates[0]] = [amino.atype, amino.fold, amino.coordinates]
+        matrix[amino.coordinates[1]][amino.coordinates[0]] = str(amino.atype) + " " + directions[str(amino.fold)]
 
     return matrix
 
