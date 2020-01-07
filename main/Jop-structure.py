@@ -78,6 +78,7 @@ class Protein(object):
         x_range = [0, 0]
         y_range = [0, 0]
 
+        # Define min/max x and y values over all aminos.
         for amino in self.chain:
             if amino.coordinates[0] > x_range[1]:
                 x_range[1] = amino.coordinates[0]
@@ -88,21 +89,27 @@ class Protein(object):
             elif amino.coordinates[1] < y_range[0]:
                 y_range[0] = amino.coordinates[1]
 
+        # Adjust amino coordinates so no negative values remain.
         for amino in self.chain:
             amino.coordinates[0] -= x_range[0]
             amino.coordinates[1] -= y_range[0]
 
         matrix = []
 
+        # Fill matrix with placeholder values.
         for i in range(y_range[1] - y_range[0] + 1):
             row = []
             for j in range(x_range[1] - x_range[0] + 1):
                 row.append("x")
             matrix.append(row)
 
+        # Adds aminos to matrix.
         for amino in self.chain:
+            print(amino.coordinates)
             matrix[amino.coordinates[1]][amino.coordinates[0]] = [amino.atype, amino.fold, amino.coordinates]
 
+        # Prints formatted matrix. 
+        matrix.reverse()
         s = [[str(e) for e in row] for row in matrix]
         lens = [max(map(len, col)) for col in zip(*s)]
         fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
