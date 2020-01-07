@@ -85,9 +85,14 @@ class Protein(object):
             self.chain.append(Amino(char, fold, amino_xy))
             self.char_counter += 1
 
+        for amino in self.chain:
+            print(str(amino))
         # Save a matrix version of the chain.
         # We also update the chain to a ofsetted version of the chain.(it now starts from x, y = 0, 0)
         self.matrix, self.chain = get_matrix(self.chain)
+
+        for amino in self.chain:
+            print(amino.get_amino_output())
 
         # Get the score of the protein and print it.
         self.score = self.get_score()
@@ -96,9 +101,7 @@ class Protein(object):
     def print_map(self):
         matrix = self.matrix
 
-        # We need to reverse the y of the rows because of python printing from the top.
-        matrix.reverse()
-
+        
         # Print matrix using pandas
         print(DataFrame(matrix))
 
@@ -134,8 +137,8 @@ class Protein(object):
             if amino.get_fold_coordinates() in xy_tocheck:
                 xy_tocheck.remove(amino.get_fold_coordinates())
             
-            if self.chain[index - 1].get_fold_coordinates() in xy_tocheck:
-                xy_tocheck.remove(amino.get_fold_coordinates)
+            if self.chain[index - 1].coordinates in xy_tocheck:
+                xy_tocheck.remove(self.chain[index - 1].coordinates)
 
             # Check all coordinates around it and adjust score if a H is next to it.
             for x, y in xy_tocheck:
@@ -143,11 +146,11 @@ class Protein(object):
                     if  x < len(self.matrix[0]) and x >= 0:
                         if isinstance(self.matrix[y][x], Amino):
                             if self.matrix[y][x].atype == "H":
-                                print(x, y)
-                                print(str(xy_tocheck))
-                                print()
+                                print("the parent amino:" + str(amino) + " " + str(index) + "th amino.")
+                                print("the range of xy's its checking:" + str(xy_tocheck))
+                                print("x and y with H found:" + str(x) + str(y))
                                 total_score -= 1
-
+        total_score = total_score // 2
         return total_score           
 
 
