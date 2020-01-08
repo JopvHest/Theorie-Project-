@@ -19,7 +19,7 @@ class Amino(object):
         self.illegal_folds = []
 
     def __str__(self):
-        directions = {"0":"@", "2":"^", "-2":"v", "1":">", "-1":"<"}
+        directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<"}
         string = str(self.atype) + " " + directions[str(self.fold)]
         return string
 
@@ -106,7 +106,7 @@ class Protein(object):
     def print_map(self):
         matrix = self.matrix
 
-        
+
         # Print matrix using pandas
         print(DataFrame(matrix))
 
@@ -139,16 +139,16 @@ class Protein(object):
 
 # This function calculates and returns the score of the chain
 def get_score(chain, matrix):
-    
+
         total_score = 0
-        
+
         # Iterate over all aminos and add the score of all of them.
         for index, amino in enumerate(chain):
-            
+
             # P has no effect on stability
             if amino.atype == "P":
                 continue
-            
+
             # Creates a list with all coordinates that need to be checked.
             xy_tocheck = []
             amino_x, amino_y = amino.coordinates
@@ -160,7 +160,7 @@ def get_score(chain, matrix):
             # Aminos to and from that amino dont add to the score so remove them.
             if amino.get_fold_coordinates() in xy_tocheck:
                 xy_tocheck.remove(amino.get_fold_coordinates())
-            
+
             if chain[index - 1].coordinates in xy_tocheck:
                 xy_tocheck.remove(chain[index - 1].coordinates)
 
@@ -172,7 +172,7 @@ def get_score(chain, matrix):
                             if matrix[y][x].atype == "H":
                                 total_score -= 1
         total_score = total_score // 2
-        return total_score 
+        return total_score
 
 # Takes the chain and makes a 2d matrix out of it. Returns a matrix and a ofsetted chain
 def get_matrix(chain):
@@ -205,7 +205,7 @@ def get_matrix(chain):
             row.append(" ")
         matrix.append(row)
 
-    
+
     # Adds aminos to matrix.
     for amino in chain:
         matrix[amino.coordinates[1]][amino.coordinates[0]] = amino
@@ -215,13 +215,14 @@ def get_matrix(chain):
 
 if __name__ == "__main__":
     protein1 = Protein("HHPHPPHPHPHPHPHPHHH")
-    
+
     lowest_score = 0
     for i in range(10):
         for i in range(5000):
-            protein1 = Protein("HHPHPPPPHPHPHPHPHPHPHPHPPHPHPHPHHH")
+            protein1 = Protein("PHPPHPPHPPH")
             if protein1.score < lowest_score:
                 lowest_score = protein1.score
+                best_protein = protein1
         print( str(i) + " runs, lowest score:" + str(lowest_score))
 
-    protein1.print_map()
+    best_protein.print_map()
