@@ -73,7 +73,7 @@ class Protein(object):
     def print_map(self):
         matrix = self.matrix
 
-        
+
         # Print matrix using pandas
         print(DataFrame(matrix))
 
