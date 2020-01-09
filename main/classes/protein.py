@@ -1,5 +1,5 @@
 from pandas import DataFrame
-
+from algorithms.helpers import get_matrix, get_score
 from classes.amino import Amino
 
 # Represents a chain of amino acids and orders them.
@@ -20,23 +20,7 @@ class Protein(object):
 
         self.matrix = []
 
-    def redo_last_fold(self):
-        # Store the illegal fold in the amino class.
-        last_amino = self.chain[-1]
-        last_amino.illegal_folds.append(last_amino.fold)
-
-        # Get new move with illegal moves excluded.
-        fold = fold_selector(last_amino.coordinates, last_amino.atype, self.chain[:-1], last_amino.illegal_folds)
-
-        # Replace the previous illegal fold with a new fold
-        last_amino.fold = fold
-
-
-        # If still no fold found, also redo move before that. Char loop in init needs to go back 1 step.
-        if not fold:
-            self.chain.remove(last_amino)
-            self.char_counter -= 1
-            self.redo_last_fold()
+        self.char_counter = 1
 
     # Prints the matrix of the protein.
     def print_map(self):
