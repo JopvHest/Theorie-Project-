@@ -3,7 +3,7 @@ from classes.amino import Amino
 from algorithms.helpers import get_matrix, get_score
 
 
-def random_chain(protein):
+def random_search(protein):
 
     char_counter = 1
 

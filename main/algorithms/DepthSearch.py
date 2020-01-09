@@ -6,7 +6,7 @@ import copy
 best_score = 1
 best_chain = None
 
-def depth_chain(protein):
+def depth_search(protein):
     char_counter = 1
 
     # Skips the first char the index.
