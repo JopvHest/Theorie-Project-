@@ -1,5 +1,5 @@
 import random
-from algorithms.Amino import Amino, get_matrix, get_score
+from classes.amino import Amino, get_matrix, get_score
 from pandas import DataFrame
 import copy
 
@@ -14,7 +14,7 @@ def fold_selector(xy, char, chain, illegal_moves, chars):
 
     if best_chain:
         return (True, best_chain)
-    
+
     raise Exception("Couldn't find best chain")
 
 def find_best_chain(current_chain, chars):
@@ -23,30 +23,30 @@ def find_best_chain(current_chain, chars):
     if len(chars) == 1:
         current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
         matrix, current_chain = get_matrix(current_chain)
-        
+
         '''
         for amino in current_chain:
             print(amino, end="")
         print("")
         '''
-        
+
 
         score = get_score(current_chain, matrix)
-        
+
         global best_score
-        global best_chain 
+        global best_chain
         # print(score)
-        
+
         if score < best_score:
             print("New best score: " + str(score))
             best_score = score
             best_chain = current_chain
-            
+
         return None
-    
-    
+
+
     legal_moves = get_legal_moves(current_chain[-1].get_fold_coordinates(), current_chain)
-    
+
 
     # If no legals move left, stop the chain.
     if not legal_moves:
