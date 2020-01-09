@@ -1,7 +1,7 @@
 import random
 
 # The actual algo for selecting the fold the chain will make.
-def fold_selector(xy, char, chain, illegal_moves):
+def fold_selector(xy, char, chain, illegal_moves, amino_string):
 
     legal_moves = get_legal_moves(xy, chain)
 
@@ -11,12 +11,12 @@ def fold_selector(xy, char, chain, illegal_moves):
             if move in legal_moves:
                 legal_moves.remove(move)
 
-    # Selects a random move if at least 1 legal moves exists
+    # Selects a random move if at least 1 legal moves exists. Returns False for no ideal_chain found.
     if legal_moves:
-        return random.choice(legal_moves)
+        return random.choice(legal_moves), False
 
     # If no legal moves exist, return False
-    return False
+    return False, False
 
 
 # Finds all the legal moves that can be made from the current position.
