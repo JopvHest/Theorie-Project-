@@ -48,50 +48,58 @@ def depth_chain(protein):
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain, illegal_moves, chars):
 
+    # This is the recursive functions which does the depth search.
     find_best_chain(chain, chars)
 
+    # IF the algo has actually found the best chain (which it should), return the best chain.
     if best_chain:
         return (True, best_chain)
 
+
     raise Exception("Couldn't find best chain")
 
+# The recursive function which accepts the variables: the current chain of aminos, and the string of the aminos it has yet to process.
 def find_best_chain(current_chain, chars):
+    
+    # The first char has to be popped because it processes that char in the last loop
+    # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
 
+    # If there is only 1 char left we've arrived at the end of a chain.
     if len(chars) == 1:
+
+        # Add the last char to the amino chain.
         current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
+        
+        # Calculate the matrix (needed for the score.) and the score
         matrix, current_chain = get_matrix(current_chain)
-
-        '''
-        for amino in current_chain:
-            print(amino, end="")
-        print("")
-        '''
-
-
         score = get_score(current_chain, matrix)
 
         global best_score
         global best_chain
-        # print(score)
-
+        
+        # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
             print("New best score: " + str(score))
             best_score = score
             best_chain = current_chain
 
+        # Abort that chain if it isnt the best score.
         return None
 
-
+    # Get legal moves on the position of that amino
     legal_moves = get_legal_moves(current_chain[-1].get_fold_coordinates(), current_chain)
 
 
-    # If no legals move left, stop the chain.
+    # If no legals move left, abort the chain. The protein got "stuck"
     if not legal_moves:
         return None
 
+    # Go recursively through all legal moves and its child legal moves etc.
     else:
         for move in legal_moves:
+
+            # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
             new_chain = copy.deepcopy(current_chain)
             new_chain.append(Amino(chars[0], move, current_chain[-1].get_fold_coordinates()))
             find_best_chain(new_chain, chars)
