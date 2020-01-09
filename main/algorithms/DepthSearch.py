@@ -1,14 +1,52 @@
 import random
-from classes.amino import Amino, get_matrix, get_score
-from pandas import DataFrame
+from classes.amino import Amino
+from algorithms.helpers import get_matrix, get_score
 import copy
 
 best_score = 1
 best_chain = None
 
+def depth_chain(protein):
+    char_counter = 1
+
+    # Skips the first char the index.
+    while char_counter < len(protein.amino_string):
+
+        # print(str(self.char_counter))
+        char = protein.amino_string[char_counter]
+        # Get the location the last amino folded to.
+        # Note: an index of -1 gets the last object in a list.
+        amino_xy = protein.chain[-1].get_fold_coordinates()
+
+
+        # Last amino always has fold of 0.
+        if char_counter + 1 == len(protein.amino_string):
+            fold = 0
+
+        # Determine which fold to pick
+        else:
+            illegal_folds = None
+            fold, ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string)
+
+             # If no legal moves are available, the last move needs to be reversed.
+            if not fold:
+                protein.redo_last_fold()
+                continue
+
+        # Ideal chain is already found, replace chain with ideal chain and break loop.
+        if ideal_chain:
+            protein.chain = ideal_chain
+            break
+
+        # Adds amino to the protein chain.
+        protein.chain.append(Amino(char, fold, amino_xy))
+        char_counter += 1
+
+    protein.matrix, protein.chain = get_matrix(protein.chain)
+
+
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain, illegal_moves, chars):
-
 
     find_best_chain(chain, chars)
 
