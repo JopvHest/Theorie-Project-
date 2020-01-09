@@ -10,5 +10,4 @@ if __name__ == "__main__":
 
     protein1 = Protein("HPPHPPHPPHPH")
     random_chain(protein1)
-
     protein1.print_map()

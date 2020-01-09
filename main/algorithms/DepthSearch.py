@@ -7,20 +7,19 @@ best_score = 1
 best_chain = None
 
 def depth_chain(protein):
-    char_counter = 1
 
     # Skips the first char the index.
-    while char_counter < len(protein.amino_string):
+    while protein.char_counter < len(protein.amino_string):
 
         # print(str(self.char_counter))
-        char = protein.amino_string[char_counter]
+        char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
         amino_xy = protein.chain[-1].get_fold_coordinates()
 
 
         # Last amino always has fold of 0.
-        if char_counter + 1 == len(protein.amino_string):
+        if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
 
         # Determine which fold to pick
