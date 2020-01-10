@@ -1,13 +1,18 @@
 import random
-import os
+import time
 
 from classes.protein import Protein
 from algorithms.helpers import get_matrix
-from algorithms.RandomSearch import random_chain
-from algorithms.DepthSearch import depth_chain
+from algorithms.RandomSearch import random_search
+from algorithms.DepthSearch import depth_search
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HPPHPPHPPHPH")
-    random_chain(protein1)
+    start_time = time.clock()
+    protein1 = Protein("HPPHPHPHPPHHPH")
+    depth_search(protein1)
     protein1.print_map()
+    protein1.get_output_list()
+
+
+    print("--- %s seconds ---" % (time.clock() - start_time))

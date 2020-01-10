@@ -1,10 +1,11 @@
 import random
 from classes.amino import Amino
-from algorithms.helpers import get_matrix, get_score
+from algorithms.helpers import get_matrix, get_score, get_matrix_efficient, get_score_efficient
 import copy
 
 best_score = 1
 best_chain = None
+best_matrix = None
 
 def depth_search(protein):
     char_counter = 1
@@ -26,23 +27,21 @@ def depth_search(protein):
         # Determine which fold to pick
         else:
             illegal_folds = None
-            fold, ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string)
+            ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string)
 
-             # If no legal moves are available, the last move needs to be reversed.
-            if not fold:
-                protein.redo_last_fold()
-                continue
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-            protein.chain = ideal_chain
+            for amino in best_chain:
+                print(amino)
+
+            protein.matrix, protein.chain = get_matrix(best_chain)
             break
 
         # Adds amino to the protein chain.
         protein.chain.append(Amino(char, fold, amino_xy))
         char_counter += 1
 
-    protein.matrix, protein.chain = get_matrix(protein.chain)
 
 
 # The actual algo for selecting the fold the chain will make.
@@ -53,14 +52,14 @@ def fold_selector(xy, char, chain, illegal_moves, chars):
 
     # IF the algo has actually found the best chain (which it should), return the best chain.
     if best_chain:
-        return (True, best_chain)
+        return (True)
 
 
     raise Exception("Couldn't find best chain")
 
 # The recursive function which accepts the variables: the current chain of aminos, and the string of the aminos it has yet to process.
 def find_best_chain(current_chain, chars):
-
+    
     # The first char has to be popped because it processes that char in the last loop
     # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
@@ -70,21 +69,25 @@ def find_best_chain(current_chain, chars):
 
         # Add the last char to the amino chain.
         current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
+        
 
         # Calculate the matrix (needed for the score.) and the score
-        matrix, current_chain = get_matrix(current_chain)
-        score = get_score(current_chain, matrix)
+        matrix, xy_offset = get_matrix_efficient(current_chain)
+        score = get_score_efficient(current_chain, matrix, xy_offset)
 
         global best_score
         global best_chain
-
+        
+        
         # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
             print("New best score: " + str(score))
             best_score = score
-            best_chain = current_chain
+            best_chain = copy.deepcopy(current_chain)
+            
 
         # Abort that chain if it isnt the best score.
+        del current_chain[-1]
         return None
 
     # Get legal moves on the position of that amino
@@ -100,9 +103,10 @@ def find_best_chain(current_chain, chars):
         for move in legal_moves:
 
             # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
-            new_chain = copy.deepcopy(current_chain)
-            new_chain.append(Amino(chars[0], move, current_chain[-1].get_fold_coordinates()))
-            find_best_chain(new_chain, chars)
+            last_amino = current_chain[-1]
+            current_chain.append(Amino(chars[0], move, last_amino.get_fold_coordinates()))
+            find_best_chain(current_chain, chars)
+            del current_chain[-1]
 
 
 # Finds all the legal moves that can be made from the current position.
