@@ -11,7 +11,7 @@ class Amino(object):
 
     def __str__(self):
         directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<"}
-        string = str(self.atype) + " " + directions[str(self.fold)]
+        string = str(self.atype) + directions[str(self.fold)] + " "
         return string
 
     # Get the amino output for the standard output we need.

@@ -5,16 +5,24 @@ import copy
 
 best_score = 1
 best_chain = None
-best_matrix = None
+current_lookahead = 0
 
-def depth_search(protein):
-    char_counter = 1
+def depth_search_lookahead(protein, max_lookahead):
+    global best_chain
+    global best_score 
+    chars = protein.amino_string
+    chain_length_goal = len(chars)
 
+   
+
+    # The first char amino is build in the proteine class
+    chars = chars [1:]
+    
     # Skips the first char the index.
-    while protein.char_counter < len(protein.amino_string):
+    while True:
 
         # print(str(self.char_counter))
-        char = protein.amino_string[protein.char_counter]
+        char = chars[0]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
         amino_xy = protein.chain[-1].get_fold_coordinates()
@@ -24,10 +32,10 @@ def depth_search(protein):
         if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
 
-        # Determine which fold to pick
+        # Determine which fold to pick. Ideal chain is returned as true if the full chain is already processed.
+        # If ideal_chain is false, the next ideal fold is given.
         else:
-            illegal_folds = None
-            ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string)
+            ideal_chain, fold = fold_selector(protein.chain, chars, max_lookahead, chain_length_goal)
 
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
@@ -38,36 +46,64 @@ def depth_search(protein):
             protein.matrix, protein.chain = get_matrix(best_chain)
             break
 
-
         # Adds amino to the protein chain.
         protein.chain.append(Amino(char, fold, amino_xy))
-        char_counter += 1
 
+        print("current chain: ", end="")
+        for amino in protein.chain:
+            print(amino, end="")
+        print("")
+        
+        # Pop the first char from the string. That one has been processed now
+        chars = chars[1:]
+        
+        # Reset the best score and best chain
+        best_score = 1
+        best_chain = 0
+    
+    # Update matrix and protein of the chain. Offset happens now.
+    protein.matrix, protein.chain = get_matrix(protein.chain)
+    print("score:" + str(get_score(protein.chain, protein.matrix)))
 
+    for amino in protein.chain:
+        print(amino, end="")
 
 # The actual algo for selecting the fold the chain will make.
-def fold_selector(xy, char, chain, illegal_moves, chars):
+def fold_selector(chain, chars, max_lookahead, chain_length_goal):
 
     # This is the recursive functions which does the depth search.
-    find_best_chain(chain, chars)
+    find_best_chain(chain, chars, max_lookahead)
 
-    # IF the algo has actually found the best chain (which it should), return the best chain.
+    # IF the algo has actually found the FULL best chain , return the best chain.
+    if len(best_chain) == chain_length_goal:
+        print('found best chain.')
+        return True, None
+    
+    # If the algo only found a partial best chain. returns only the next best move to take.
     if best_chain:
-        return (True)
+        print("best move: " + str(best_chain[0].fold) + ", best_chain: ", end="")
+        for amino in best_chain:
+            print(amino, end="")
+        print("")
+
+        return False, best_chain[len(chain)].fold
 
 
     raise Exception("Couldn't find best chain")
 
 # The recursive function which accepts the variables: the current chain of aminos, and the string of the aminos it has yet to process.
-def find_best_chain(current_chain, chars):
+def find_best_chain(current_chain, chars, max_lookahead):
     
-    # The first char has to be popped because it processes that char in the last loop
-    # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
-    chars = chars[1:]
+    
+    # The first char has to be popped because it processed that char.
+    global current_lookahead
+    if not current_lookahead == 0:
+        chars = chars[1:]
 
     # If there is only 1 char left we've arrived at the end of a chain.
-    if len(chars) == 1:
-
+    if len(chars) == 1 or current_lookahead == max_lookahead:
+        
+        
         # Add the last char to the amino chain.
         current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
         
@@ -87,7 +123,7 @@ def find_best_chain(current_chain, chars):
             best_chain = copy.deepcopy(current_chain)
             
 
-        # Abort that chain if it isnt the best score.
+        # Abort that chain if it isnt the best score. remove amino we just added
         del current_chain[-1]
         return None
 
@@ -105,8 +141,15 @@ def find_best_chain(current_chain, chars):
 
             # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
             last_amino = current_chain[-1]
+            
+            # Append the next amino and increase current lookahead
+            current_lookahead += 1
             current_chain.append(Amino(chars[0], move, last_amino.get_fold_coordinates()))
-            find_best_chain(current_chain, chars)
+            
+            find_best_chain(current_chain, chars, max_lookahead)
+
+            # After the algo the lookahead should return to last value and the amino we just added should be removed again.
+            current_lookahead -= 1
             del current_chain[-1]
 
 

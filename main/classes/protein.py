@@ -2,6 +2,8 @@ from pandas import DataFrame
 from algorithms.helpers import get_matrix, get_score
 from classes.amino import Amino
 
+import string
+
 # Represents a chain of amino acids and orders them.
 class Protein(object):
 
@@ -10,7 +12,16 @@ class Protein(object):
         # The list which contains the ordered and connected aminos.
         self.chain = []
 
-        self.amino_string = amino_string
+        
+        # The string of the protein, make it case insensitive
+        self.amino_string = amino_string.upper()
+        
+        # Check if amino string contains chars other than H, C and P
+        illegal_chars = list(string.ascii_uppercase)
+        illegal_chars.remove("H").remove("P").remove("C")
+        for char in amino_string:
+            if char in illegal_chars:
+                raise Exception("Amino string contains illegal chars")
 
         # Adds the first amino to the chain, direction is hard-coded as "up".
         self.chain.append(Amino(amino_string[0], 2, [0,0]))
@@ -37,3 +48,6 @@ class Protein(object):
         for amino in self.chain:
             print(str(amino.get_amino_output()))
         print("")
+    
+    def get_score(self):
+        return get_score(self.chain)

@@ -102,11 +102,18 @@ def get_score(chain, matrix):
 
             # Check all coordinates around it and adjust score if a H is next to it.
             for x, y in xy_tocheck:
+                # Only check if in correct y range
                 if y < len(matrix) and y >= 0:
+                    # Dito for x
                     if  x < len(matrix[0]) and x >= 0:
+                        # Empty matrix spots are empty strings and shouldnt be considered
                         if isinstance(matrix[y][x], Amino):
-                            if matrix[y][x].atype == "H":
+                            
+                            if matrix[y][x].atype == "H" and amino.atype == "H":
                                 total_score -= 1
+                            
+                            elif amino.atype == "C" and matrix[y][x].atype == "C":
+                                total_score -= 5
         total_score = total_score // 2
         return total_score
 
@@ -128,13 +135,14 @@ def get_score_efficient(chain, matrix, xy_offset):
 
             # Creates a list with all coordinates that need to be checked.
             xy_tocheck = []
-            amino_x = amino.coordinates[0] - x_offset
-            amino_y = amino.coordinates[1] - y_offset
+            # amino_x = amino.coordinates[0] - x_offset
+            # amino_y = amino.coordinates[1] - y_offset
+
+            amino_x = amino.coordinates[0]
+            amino_y = amino.coordinates[1]
 
             xy_tocheck.append([amino_x + 1, amino_y])
             xy_tocheck.append([amino_x, amino_y + 1])
-            xy_tocheck.append([amino_x - 1, amino_y])
-            xy_tocheck.append([amino_x, amino_y - 1])
 
             # Aminos to and from that amino dont add to the score so remove them.
             if amino.get_fold_coordinates() in xy_tocheck:
@@ -143,12 +151,26 @@ def get_score_efficient(chain, matrix, xy_offset):
             if chain[index - 1].coordinates in xy_tocheck:
                 xy_tocheck.remove(chain[index - 1].coordinates)
 
+            for xy in xy_tocheck:
+                xy[0] -= x_offset
+                xy[1] -= y_offset
+            
+
             # Check all coordinates around it and adjust score if a H is next to it.
             for x, y in xy_tocheck:
+                # Only check if in correct y range
                 if y < len(matrix) and y >= 0:
+                    # Dito for the y range
                     if  x < len(matrix[0]) and x >= 0:
+                        # Empty matrix spots are empty strings and shouldnt be considered
                         if isinstance(matrix[y][x], Amino):
-                            if matrix[y][x].atype == "H":
+                            
+                            
+                            if matrix[y][x].atype == "H" and amino.atype == "H":
                                 total_score -= 1
-        total_score = total_score // 2
+                            
+                            elif amino.atype == "C" and matrix[y][x].atype == "C":
+                                total_score -= 5
         return total_score
+
+    
