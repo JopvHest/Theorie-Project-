@@ -7,7 +7,7 @@ from algorithms.helpers import get_fold_number
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HHPCPHHPCHPHH", "3D")
+    protein1 = Protein("HHPCPHHPCHPHHHHPPP", "3D")
     random_search(protein1)
 
     protein1.print_map()

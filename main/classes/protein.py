@@ -110,14 +110,25 @@ class Protein(object):
 
             ax.scatter(x_points, y_points, z_points, c = colors, s = 200)
             ax.plot(x_points, y_points, z_points, linestyle='-', color='0.4')
+
+            max_range = max(max(x_points) - min(x_points), max(y_points) - min(y_points), max(z_points) - min(z_points)) / 2
+            mid_x = (max(x_points) + min(x_points)) * 0.5
+            mid_y = (max(y_points) + min(y_points)) * 0.5
+            mid_z = (max(z_points) + min(z_points)) * 0.5
+
+            ax.set_xlim(mid_x - max_range, mid_x + max_range)
+            ax.set_ylim(mid_y - max_range, mid_y + max_range)
+            ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
             ax.xaxis.set_major_locator(plt.MultipleLocator(1))
             ax.yaxis.set_major_locator(plt.MultipleLocator(1))
             ax.zaxis.set_major_locator(plt.MultipleLocator(1))
+
             ax.set_xlabel('X Axis')
             ax.set_ylabel('Y Axis')
             ax.set_zlabel('Z Axis')
-            ax.grid()
 
+            ax.grid()
             plt.show()
 
 
