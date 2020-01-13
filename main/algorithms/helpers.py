@@ -152,3 +152,69 @@ def get_score_efficient(chain, matrix, xy_offset):
                                 total_score -= 1
         total_score = total_score // 2
         return total_score
+
+
+
+def get_fold_number(chain):
+
+        folds = 0
+
+        # Iterate over all aminos and add the score of all of them.
+        for index, amino in enumerate(chain):
+            print(amino)
+            
+            amino_before = chain[index-1]
+            print(abs(amino.fold))
+            print(abs(amino_before.fold))
+            if abs(amino_before.fold) != 0:
+                if abs(amino.fold) != 0:
+                    if abs(amino.fold) != abs(amino_before.fold):
+                        if amino.fold != 0:
+                            folds += 1
+                            print("folds" + str(folds))
+        print("folds" + str(folds))
+        return(folds)
+
+
+def get_score_efficient_and_compactness(chain, matrix, xy_offset):
+
+        total_score = 0
+        compactness = 0
+        
+        x_offset, y_offset = xy_offset
+
+        # Iterate over all aminos and add the score of all of them.
+        for index, amino in enumerate(chain):
+
+            
+
+            # Creates a list with all coordinates that need to be checked.
+            xy_tocheck = []
+            amino_x = amino.coordinates[0] - x_offset
+            amino_y = amino.coordinates[1] - y_offset
+
+            xy_tocheck.append([amino_x + 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y + 1])
+            xy_tocheck.append([amino_x - 1, amino_y])
+            xy_tocheck.append([amino_x, amino_y - 1])
+
+            # Aminos to and from that amino dont add to the score so remove them.
+            if amino.get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates())
+
+            if chain[index - 1].coordinates in xy_tocheck:
+                xy_tocheck.remove(chain[index - 1].coordinates)
+
+            # Check all coordinates around it and adjust score if a H is next to it.
+            for x, y in xy_tocheck:
+                if y < len(matrix) and y >= 0:
+                    if  x < len(matrix[0]) and x >= 0:
+                        if isinstance(matrix[y][x], Amino):
+                            compactness += 1
+                            # P has no effect on stability
+                            if amino.atype != "P":
+                                if matrix[y][x].atype == "H":
+                                    total_score -= 1
+        total_score = total_score // 2
+        compactness = compactness // 2
+        return total_score
