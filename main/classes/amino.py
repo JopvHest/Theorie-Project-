@@ -3,6 +3,12 @@ class Amino(object):
 
     def __init__(self, atype, fold, coordinates):
         self.atype = atype
+        
+        legal_folds = [1, -1, 2, -2, 3, -3, 0]
+        
+        if fold not in legal_folds:
+            raise Exception("Invalid fold.")
+        
         self.fold = fold
         self.coordinates = coordinates
 
@@ -10,8 +16,8 @@ class Amino(object):
         self.illegal_folds = []
 
     def __str__(self):
-        directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<"}
-        string = str(self.atype) + " " + directions[str(self.fold)]
+        directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<", "3": "O", "-3" : "X"}
+        string = str(self.atype) + directions[str(self.fold)] + " "
         return string
 
     # Get the amino output for the standard output we need.
@@ -37,6 +43,11 @@ class Amino(object):
         # Fold is in x direction.
         if abs(self.fold) == 1:
             fold_coordinates[0] += self.fold
+            return fold_coordinates
+        
+        # Fold is in Z direction.
+        if abs(self.fold) == 3:
+            fold_coordinates[2] += int(self.fold / 3)
             return fold_coordinates
 
         raise Exception("fold of: " + str(self.fold) + " is invalid")
