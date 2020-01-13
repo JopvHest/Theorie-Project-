@@ -356,7 +356,6 @@ def get_score_efficient(chain, matrix, xy_offset):
                 
                             elif amino.atype == "C" and matrix_amino.atype == "C":
                                 total_score -= 5
-        total_score = total_score // 2
         return total_score
 
     
