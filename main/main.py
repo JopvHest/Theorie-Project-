@@ -6,7 +6,7 @@ from algorithms.DepthSearch import depth_search
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HPPHPPPHPH", "2D")
+    protein1 = Protein("HPPHPCPPHPPHPHCH", "2D")
     depth_search(protein1)
 
     protein1.print_map()
