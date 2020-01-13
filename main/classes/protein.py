@@ -7,7 +7,16 @@ import string
 # Represents a chain of amino acids and orders them.
 class Protein(object):
 
-    def __init__(self, amino_string):
+    def __init__(self, amino_string, mode):
+
+        if mode == "2d" or mode == "2D":
+            self.mode_3d = False
+        
+        elif mode == "3d" or mode == "3D":
+            self.mode_3d = True
+        
+        else:
+            raise Exception("Dimension mode not valid")
 
         # The list which contains the ordered and connected aminos.
         self.chain = []
@@ -18,13 +27,19 @@ class Protein(object):
         
         # Check if amino string contains chars other than H, C and P
         illegal_chars = list(string.ascii_uppercase)
-        illegal_chars.remove("H").remove("P").remove("C")
+        illegal_chars.remove("H")
+        illegal_chars.remove("P")
+        illegal_chars.remove("C")
+
         for char in amino_string:
             if char in illegal_chars:
                 raise Exception("Amino string contains illegal chars")
 
         # Adds the first amino to the chain, direction is hard-coded as "up".
-        self.chain.append(Amino(amino_string[0], 2, [0,0]))
+        if self.mode_3d == True:
+            self.chain.append(Amino(amino_string[0], 2, [0,0,0]))
+        else:
+            self.chain.append(Amino(amino_string[0], 2, [0,0]))
 
         # IF a ideal answer is found, it is stored here
         self.ideal_chain = []
@@ -35,11 +50,21 @@ class Protein(object):
 
     # Prints the matrix of the protein.
     def print_map(self):
-        matrix = self.matrix
+        
+        if self.mode_3d == False:
+            matrix = self.matrix
+            # Print matrix using pandas
+            print(DataFrame(matrix))
+        
+        if self.mode_3d == True:
+            matrix = self.matrix
 
+            # go through each layer and print it
+            for layer in matrix:
+                # Print matrix using pandas
+                print(DataFrame(layer))
+        
 
-        # Print matrix using pandas
-        print(DataFrame(matrix))
 
     # Outputs a list like the excercise requires
     def get_output_list(self):

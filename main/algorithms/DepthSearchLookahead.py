@@ -4,7 +4,7 @@ from algorithms.helpers import get_matrix, get_score, get_matrix_efficient, get_
 import copy
 
 best_score = 1
-best_chain = None
+best_chain = []
 current_lookahead = 0
 
 def depth_search_lookahead(protein, max_lookahead):
@@ -59,7 +59,7 @@ def depth_search_lookahead(protein, max_lookahead):
         
         # Reset the best score and best chain
         best_score = 1
-        best_chain = 0
+        best_chain = []
     
     # Update matrix and protein of the chain. Offset happens now.
     protein.matrix, protein.chain = get_matrix(protein.chain)

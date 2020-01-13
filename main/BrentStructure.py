@@ -17,8 +17,9 @@ if __name__ == "__main__":
 
     start_time = time.clock()
     
-    protein1 = Protein("HCPHPCPHPCHCHPHPPPHPPPcHPPPPHPCPHPCPPHPHHHCCHCHCHCHHPPPHPPCPHPHPCHPCPPHP")
-    depth_search_lookahead(protein1, 5)
+    protein1 = Protein("HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH", "3d")
+    
+    random_search(protein1)
     protein1.print_map()
     protein1.get_output_list()
     print(str(get_score(protein1.chain, protein1.matrix)))
