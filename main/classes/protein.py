@@ -5,7 +5,7 @@ from classes.amino import Amino
 import string
 
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
 
 # Represents a chain of amino acids and orders them.
 class Protein(object):
@@ -68,6 +68,7 @@ class Protein(object):
                 print(DataFrame(layer))
 
     def print_protein(self):
+
         if self.mode_3d == False:
             x_points, y_points, colors = [], [], []
             for amino in self.chain:
@@ -78,6 +79,8 @@ class Protein(object):
                     colors.append((1,0,0))
                 elif amino.atype == 'P':
                     colors.append((0,0,1))
+                elif amino.atype == 'C':
+                    colors.append((0,1,0))
 
             fig, ax = plt.subplots()
             plt.scatter(x_points, y_points, c = colors, s = 200)
@@ -89,7 +92,34 @@ class Protein(object):
             plt.show()
 
         if self.mode_3d == True:
-            print("3D version not yet implemented. ")
+            x_points, y_points, z_points, colors = [], [], [], []
+            for amino in self.chain:
+                x_points.append(amino.coordinates[0])
+                y_points.append(amino.coordinates[1])
+                z_points.append(amino.coordinates[2])
+
+                if amino.atype == 'H':
+                    colors.append((1,0,0))
+                elif amino.atype == 'P':
+                    colors.append((0,0,1))
+                elif amino.atype == 'C':
+                    colors.append((0,1,0))
+
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+
+            ax.scatter(x_points, y_points, z_points, c = colors, s = 200)
+            ax.plot(x_points, y_points, z_points, linestyle='-', color='0.4')
+            ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+            ax.yaxis.set_major_locator(plt.MultipleLocator(1))
+            ax.zaxis.set_major_locator(plt.MultipleLocator(1))
+            ax.set_xlabel('X Axis')
+            ax.set_ylabel('Y Axis')
+            ax.set_zlabel('Z Axis')
+            ax.grid()
+
+            plt.show()
+
 
     # Outputs a list like the excercise requires
     def get_output_list(self):
