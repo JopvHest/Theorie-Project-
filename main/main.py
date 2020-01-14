@@ -8,8 +8,8 @@ from algorithms.helpers import get_fold_number
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HHPPPPPPHH", "2D")
-    depth_search(protein1)
+    protein1 = Protein("HPPCPPCHHHHPHHPPP", "2D")
+    depth_search_lookahead(protein1, 10)
 
     protein1.print_map()
     protein1.print_protein()

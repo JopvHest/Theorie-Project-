@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from algorithms.helpers import get_matrix, get_score
+from algorithms.helpers import get_matrix, get_score, get_connections
 from classes.amino import Amino
 
 import string
@@ -69,6 +69,8 @@ class Protein(object):
 
     def print_protein(self):
 
+        connections = get_connections(self.chain, self.matrix)
+
         if self.mode_3d == False:
             x_points, y_points, colors = [], [], []
             for amino in self.chain:
@@ -85,8 +87,17 @@ class Protein(object):
             fig, ax = plt.subplots()
             plt.scatter(x_points, y_points, c = colors, s = 200)
             plt.plot(x_points, y_points, linestyle='-', color='0.4')
+
+            print(connections)
+            for connection in connections:
+                if connection[0] == 1:
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle='--', color=(1,0,0))
+                if connection[0] == 5:
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle='--', color=(0,1,0))
+
             ax.xaxis.set_major_locator(plt.MultipleLocator(1))
             ax.yaxis.set_major_locator(plt.MultipleLocator(1))
+            plt.axis("equal")
             plt.grid()
 
             plt.show()
