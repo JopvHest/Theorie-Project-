@@ -11,6 +11,8 @@ from algorithms.BreadthSearch import breadth_search
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HHcPPphhpphppphphhhhppphphphpphhhhhhhhPPPcPhphcPH", "3D")
-    depth_search_lookahead(protein1, 5)
+    protein1 = Protein("HphhhhpHhpH", "2D")
+    breadth_search(protein1)
     protein1.print_protein()
+
+    # -4 Hv P> H> H^ H< H^ P> H> Hv Pv H@

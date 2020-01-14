@@ -16,19 +16,20 @@
 from classes.amino import Amino
 from queue import Queue 
 import copy
+from algorithms.helpers import get_score_efficient, get_matrix_efficient, get_matrix
 
 
 def breadth_search(protein):
 
-    # create first amino
-    first_amino = Amino(protein.chain[0], 2, [0,0])
+    # Get chain WITH first amino already in it.
+    start_chain = protein.chain
     
-    # make chain with the first amino
-    chain = [first_amino]
     # create queue and put the first amino in it
     queue = Queue(maxsize = 0)
-    queue.put(chain)
+    queue.put(start_chain)
 
+    # Finished queues. Is this smart?
+    finished_chains = []
    
     # go trough the queue
     while not queue.empty():
@@ -47,7 +48,8 @@ def breadth_search(protein):
             new_amino = Amino(atype, fold, coordinates)
             chain_actual.append(new_amino)
 
-            # get score etc after this aminos are gone
+            # Save the chain to the finished chain list.
+            finished_chains.append(chain_actual)
 
         # Determine fold and make new chain for every possibility
         else:
@@ -67,9 +69,29 @@ def breadth_search(protein):
                     # put the new chain in the queue
                     queue.put(new_chain)
 
-                    # test output
-                    print(index)
-                    print(protein.amino_string)
+    # The best score and corresponding chain that has been found
+    best_score = 1
+    best_chain = []
+
+    # Goes over all finished chains to find the one with the best score
+    for chain in finished_chains:
+
+        matrix, xy_offset = get_matrix_efficient(chain)
+        score = get_score_efficient(chain, matrix, xy_offset)
+        
+        # If the score is better than the best score, replace best_chain
+        if score < best_score:
+            best_score = score
+            best_chain = chain
+    
+    # Return best chain and matrix to the protein.
+    protein.matrix, protein.chain = get_matrix(best_chain)
+    
+    print("Score: ", end="")
+    print(protein.get_score())
+    for amino in protein.chain:
+        print(str(amino), end="")
+
 
 
 def get_legal_moves(xy, chain):

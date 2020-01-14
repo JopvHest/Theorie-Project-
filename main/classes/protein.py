@@ -157,4 +157,4 @@ class Protein(object):
         print("")
 
     def get_score(self):
-        return get_score(self.chain)
+        return get_score(self.chain, self.matrix)
