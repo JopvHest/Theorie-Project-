@@ -433,6 +433,8 @@ def get_connections(chain, matrix):
         else:
             mode_3d = False
 
+        connections = []
+
         # Iterate over all aminos and add the score of all of them.
         for index, amino in enumerate(chain):
 
@@ -460,8 +462,6 @@ def get_connections(chain, matrix):
                 xy_tocheck.append([amino_x, amino_y + 1])
                 xy_tocheck.append([amino_x - 1, amino_y])
                 xy_tocheck.append([amino_x, amino_y - 1])
-
-            connections = []
 
             # Aminos to and from that amino dont add to the score so remove them.
             # Amino the amino folds to.

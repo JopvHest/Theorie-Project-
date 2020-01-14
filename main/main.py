@@ -16,6 +16,8 @@ if __name__ == "__main__":
 
     # protein1 = Protein("HPPCPPCHHHHPHHPPP", "2D")
     # depth_search_lookahead(protein1, 10)
+    # protein1 = Protein("HHPCCPPPHHHHPPPCPPPH", "3D")
+    # depth_search_lookahead(protein1, 7)
 
     # protein1.print_map()
     # protein1.print_protein()
