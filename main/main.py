@@ -10,9 +10,8 @@ from algorithms.breadth_first import breadth_search
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HPPCPPCHHHHPHHPPP", "2D")
-    depth_search_lookahead(protein1, 10)
+    protein1 = Protein("HHPCCPPPHHHHPPPCPPPH", "3D")
+    depth_search_lookahead(protein1, 7)
 
     protein1.print_map()
     protein1.print_protein()
->>>>>>> 2d223c0d7a3a3aebbfef46a1d1686f1d043f70ea
