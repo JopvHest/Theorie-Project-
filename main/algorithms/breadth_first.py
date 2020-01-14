@@ -3,15 +3,6 @@ from classes.amino import Amino
 
 
 
-
-# class Graph():
-#     def __init__(self):
-#         self.nodes =
-        
-
-
-
-
 class Node(object):
     def __init__(self, atype, fold, coordinates, index):
         self.atype = atype
@@ -23,6 +14,9 @@ class Node(object):
 
         self.chain = []
         self.index = index
+
+    def __str__(self):
+        return self.atype + str(self.chain)
 
     
     # Get the amino output for the standard output we need.
@@ -72,17 +66,17 @@ def breadth_search(protein):
     for amino in stack:
 
         # Last amino always has fold of 0.
-        if amino.index + 1 == len(protein.amino_string):
+        # + 2 because index starts at 0 and you want to add last node one before the end
+        if amino.index + 2 == len(protein.amino_string):
+            
             fold = 0
             index = amino.chain[-1].index + 1
-
-            print(protein.amino_string)
-            print(index)
-
+            
+            amino_chain = amino.chain[-1]
             atype = protein.amino_string[index]
             coordinates = amino.chain[-1].get_fold_coordinates()
             amino = Node(atype, fold, coordinates, index)
-            amino.chain = amino.chain[-1].chain
+            amino.chain = amino_chain.chain
             amino.chain.append(amino)
 
             # get score etc after this aminos are gone

@@ -1,4 +1,5 @@
 import random
+import sys
 
 from classes.protein import Protein
 from algorithms.RandomSearch import random_search
