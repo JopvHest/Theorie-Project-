@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     start_time = time.clock()
     
-    protein1 = Protein("HHPCHPPHPHC", "3d")
+    protein1 = Protein("HPPHPPHHPHHPPHPPHHPHHPPHPPHHPHHPPHPPHHPHHPPHPPHHPH", "3d")
     
     depth_search_lookahead(protein1, 5)
     protein1.print_map()
