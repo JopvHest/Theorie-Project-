@@ -1,3 +1,17 @@
+# pseudocode
+
+# stack = list with all current chains.
+# Only has 1 chain at the start. a chain with the start move.
+
+# While True:
+#   for chain in stack:
+#       remove chain from stack
+#       for move in legal_moves(chain):
+#           add chain+move to the chain. At the place of the original chain (That got removed)
+# When every chain in the stack arrived at the end of the amino_string. Compare the scores of ALL chains. 
+
+# For beam search we compare all the chains every x turns and remove the worst x procent.
+
 
 from classes.amino import Amino
 
@@ -16,7 +30,7 @@ class Node(object):
         self.index = index
 
     def __str__(self):
-        return self.atype + str(self.chain)
+        return self.atype
 
     
     # Get the amino output for the standard output we need.
@@ -73,14 +87,17 @@ def breadth_search(protein):
             fold = 0
             index = amino.chain[-1].index + 1
             
-            amino_chain = amino.chain[-1]
+            
             atype = protein.amino_string[index]
             coordinates = amino.chain[-1].get_fold_coordinates()
             amino = Node(atype, fold, coordinates, index)
-            amino.chain = amino_chain.chain
+            amino_before = amino.chain[-1]
+            amino.chain = amino_before.chain
             amino.chain.append(amino)
 
             # get score etc after this aminos are gone
+            print(amino.chain)
+            
 
 
         # Determine which fold to pick

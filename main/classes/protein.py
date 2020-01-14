@@ -85,14 +85,14 @@ class Protein(object):
                     colors.append((0,1,0))
 
             fig, ax = plt.subplots()
-            plt.scatter(x_points, y_points, c = colors, s = 200)
-            plt.plot(x_points, y_points, linestyle='-', color='0.4')
+            plt.plot(x_points, y_points, linestyle='-', color='black', linewidth=3, zorder=0)
+            plt.scatter(x_points, y_points, c = colors, s = 200, zorder=10)
 
             for connection in connections:
                 if connection[0] == 1:
-                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle='--', color=(1,0,0))
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle=':', color=(1,0,0))
                 if connection[0] == 5:
-                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle='--', color=(0,1,0))
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle=':', color=(0,1,0))
 
             ax.xaxis.set_major_locator(plt.MultipleLocator(1))
             ax.yaxis.set_major_locator(plt.MultipleLocator(1))
@@ -119,7 +119,13 @@ class Protein(object):
             ax = fig.add_subplot(111, projection='3d')
 
             ax.scatter(x_points, y_points, z_points, c = colors, s = 200)
-            ax.plot(x_points, y_points, z_points, linestyle='-', color='0.4')
+            ax.plot(x_points, y_points, z_points, linestyle='-', color='black')
+
+            for connection in connections:
+                if connection[0] == 1:
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), (connection[1][2], connection[2][2]), linestyle=':', color=(1,0,0))
+                if connection[0] == 5:
+                    plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), (connection[1][2], connection[2][2]), linestyle=':', color=(0,1,0))
 
             max_range = max(max(x_points) - min(x_points), max(y_points) - min(y_points), max(z_points) - min(z_points)) / 2
             mid_x = (max(x_points) + min(x_points)) * 0.5
