@@ -15,6 +15,9 @@ class Amino(object):
         # Contains illegal folds for this amino based on that the next location wouldnt have legal moves.
         self.illegal_folds = []
 
+        self.chain = []
+        self.index = 0
+
     def __str__(self):
         directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<", "3": "O", "-3" : "X"}
         string = str(self.atype) + directions[str(self.fold)] + " "
