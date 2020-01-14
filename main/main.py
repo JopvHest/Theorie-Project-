@@ -6,9 +6,13 @@ from algorithms.RandomSearch import random_search
 from algorithms.DepthSearch import depth_search
 from algorithms.DepthSearchLookahead import depth_search_lookahead
 from algorithms.helpers import get_fold_number
+from algorithms.breadth_first import breadth_search
+
 
 if __name__ == "__main__":
 
-    protein1 = Protein("HHPPHHHPHHHHHPHPHPHPHPHPPPHPHPHPHPHPHP", "2d")
-    depth_search_lookahead(protein1, 13)
-    print(str(sys.getsizeof(protein1.chain)))
+    protein1 = Protein("HPPCPPCHHHHPHHPPP", "2D")
+    depth_search_lookahead(protein1, 10)
+
+    protein1.print_map()
+    protein1.print_protein()
