@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # Represents a chain of amino acids and orders them.
 class Protein(object):
-
+    
     def __init__(self, amino_string, mode):
 
         if mode == "2d" or mode == "2D":
@@ -88,7 +88,6 @@ class Protein(object):
             plt.scatter(x_points, y_points, c = colors, s = 200)
             plt.plot(x_points, y_points, linestyle='-', color='0.4')
 
-            print(connections)
             for connection in connections:
                 if connection[0] == 1:
                     plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle='--', color=(1,0,0))

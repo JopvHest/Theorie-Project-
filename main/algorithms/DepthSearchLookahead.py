@@ -40,8 +40,6 @@ def depth_search_lookahead(protein, max_lookahead):
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-            for amino in best_chain:
-                print(amino)
 
             protein.matrix, protein.chain = get_matrix(best_chain)
             break
@@ -49,9 +47,7 @@ def depth_search_lookahead(protein, max_lookahead):
         # Adds amino to the protein chain.
         protein.chain.append(Amino(char, fold, amino_xy))
 
-        print("current chain: ", end="")
-        for amino in protein.chain:
-            print(amino, end="")
+        print("Char " + str(len(protein.chain)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
         print("")
         
         # Pop the first char from the string. That one has been processed now
@@ -63,7 +59,7 @@ def depth_search_lookahead(protein, max_lookahead):
     
     # Update matrix and protein of the chain. Offset happens now.
     protein.matrix, protein.chain = get_matrix(protein.chain)
-    print("score:" + str(get_score(protein.chain, protein.matrix)))
+    print("score:" + str(get_score(protein.chain, protein.matrix)) + "")
 
     for amino in protein.chain:
         print(amino, end="")
@@ -81,11 +77,6 @@ def fold_selector(chain, chars, max_lookahead, chain_length_goal):
     
     # If the algo only found a partial best chain. returns only the next best move to take.
     if best_chain:
-        print("best move: " + str(best_chain[0].fold) + ", best_chain: ", end="")
-        for amino in best_chain:
-            print(amino, end="")
-        print("")
-
         return False, best_chain[len(chain)].fold
 
 
@@ -118,7 +109,6 @@ def find_best_chain(current_chain, chars, max_lookahead):
         
         # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
-            print("New best score: " + str(score))
             best_score = score
             best_chain = copy.deepcopy(current_chain)
             

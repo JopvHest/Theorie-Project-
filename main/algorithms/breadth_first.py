@@ -54,6 +54,7 @@ class Node(object):
 
 def breadth_search(protein):
 
+
     first_amino = Node(protein.chain[0], 2, [0,0], 0)
     first_amino.chain.append(first_amino)
     # put first amino in stack
@@ -86,8 +87,11 @@ def breadth_search(protein):
         else:
             new_amino = fold_selector(amino.chain, amino.index, protein.amino_string)
             stack.append(new_amino)
-                
 
+    best_score = 1
+    best_chain = []          
+    for chains in stack:
+        get_score(chains)
 
 def fold_selector(current_chain, index, chars):
 

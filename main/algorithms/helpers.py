@@ -226,8 +226,7 @@ def get_score(chain, matrix):
 
                         if mode_3d:
                             # Empty matrix spots are empty strings and shouldnt be considered
-                            print(z, y, x)
-                            print(amino.get_amino_output())
+                            
 
                             # If it isnt an Amino, dont need to check
                             if isinstance(matrix[z][y][x], Amino):
