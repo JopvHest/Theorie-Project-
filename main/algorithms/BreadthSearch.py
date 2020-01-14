@@ -35,11 +35,11 @@ def breadth_search(protein):
         # get the first chain from the queue
         chain_actual = queue.get()
 
-        # get the index from the length of the chain, - 1 because index starts at 0
-        index = len(chain_actual) - 1
+        # get the index from the length of the chain
+        index = len(chain_actual)
  
         # Last amino always has fold of 0.
-        if  index + 2 == len(protein.amino_string):
+        if  index + 1 == len(protein.amino_string):
             
             fold = 0
             atype = protein.amino_string[index]
