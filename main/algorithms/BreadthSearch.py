@@ -89,7 +89,7 @@ def breadth_search(protein, ch_score):
             print(amino, end="")
         print("score", end="")
         protein1 = Protein(protein.amino_string, "2d")
-        protein1.matrix, protein1.chain = get_matrix(chain)
+        protein1.matrix, protein1.chain = get_matrix(copy.deepcopy(chain))
         print(str(protein1.get_score()))
 
         matrix, xy_offset = get_matrix_efficient(chain)

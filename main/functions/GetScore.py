@@ -158,8 +158,9 @@ def get_score_efficient(chain, matrix, xy_offset, ch_score):
             if amino.get_fold_coordinates() in xy_tocheck:
                 xy_tocheck.remove(amino.get_fold_coordinates())
 
-            if chain[index - 1].coordinates in xy_tocheck:
-                xy_tocheck.remove(chain[index - 1].coordinates)
+            if not index == 0:
+                if chain[index - 1].coordinates in xy_tocheck:
+                    xy_tocheck.remove(chain[index - 1].coordinates)
 
             for xy in xy_tocheck:
                 xy[0] -= x_offset
