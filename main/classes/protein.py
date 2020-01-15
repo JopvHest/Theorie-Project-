@@ -15,10 +15,10 @@ class Protein(object):
 
     def __init__(self, amino_string, mode):
 
-        if mode == "2d" or mode == "2D":
+        if mode in ["2d", "2D"]:
             self.mode_3d = False
 
-        elif mode == "3d" or mode == "3D":
+        elif mode in ["3d", "3D"]:
             self.mode_3d = True
 
         else:

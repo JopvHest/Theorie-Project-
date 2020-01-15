@@ -1,13 +1,10 @@
 from classes.amino import Amino
+from functions.IsChain3d import is_chain_3d
 
 def get_connections(chain, matrix):
 
         # Check if 3d mode.
-        if len(chain[0].coordinates) == 3:
-            mode_3d = True
-
-        else:
-            mode_3d = False
+        mode_3d = is_chain_3d(chain)
 
         connections = []
 
@@ -102,3 +99,4 @@ def get_connections(chain, matrix):
                                 elif amino.atype == "C" and matrix[y][x].atype == "C":
                                     connections.append([5, [x, y], amino.coordinates])
         return connections
+

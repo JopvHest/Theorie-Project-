@@ -1,4 +1,5 @@
 from classes.amino import Amino
+from functions.IsChain3d import is_chain_3d
 
 
 
@@ -6,11 +7,7 @@ from classes.amino import Amino
 def get_score(chain, matrix, ch_score):
 
         # Check if 3d mode.
-        if len(chain[0].coordinates) == 3:
-            mode_3d = True
-
-        else:
-            mode_3d = False
+        mode_3d = is_chain_3d(chain)
 
         total_score = 0
 
@@ -118,11 +115,7 @@ def get_score(chain, matrix, ch_score):
 def get_score_efficient(chain, matrix, xy_offset, ch_score):
 
         # Check if 3d mode.
-        if len(chain[0].coordinates) == 3:
-            mode_3d = True
-
-        else:
-            mode_3d = False
+        mode_3d = is_chain_3d(chain)
 
         total_score = 0
 

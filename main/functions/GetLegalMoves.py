@@ -1,13 +1,11 @@
+from functions.IsChain3d import is_chain_3d
+
+
 # Finds all the legal moves that can be made from the current position.
 # Returns False for no ideal chain found.
 def get_legal_moves(xy, chain):
 
-    # Check if 3d mode.
-    if len(chain[0].coordinates) == 3:
-        mode_3d = True
-
-    else:
-        mode_3d = False
+    mode_3d = is_chain_3d(chain)
 
 
     if mode_3d:
