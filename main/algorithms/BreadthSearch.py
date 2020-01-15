@@ -41,7 +41,7 @@ def breadth_search(protein, ch_score):
         chain_actual = queue.get()
 
         # get the index from the length of the chain
-        index = len(chain_actual)
+        index = len(chain_actual) - 1
 
         # Last amino always has fold of 0.
         if  index + 1 == len(protein.amino_string):
@@ -85,7 +85,7 @@ def breadth_search(protein, ch_score):
         print("score", end="")
         protein1 = Protein(protein.amino_string, "2d")
         protein1.matrix, protein1.chain = get_matrix(chain)
-        print(str(protein1.get_score(ch_score)))
+        print(str(protein1.get_score()))
 
         matrix, xy_offset = get_matrix_efficient(chain)
         score = get_score_efficient(chain, matrix, xy_offset, ch_score)
