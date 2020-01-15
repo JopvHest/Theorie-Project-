@@ -8,7 +8,7 @@ best_score = 1
 best_chain = None
 best_matrix = None
 
-def depth_search(protein):
+def depth_search(protein, ch_score):
     char_counter = 1
 
     # Skips the first char the index.
@@ -28,7 +28,7 @@ def depth_search(protein):
         # Determine which fold to pick
         else:
             illegal_folds = None
-            ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string)
+            ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string, ch_score)
 
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
@@ -47,10 +47,10 @@ def depth_search(protein):
 
 
 # The actual algo for selecting the fold the chain will make.
-def fold_selector(xy, char, chain, illegal_moves, chars):
+def fold_selector(xy, char, chain, illegal_moves, chars, ch_score):
 
     # This is the recursive functions which does the depth search.
-    find_best_chain(chain, chars)
+    find_best_chain(chain, chars, ch_score)
 
     # IF the algo has actually found the best chain (which it should), return the best chain.
     if best_chain:
@@ -60,8 +60,8 @@ def fold_selector(xy, char, chain, illegal_moves, chars):
     raise Exception("Couldn't find best chain")
 
 # The recursive function which accepts the variables: the current chain of aminos, and the string of the aminos it has yet to process.
-def find_best_chain(current_chain, chars):
-    
+def find_best_chain(current_chain, chars, ch_score):
+
     # The first char has to be popped because it processes that char in the last loop
     # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
@@ -71,22 +71,22 @@ def find_best_chain(current_chain, chars):
 
         # Add the last char to the amino chain.
         current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
-        
+
 
         # Calculate the matrix (needed for the score.) and the score
         matrix, xy_offset = get_matrix_efficient(current_chain)
-        score = get_score_efficient(current_chain, matrix, xy_offset)
+        score = get_score_efficient(current_chain, matrix, xy_offset, ch_score)
 
         global best_score
         global best_chain
-        
-        
+
+
         # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
             print("New best score: " + str(score))
             best_score = score
             best_chain = copy.deepcopy(current_chain)
-            
+
 
         # Abort that chain if it isnt the best score.
         del current_chain[-1]
@@ -107,7 +107,7 @@ def find_best_chain(current_chain, chars):
             # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
             last_amino = current_chain[-1]
             current_chain.append(Amino(chars[0], move, last_amino.get_fold_coordinates()))
-            find_best_chain(current_chain, chars)
+            find_best_chain(current_chain, chars, ch_score)
             del current_chain[-1]
 
 
@@ -118,15 +118,15 @@ def get_legal_moves(xy, chain):
     # Check if 3d mode.
     if len(chain[0].coordinates) == 3:
         mode_3d = True
-    
-    else: 
+
+    else:
         mode_3d = False
-    
+
 
     if mode_3d:
         moves_xydelta = [[1, (1, 0, 0)], [-1, (-1, 0, 0)], [2, (0, 1, 0)], [-2, (0, -1, 0)], [3, (0, 0, 1)], [-3, (0, 0, -1)]]
-    
-    else: 
+
+    else:
         # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
         moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
 
@@ -142,7 +142,7 @@ def get_legal_moves(xy, chain):
                 coordinates_sum.append(move[1][0] + xy[0])
                 coordinates_sum.append(move[1][1] + xy[1])
                 coordinates_sum.append(move[1][2] + xy[2])
-            
+
             else:
                 coordinates_sum = []
                 coordinates_sum.append(move[1][0] + xy[0])

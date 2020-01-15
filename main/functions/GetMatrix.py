@@ -3,7 +3,6 @@ from classes.amino import Amino
 # Takes the chain and makes a 2d matrix out of it. Returns a matrix and a ofsetted chain
 def get_matrix(chain):
 
-    # The range aminos exist in the chain.
     x_range = [0, 0]
     y_range = [0, 0]
 
@@ -41,8 +40,8 @@ def get_matrix(chain):
         if mode_3d:
             amino.coordinates[2] -= z_range[0]
 
-
     matrix = []
+
     # Fill matrix with placeholder values. The array indexes are reversed, so: matrix[z][y][x]
     # 3D
     if mode_3d:
@@ -81,7 +80,6 @@ def get_matrix(chain):
 # This function is used in searches so the original chain isnt changed.
 def get_matrix_efficient(chain):
 
-    
     x_range = [0, 0]
     y_range = [0, 0]
 
@@ -149,3 +147,4 @@ def get_matrix_efficient(chain):
         offset = [x_range[0], y_range[0]]
 
     return matrix, offset
+

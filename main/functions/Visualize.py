@@ -77,9 +77,11 @@ def get_connections(chain, matrix):
                             if isinstance(matrix[z][y][x], Amino):
 
                                 # If they are both H, score -= 1
-                                if matrix[z][y][x].atype == "H" and amino.atype == "H":
+                                if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
                                     connections.append([1, [x, y, z], amino.coordinates])
-
+                                # If they are both C, score -= 5
+                                elif amino.atype == "H" and matrix[z][y][x].atype == "H":
+                                    connections.append([1, [x, y, z], amino.coordinates])
                                 # If they are both C, score -= 5
                                 elif amino.atype == "C" and matrix[z][y][x].atype == "C":
                                     connections.append([5, [x, y, z], amino.coordinates])
@@ -90,9 +92,11 @@ def get_connections(chain, matrix):
                             if isinstance(matrix[y][x], Amino):
 
                                 # If they are both H, score -= 1
-                                if matrix[y][x].atype == "H" and amino.atype == "H":
+                                if (matrix[y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[y][x].atype != amino.atype):
                                     connections.append([1, [x, y], amino.coordinates])
-
+                                # If they are both C, score -= 5
+                                elif amino.atype == "H" and matrix[y][x].atype == "H":
+                                    connections.append([1, [x, y], amino.coordinates])
                                 # If they are both C, score -= 5
                                 elif amino.atype == "C" and matrix[y][x].atype == "C":
                                     connections.append([5, [x, y], amino.coordinates])

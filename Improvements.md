@@ -40,10 +40,9 @@ itself
 
 
 # TODO
-- Breadth search
 - Max achievable score function.
 - Remoce c-h bondds from search functions so search doesnt sacrifice Adjecent C spots for kjust 01
--
+- Add C-H bonds to get_score functions
 
 https://www.geeksforgeeks.org/queue-in-python/  Queue.queue
 

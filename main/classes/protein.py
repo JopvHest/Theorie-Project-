@@ -10,7 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # Represents a chain of amino acids and orders them.
 class Protein(object):
-    
+
     def __init__(self, amino_string, mode):
 
         if mode == "2d" or mode == "2D":
@@ -24,7 +24,6 @@ class Protein(object):
 
         # The list which contains the ordered and connected aminos.
         self.chain = []
-
 
         # The string of the protein, make it case insensitive
         self.amino_string = amino_string.upper()
@@ -142,5 +141,5 @@ class Protein(object):
         print("")
 
     # Return the score.
-    def get_score(self):
-        return get_score(self.chain, self.matrix)
+    def get_score(self, ch_score):
+        return get_score(self.chain, self.matrix, ch_score)
