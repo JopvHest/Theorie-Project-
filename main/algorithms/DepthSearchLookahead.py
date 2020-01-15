@@ -2,6 +2,7 @@ import random
 from classes.amino import Amino
 from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient, get_score
+from functions.GetLegalMoves import get_legal_moves
 import copy
 
 best_score = 1
@@ -60,7 +61,6 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
 
     # Update matrix and protein of the chain. Offset happens now.
     protein.matrix, protein.chain = get_matrix(protein.chain)
-    print("score:" + str(get_score(protein.chain, protein.matrix, ch_score)) + "")
 
     for amino in protein.chain:
         print(amino, end="")
@@ -142,51 +142,3 @@ def find_best_chain(current_chain, chars, max_lookahead, ch_score):
             # After the algo the lookahead should return to last value and the amino we just added should be removed again.
             current_lookahead -= 1
             del current_chain[-1]
-
-
-# Finds all the legal moves that can be made from the current position.
-# Returns False for no ideal chain found.
-def get_legal_moves(xy, chain):
-
-    # Check if 3d mode.
-    if len(chain[0].coordinates) == 3:
-        mode_3d = True
-
-    else:
-        mode_3d = False
-
-
-    if mode_3d:
-        moves_xydelta = [[1, (1, 0, 0)], [-1, (-1, 0, 0)], [2, (0, 1, 0)], [-2, (0, -1, 0)], [3, (0, 0, 1)], [-3, (0, 0, -1)]]
-
-    else:
-        # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
-        moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
-
-    # Check if the legal moves interfere with any of the current amino coordinates.
-    # Note: we iterate over a COPY of the list because you cant delete items from a list while iterating over it.
-    for amino in list(chain):
-        # Check for every legal move left.
-        for move in moves_xydelta:
-
-           # If the move delta plus current xy is equal to another amino's xy remove it from the legal moves list.
-            if mode_3d:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
-                coordinates_sum.append(move[1][2] + xy[2])
-
-            else:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
-
-            if coordinates_sum == list(amino.coordinates):
-                moves_xydelta.remove(move)
-
-    # Only return the move int of the legal moves remaining.
-    legal_moves = []
-    for moves in moves_xydelta:
-        legal_moves.append(moves[0])
-
-    return legal_moves

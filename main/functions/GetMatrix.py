@@ -1,4 +1,5 @@
 from classes.amino import Amino
+from functions.IsChain3d import is_chain_3d
 
 # Takes the chain and makes a 2d matrix out of it. Returns a matrix and a ofsetted chain
 def get_matrix(chain):
@@ -7,13 +8,12 @@ def get_matrix(chain):
     y_range = [0, 0]
 
     # Check if 3d mode
-    if len(chain[0].coordinates) == 3:
-        mode_3d = True
+    mode_3d = is_chain_3d(chain)
+        
+    if mode_3d:
         z_range = [0, 0]
 
-    else:
-        mode_3d = False
-
+    
     # Define min/max x and y values over all aminos.
     for amino in chain:
         if amino.coordinates[0] > x_range[1]:
@@ -84,12 +84,12 @@ def get_matrix_efficient(chain):
     y_range = [0, 0]
 
     # Check if 3d mode
-    if len(chain[0].coordinates) == 3:
-        mode_3d = True
+    mode_3d = is_chain_3d(chain)
+    
+    if mode_3d:
         z_range = [0, 0]
 
-    else:
-        mode_3d = False
+    
 
     # Define min/max x and y values over all aminos.
     for amino in chain:
