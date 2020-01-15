@@ -1,5 +1,8 @@
 from pandas import DataFrame
-from algorithms.helpers import get_matrix, get_score, get_connections
+from functions.GetMatrix import get_matrix
+from functions.GetScore import get_score
+from functions.Visualize import get_connections
+
 from classes.amino import Amino
 
 import string
