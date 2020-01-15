@@ -2,22 +2,28 @@
 class Amino(object):
 
     def __init__(self, atype, fold, coordinates):
+        # The type of the amino, so: "C",  "H" or "P"
         self.atype = atype
         
+        # Check if fold is legal and save it.
         legal_folds = [1, -1, 2, -2, 3, -3, 0]
-        
         if fold not in legal_folds:
             raise Exception("Invalid fold.")
-        
         self.fold = fold
+
+        # The 2d OR 3d coordinates in a list [x, y] or [x, y, z]
         self.coordinates = coordinates
 
         # Contains illegal folds for this amino based on that the next location wouldnt have legal moves.
+        # Only used in Random.
         self.illegal_folds = []
 
+        # Contains the chain of Aminos in a list.
         self.chain = []
+
         self.index = 0
 
+    # Returns the type plus the direction of the fold.
     def __str__(self):
         directions = {"0":"@", "2":"v", "-2":"^", "1":">", "-1":"<", "3": "O", "-3" : "X"}
         string = str(self.atype) + directions[str(self.fold)] + " "
