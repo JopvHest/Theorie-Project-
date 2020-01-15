@@ -79,8 +79,16 @@ def breadth_search(protein, ch_score):
     # Goes over all finished chains to find the one with the best score
     for chain in finished_chains:
 
+        for amino in chain:
+            print(amino, end="")
+        print("score", end="")
+        protein1 = Protein(protein.amino_string, "2d")
+        protein1.matrix, protein1.chain = get_matrix(chain)
+        print(str(protein1.get_score(ch_score)))
+
         matrix, xy_offset = get_matrix_efficient(chain)
-        score = get_score_efficient(chain, matrix, xy_offset,  ch_score)
+        score = get_score_efficient(chain, matrix, xy_offset, ch_score)
+        print("score after xy ofset: " + str(score))
         
         # If the score is better than the best score, replace best_chains
         # if score is equal add chain to best_chains
@@ -88,16 +96,17 @@ def breadth_search(protein, ch_score):
             best_score = score
             best_chains = []
             best_chains.append(chain)
-        if score == best_score:
+        elif score == best_score:
             best_chains.append(chain)
-    
+    print("length best chains:" + str(len(best_chains)))
     # Return best chains and matrixes to the protein.
     for chain in best_chains:
         protein1 = Protein(protein.amino_string, "2d")
         protein1.matrix, protein1.chain = get_matrix(chain)
-        print(str(protein1.get_score(ch_score)))
+        print(str(protein1.get_score(ch_score)), end="")
         for amino in chain:
             print(amino, end="")
+        print()
         protein1.print_protein()
             
 

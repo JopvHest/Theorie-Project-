@@ -49,3 +49,20 @@ https://www.geeksforgeeks.org/queue-in-python/  Queue.queue
 amino.24 do we still use protein.index??
 protein.46 is ideal chain still used?
 protein.50 do we still use char_counter??
+
+
+
+# errors:
+
+Hv H> H> P^ H^ H< Pv H@ score-3
+score after xy ofset: -2
+
+Hv H> Hv P> H^ H^ P< H@ score-3
+score after xy ofset: -2
+
+
+-3Hv Hv H> P^ H^ H> Pv H@
+-3Hv Hv H> P^ H^ H^ P< H@
+-3Hv Hv H< P^ H< H^ P> H@
+-3Hv Hv H< P^ H^ H< Pv H@
+-3Hv Hv H< P^ H^ H^ P> H@

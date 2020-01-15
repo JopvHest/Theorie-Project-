@@ -9,10 +9,9 @@ from algorithms.BreadthSearch import breadth_search
 
 if __name__ == "__main__":
 
-    # protein1 = Protein("HhhpHhpH", "2D")
     protein1 = Protein("HppH", "2D")
+    # protein1 = Protein("HppHH", "2D")
     breadth_search(protein1, 1)
-    protein1.print_protein()
     # start_time = time.clock()
     
     
