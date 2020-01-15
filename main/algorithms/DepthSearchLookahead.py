@@ -1,6 +1,7 @@
 import random
 from classes.amino import Amino
-from algorithms.helpers import get_matrix, get_score, get_matrix_efficient, get_score_efficient
+from functions.GetMatrix import get_matrix_efficient, get_matrix
+from functions.GetScore import get_score_efficient, get_score
 import copy
 
 best_score = 1

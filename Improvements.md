@@ -46,3 +46,7 @@ itself
 -
 
 https://www.geeksforgeeks.org/queue-in-python/  Queue.queue
+
+amino.24 do we still use protein.index??
+protein.46 is ideal chain still used?
+protein.50 do we still use char_counter??

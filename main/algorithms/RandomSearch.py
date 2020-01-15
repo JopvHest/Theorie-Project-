@@ -1,6 +1,7 @@
 import random
 from classes.amino import Amino
-from algorithms.helpers import get_matrix, get_score
+from functions.GetMatrix import get_matrix
+from functions.GetScore import get_score
 
 
 def random_search(protein):

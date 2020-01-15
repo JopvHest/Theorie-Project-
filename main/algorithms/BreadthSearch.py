@@ -16,7 +16,9 @@
 from classes.amino import Amino
 from queue import Queue 
 import copy
-from algorithms.helpers import get_score_efficient, get_matrix_efficient, get_matrix
+
+from functions.GetMatrix import get_matrix_efficient, get_matrix
+from functions.GetScore import get_score_efficient
 
 
 def breadth_search(protein):
