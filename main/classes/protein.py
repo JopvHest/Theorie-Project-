@@ -1,6 +1,5 @@
-from functions.GetMatrix import get_matrix
-from functions.GetScore import get_score
-from functions.Visualize import get_connections
+from pandas import DataFrame
+from algorithms.helpers import get_matrix, get_score, get_connections
 from classes.amino import Amino
 
 import string
@@ -33,6 +32,7 @@ class Protein(object):
         illegal_chars.remove("H")
         illegal_chars.remove("P")
         illegal_chars.remove("C")
+
         for char in self.amino_string:
             if char in illegal_chars:
                 raise Exception("Amino string contains illegal chars")
@@ -50,16 +50,35 @@ class Protein(object):
 
         self.char_counter = 1
 
-    def print_protein(self):
-
-        connections = get_connections(self.chain, self.matrix)
+    # Prints the matrix of the protein.
+    def print_map(self):
 
         if self.mode_3d == False:
+            matrix = self.matrix
+            # Print matrix using pandas
+            print(DataFrame(matrix))
+
+        if self.mode_3d == True:
+            matrix = self.matrix
+
+            # go through each layer and print it
+            for layer in matrix:
+                # Print matrix using pandas
+                print(DataFrame(layer))
+
+    def print_protein(self):
+        # Get list of bonds
+        connections = get_connections(self.chain, self.matrix)
+
+        # 2D print
+        if self.mode_3d == False:
             x_points, y_points, colors = [], [], []
+            # Create lists of x/y coordinates of all amino's
             for amino in self.chain:
                 x_points.append(amino.coordinates[0])
                 y_points.append(amino.coordinates[1])
 
+                # For each amino, append colors list with appropriate color
                 if amino.atype == 'H':
                     colors.append((1,0,0))
                 elif amino.atype == 'P':
@@ -68,29 +87,37 @@ class Protein(object):
                     colors.append((0,1,0))
 
             fig, ax = plt.subplots()
+            # Plot solid black line connecting amino's
             plt.plot(x_points, y_points, linestyle='-', color='black', linewidth=3, zorder=0)
+            # Plot scatter points, at coordinates of amino's, in appropriate colors
             plt.scatter(x_points, y_points, c = colors, s = 200, zorder=10)
 
+            # Plot all connections using dotted line in appropriate color, based on amount of points the connection gives
             for connection in connections:
                 if connection[0] == 1:
                     plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle=':', color=(1,0,0))
                 if connection[0] == 5:
                     plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), linestyle=':', color=(0,1,0))
 
+            # Set grid size to 1x1
             ax.xaxis.set_major_locator(plt.MultipleLocator(1))
             ax.yaxis.set_major_locator(plt.MultipleLocator(1))
+
+            # Scale all axis equally, show grid, and show plot
             plt.axis("equal")
             plt.grid()
-
             plt.show()
 
+        # 3D print
         if self.mode_3d == True:
             x_points, y_points, z_points, colors = [], [], [], []
+            # Create lists of x/y/z coordinates of all amino's
             for amino in self.chain:
                 x_points.append(amino.coordinates[0])
                 y_points.append(amino.coordinates[1])
                 z_points.append(amino.coordinates[2])
 
+                # Append colors list with appropriate color per amino
                 if amino.atype == 'H':
                     colors.append((1,0,0))
                 elif amino.atype == 'P':
@@ -101,15 +128,19 @@ class Protein(object):
             fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
 
+            # Create scatter plot with all amino's
             ax.scatter(x_points, y_points, z_points, c = colors, s = 200)
+            # Plot line connecting amino's
             ax.plot(x_points, y_points, z_points, linestyle='-', color='black')
 
+            # Plot each bond in appropriate color
             for connection in connections:
                 if connection[0] == 1:
                     plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), (connection[1][2], connection[2][2]), linestyle=':', color=(1,0,0))
                 if connection[0] == 5:
                     plt.plot((connection[1][0], connection[2][0]), (connection[1][1], connection[2][1]), (connection[1][2], connection[2][2]), linestyle=':', color=(0,1,0))
 
+            # Following code is a workaround to scale the axis equally in 3d
             max_range = max(max(x_points) - min(x_points), max(y_points) - min(y_points), max(z_points) - min(z_points)) / 2
             mid_x = (max(x_points) + min(x_points)) * 0.5
             mid_y = (max(y_points) + min(y_points)) * 0.5
@@ -123,10 +154,12 @@ class Protein(object):
             ax.yaxis.set_major_locator(plt.MultipleLocator(1))
             ax.zaxis.set_major_locator(plt.MultipleLocator(1))
 
+            # Label axis
             ax.set_xlabel('X Axis')
             ax.set_ylabel('Y Axis')
             ax.set_zlabel('Z Axis')
 
+            # Create grid and show plot
             ax.grid()
             plt.show()
 
@@ -134,12 +167,10 @@ class Protein(object):
     # Outputs a list like the excercise requires
     def get_output_list(self):
 
-        # Print the standard amino output for every amino
         print("amino, fold")
         for amino in self.chain:
             print(str(amino.get_amino_output()))
         print("")
 
-    # Return the score.
     def get_score(self, ch_score):
         return get_score(self.chain, self.matrix, ch_score)
