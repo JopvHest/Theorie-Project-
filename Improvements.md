@@ -60,7 +60,7 @@ score after xy ofset: -2
 Hv H> Hv P> H^ H^ P< H@ score-3
 score after xy ofset: -2
 
-
+Hv Hv H> P^ H> H^ P< H@
 -3 Hv Hv H> P^ H^ H> Pv H@
 -3Hv Hv H> P^ H^ H^ P< H@
 -3Hv Hv H< P^ H< H^ P> H@

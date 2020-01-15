@@ -41,7 +41,7 @@ def breadth_search(protein, ch_score):
         chain_actual = queue.get()
 
         # get the index from the length of the chain
-        index = len(chain_actual) - 1
+        index = len(chain_actual)
 
         # Last amino always has fold of 0.
         if  index + 1 == len(protein.amino_string):
@@ -54,6 +54,11 @@ def breadth_search(protein, ch_score):
 
             # Save the chain to the finished chain list.
             finished_chains.append(chain_actual)
+            for amino in chain_actual:
+                print(str(amino), end="")
+            matrix, offset = get_matrix_efficient(chain_actual)
+            score = get_score_efficient(chain_actual, matrix, offset, 1)
+            print(" " + str(score))
 
         # Determine fold and make new chain for every possibility
         else:
@@ -80,16 +85,6 @@ def breadth_search(protein, ch_score):
     # Goes over all finished chains to find the one with the best score
     for chain in finished_chains:
 
-        for amino in chain:
-            print(amino, end="")
-        print("score", end="")
-        protein1 = Protein(protein.amino_string, "2d")
-        protein1.matrix, protein1.chain = get_matrix(chain)
-        print(str(protein1.get_score()))
-
-        matrix, xy_offset = get_matrix_efficient(chain)
-        score = get_score_efficient(chain, matrix, xy_offset, ch_score)
-        print("score after xy ofset: " + str(score))
         
         # If the score is better than the best score, replace best_chains
         # if score is equal add chain to best_chains
