@@ -45,9 +45,10 @@ def get_score(chain, matrix):
             if amino.get_fold_coordinates() in xy_tocheck:
                 xy_tocheck.remove(amino.get_fold_coordinates())
 
-            # Amino the amino GOT folded from.
-            if chain[index - 1].coordinates in xy_tocheck:
-                xy_tocheck.remove(chain[index - 1].coordinates)
+            if not index == 0:
+                # Amino the amino GOT folded from.
+                if chain[index - 1].coordinates in xy_tocheck:
+                    xy_tocheck.remove(chain[index - 1].coordinates)
 
             # Check all coordinates around it and adjust score if a H is next to it.
             for coordinates in xy_tocheck:
