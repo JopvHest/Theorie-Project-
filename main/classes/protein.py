@@ -175,5 +175,5 @@ class Protein(object):
             print(str(amino.get_amino_output()))
         print("")
 
-    def get_score(self, ch_score):
-        return get_score(self.chain, self.matrix, ch_score)
+    def get_score(self):
+        return get_score(self.chain, self.matrix)
