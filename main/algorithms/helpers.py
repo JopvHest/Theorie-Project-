@@ -150,7 +150,7 @@ def get_matrix_efficient(chain):
 
 
 # This function calculates and returns the score of the chain.
-def get_score(chain, matrix):
+def get_score(chain, matrix, ch_score):
 
         # Check if 3d mode.
         if len(chain[0].coordinates) == 3:
@@ -226,37 +226,43 @@ def get_score(chain, matrix):
 
                         if mode_3d:
                             # Empty matrix spots are empty strings and shouldnt be considered
-                            
+
 
                             # If it isnt an Amino, dont need to check
                             if isinstance(matrix[z][y][x], Amino):
 
-                                # If they are both H, score -= 1
-                                if matrix[z][y][x].atype == "H" and amino.atype == "H":
-                                    total_score -= 1
-
-                                # If they are both C, score -= 5
+                                # Subtract ch_score for C/H bonds
+                                if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
+                                    total_score -= ch_score
+                                # Subtract 5 for C/C bonds
                                 elif amino.atype == "C" and matrix[z][y][x].atype == "C":
                                     total_score -= 5
+                                # Subtract 1 for H/H bonds
+                                elif amino.atype == "H" and matrix[z][y][x].atype == "H":
+                                    total_score -= 1
+
                         # 2D
                         else:
                             # Empty matrix spots are empty strings and shouldnt be considered
                             if isinstance(matrix[y][x], Amino):
 
-                                # If they are both H, score -= 1
-                                if matrix[y][x].atype == "H" and amino.atype == "H":
-                                    total_score -= 1
-
-                                # If they are both C, score -= 5
+                                # Subtract ch_score for C/H bonds
+                                if (matrix[y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[y][x].atype != amino.atype):
+                                    total_score -= ch_score
+                                # Subtract 5 for C/C bonds
                                 elif amino.atype == "C" and matrix[y][x].atype == "C":
                                     total_score -= 5
+                                # Subtract 1 for H/H bonds
+                                elif amino.atype == "H" and matrix[y][x].atype == "H":
+                                    total_score -= 1
+
         total_score = total_score // 2
         return total_score
 
 
 # This function calculates and returns the score of the chain.
 # This functions is used in searches and uses a non-offsetted chain + xy offfset instead of a offsetted chain.
-def get_score_efficient(chain, matrix, xy_offset):
+def get_score_efficient(chain, matrix, xy_offset, ch_score):
 
         # Check if 3d mode.
         if len(chain[0].coordinates) == 3:
@@ -349,10 +355,13 @@ def get_score_efficient(chain, matrix, xy_offset):
 
                         if isinstance(matrix_amino, Amino):
 
-
-                            if matrix_amino.atype == "H" and amino.atype == "H":
+                            # Subtract ch_score for C/H bonds
+                            if (matrix_amino.atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix_amino.atype != amino.atype):
+                                total_score -= ch_score
+                            # Subtract 5 for C/C bonds
+                            elif amino.atype == "H" and matrix_amino.atype == "H":
                                 total_score -= 1
-
+                            # Subtract 1 for H/H bonds
                             elif amino.atype == "C" and matrix_amino.atype == "C":
                                 total_score -= 5
         return total_score

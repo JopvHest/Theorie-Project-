@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # Represents a chain of amino acids and orders them.
 class Protein(object):
-    
+
     def __init__(self, amino_string, mode):
 
         if mode == "2d" or mode == "2D":
@@ -24,7 +24,6 @@ class Protein(object):
         # The list which contains the ordered and connected aminos.
         self.chain = []
 
-
         # The string of the protein, make it case insensitive
         self.amino_string = amino_string.upper()
 
@@ -34,15 +33,15 @@ class Protein(object):
         illegal_chars.remove("P")
         illegal_chars.remove("C")
 
-        for char in amino_string:
+        for char in self.amino_string:
             if char in illegal_chars:
                 raise Exception("Amino string contains illegal chars")
 
         # Adds the first amino to the chain, direction is hard-coded as "up".
         if self.mode_3d == True:
-            self.chain.append(Amino(amino_string[0], 2, [0,0,0]))
+            self.chain.append(Amino(self.amino_string[0], 2, [0,0,0]))
         else:
-            self.chain.append(Amino(amino_string[0], 2, [0,0]))
+            self.chain.append(Amino(self.amino_string[0], 2, [0,0]))
 
         # IF a ideal answer is found, it is stored here
         self.ideal_chain = []
@@ -156,5 +155,5 @@ class Protein(object):
             print(str(amino.get_amino_output()))
         print("")
 
-    def get_score(self):
-        return get_score(self.chain, self.matrix)
+    def get_score(self, ch_score):
+        return get_score(self.chain, self.matrix, ch_score)
