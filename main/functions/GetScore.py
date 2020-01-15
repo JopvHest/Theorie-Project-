@@ -3,7 +3,7 @@ from classes.amino import Amino
 
 
 # This function calculates and returns the score of the chain.
-def get_score(chain, matrix, ch_score):
+def get_score(chain, matrix):
 
         # Check if 3d mode.
         if len(chain[0].coordinates) == 3:
@@ -86,7 +86,7 @@ def get_score(chain, matrix, ch_score):
 
                                 # Subtract ch_score for C/H bonds
                                 if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
-                                    total_score -= ch_score
+                                    total_score -= 1
                                 # Subtract 5 for C/C bonds
                                 elif amino.atype == "C" and matrix[z][y][x].atype == "C":
                                     total_score -= 5
@@ -101,7 +101,7 @@ def get_score(chain, matrix, ch_score):
 
                                 # Subtract ch_score for C/H bonds
                                 if (matrix[y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[y][x].atype != amino.atype):
-                                    total_score -= ch_score
+                                    total_score -= 1
                                 # Subtract 5 for C/C bonds
                                 elif amino.atype == "C" and matrix[y][x].atype == "C":
                                     total_score -= 5
@@ -218,4 +218,3 @@ def get_score_efficient(chain, matrix, xy_offset, ch_score):
                             elif amino.atype == "C" and matrix_amino.atype == "C":
                                 total_score -= 5
         return total_score
-

@@ -61,7 +61,6 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
 
     # Update matrix and protein of the chain. Offset happens now.
     protein.matrix, protein.chain = get_matrix(protein.chain)
-    print("score:" + str(get_score(protein.chain, protein.matrix, ch_score)) + "")
 
     for amino in protein.chain:
         print(amino, end="")
