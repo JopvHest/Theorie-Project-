@@ -4,6 +4,7 @@ from functions.GetScore import get_score
 from functions.Visualize import get_connections
 
 from classes.amino import Amino
+from classes.chain import Chain
 
 import string
 
@@ -25,7 +26,7 @@ class Protein(object):
             raise Exception("Dimension mode not valid")
 
         # The list which contains the ordered and connected aminos.
-        self.chain = []
+        self.chain = Chain([])
 
         # The string of the protein, make it case insensitive
         self.amino_string = amino_string.upper()
@@ -42,12 +43,9 @@ class Protein(object):
 
         # Adds the first amino to the chain, direction is hard-coded as "up".
         if self.mode_3d == True:
-            self.chain.append(Amino(self.amino_string[0], 2, [0,0,0]))
+            self.chain.chain_list.append(Amino(self.amino_string[0], 2, [0,0,0]))
         else:
-            self.chain.append(Amino(self.amino_string[0], 2, [0,0]))
-
-        # IF a ideal answer is found, it is stored here
-        self.ideal_chain = []
+            self.chain.chain_list.append(Amino(self.amino_string[0], 2, [0,0]))
 
         self.matrix = []
 
@@ -71,7 +69,7 @@ class Protein(object):
 
     def print_protein(self):
         # Get list of bonds
-        connections = get_connections(self.chain, self.matrix)
+        connections = get_connections(self.chain.chain_list, self.matrix)
 
         # 2D print
         if self.mode_3d == False:
@@ -115,7 +113,7 @@ class Protein(object):
         if self.mode_3d == True:
             x_points, y_points, z_points, colors = [], [], [], []
             # Create lists of x/y/z coordinates of all amino's
-            for amino in self.chain:
+            for amino in self.chain.chain_list:
                 x_points.append(amino.coordinates[0])
                 y_points.append(amino.coordinates[1])
                 z_points.append(amino.coordinates[2])
@@ -171,9 +169,9 @@ class Protein(object):
     def get_output_list(self):
 
         print("amino, fold")
-        for amino in self.chain:
+        for amino in self.chain.chain_list:
             print(str(amino.get_amino_output()))
         print("")
 
     def get_score(self):
-        return get_score(self.chain, self.matrix)
+        return get_score(self.chain.chain_list, self.matrix)

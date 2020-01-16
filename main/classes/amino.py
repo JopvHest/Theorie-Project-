@@ -21,7 +21,6 @@ class Amino(object):
         # Contains the chain of Aminos in a list.
         self.chain = []
 
-        self.index = 0
 
     # Returns the type plus the direction of the fold.
     def __str__(self):

@@ -2,7 +2,8 @@ import random
 from classes.amino import Amino
 from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient, get_score
-from functions.GetLegalMoves import get_legal_moves
+from functions.GetLegalMoves import get_legal_moves_nomirror
+from classes.chain import Chain
 import copy
 
 best_score = 1
@@ -16,7 +17,6 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
     chain_length_goal = len(chars)
 
 
-
     # The first char amino is build in the proteine class
     chars = chars [1:]
 
@@ -27,7 +27,7 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
         char = chars[0]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
-        amino_xy = protein.chain[-1].get_fold_coordinates()
+        amino_xy = protein.chain.chain_list[-1].get_fold_coordinates()
 
 
         # Last amino always has fold of 0.
@@ -43,13 +43,13 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
 
-            protein.matrix, protein.chain = get_matrix(best_chain)
+            protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 
         # Adds amino to the protein chain.
-        protein.chain.append(Amino(char, fold, amino_xy))
+        protein.chain.chain_listappend(Amino(char, fold, amino_xy))
 
-        print("Char " + str(len(protein.chain)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
+        print("Char " + str(len(protein.chain.chain_list)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
         print("")
 
         # Pop the first char from the string. That one has been processed now
@@ -60,9 +60,13 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
         best_chain = []
 
     # Update matrix and protein of the chain. Offset happens now.
-    protein.matrix, protein.chain = get_matrix(protein.chain)
+    protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
+    
+    best_score = 1
+    best_chain = []
 
-    for amino in protein.chain:
+
+    for amino in protein.chain.chain_list:
         print(amino, end="")
 
 # The actual algo for selecting the fold the chain will make.
@@ -97,12 +101,12 @@ def find_best_chain(current_chain, chars, max_lookahead, ch_score):
 
 
         # Add the last char to the amino chain.
-        current_chain.append(Amino(chars[0], 0, current_chain[-1].get_fold_coordinates()))
+        current_chain.chain_list.append(Amino(chars[0], 0, current_chain.chain_list[-1].get_fold_coordinates()))
 
 
         # Calculate the matrix (needed for the score.) and the score
-        matrix, xy_offset = get_matrix_efficient(current_chain)
-        score = get_score_efficient(current_chain, matrix, xy_offset, ch_score)
+        matrix, xy_offset = get_matrix_efficient(current_chain.chain_list)
+        score = get_score_efficient(current_chain.chain_list, matrix, xy_offset, ch_score)
 
         global best_score
         global best_chain
@@ -111,15 +115,15 @@ def find_best_chain(current_chain, chars, max_lookahead, ch_score):
         # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
             best_score = score
-            best_chain = copy.deepcopy(current_chain)
+            best_chain = copy.deepcopy(current_chain.chain_list)
 
 
         # Abort that chain if it isnt the best score. remove amino we just added
-        del current_chain[-1]
+        del current_chain.chain_list[-1]
         return None
 
     # Get legal moves on the position of that amino
-    legal_moves = get_legal_moves(current_chain[-1].get_fold_coordinates(), current_chain)
+    legal_moves = get_legal_moves_nomirror(current_chain.chain_list[-1].get_fold_coordinates(), current_chain)
 
 
     # If no legals move left, abort the chain. The protein got "stuck"
@@ -131,14 +135,16 @@ def find_best_chain(current_chain, chars, max_lookahead, ch_score):
         for move in legal_moves:
 
             # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
-            last_amino = current_chain[-1]
+            last_amino = current_chain.chain_list[-1]
 
             # Append the next amino and increase current lookahead
             current_lookahead += 1
-            current_chain.append(Amino(chars[0], move, last_amino.get_fold_coordinates()))
+            current_chain.chain_list.append(Amino(chars[0], move, last_amino.get_fold_coordinates()))
 
+            current_chain.update_mirror_status()
             find_best_chain(current_chain, chars, max_lookahead, ch_score)
+            current_chain.update_mirror_status_reverse()
 
             # After the algo the lookahead should return to last value and the amino we just added should be removed again.
             current_lookahead -= 1
-            del current_chain[-1]
+            del current_chain.chain_list[-1]

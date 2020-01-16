@@ -8,7 +8,8 @@ from functions.GetLegalMoves import get_legal_moves
 def random_search(protein):
 
     while protein.char_counter < len(protein.amino_string):
-
+        
+        protein.chain = protein.chain.chain_list
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -69,4 +70,4 @@ def redo_last_fold(protein):
         protein.chain.remove(last_amino)
         protein.char_counter -= 1
         redo_last_fold(protein)
-        
+

@@ -11,9 +11,9 @@
 
 ## Implemented:
 
-itself
 
 ## to implement:
+- Lookahead
 - beam-search
 
 
@@ -47,7 +47,6 @@ itself
 https://www.geeksforgeeks.org/queue-in-python/  Queue.queue
 
 amino.24 do we still use protein.index??
-protein.46 is ideal chain still used?
 protein.50 do we still use char_counter??
 
 
@@ -66,3 +65,18 @@ Hv Hv H> P^ H> H^ P< H@
 -3Hv Hv H< P^ H< H^ P> H@
 -3Hv Hv H< P^ H^ H< Pv H@
 -3Hv Hv H< P^ H^ H^ P> H@
+
+# Wasted score'
+Score = normal_score - wasted_score
+
+Total-wasted = 0
+
+For every amino:
+    for every amino that is adjacent:
+        if not connected(from or to amino):
+            total-wasted += wasted_x
+
+wasted_x should be between 0 and 1 for H
+
+for c? idk. Maybe between 0-5. But that wouldnt make sense if there is for example only 1 C in a protein.
+
