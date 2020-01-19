@@ -15,6 +15,7 @@ best_matrix = None
 #   "2" : [[average_score, amount_of_scores], [best_score]]
 #}
 
+# This function is a implementation of the depth search algo in which the score and the matric get iteratively improve instead of being build from scratch
 def depth_search_iterative(protein, ch_score):
     char_counter = 1
 
@@ -98,6 +99,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         current_chain.chain_list.append(new_amino)
         current_chain.matrix[new_amino_y][new_amino_x] = new_amino
         
+        # Get the new score by building on the last score
         new_score = get_score_iterative(current_chain.chain_list, current_chain.matrix, current_score)
 
         # Calculate the matrix (needed for the score.) and the score

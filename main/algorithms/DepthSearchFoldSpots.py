@@ -35,9 +35,11 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
     protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1]
     protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
-    new_score, spots_to_add, spots_to_remove = get_score_iterative_and_spots(protein.chain, protein.chain.matrix, 0)
-    protein.chain.add_fold_spots(spots_to_add)
-    protein.chain.remove_fold_spots(spots_to_remove)
+    new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(protein.chain, protein.chain.matrix, 0)
+    protein.chain.add_fold_spots(spots_to_add, "H")
+    protein.chain.remove_fold_spots(spots_to_remove, "H")
+    protein.chain.add_fold_spots(spots_to_add_C, "C")
+    protein.chain.remove_fold_spots(spots_to_remove_C, "C")
         
 
     # Skips the first char the index.
@@ -157,45 +159,54 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.update_mirror_status()
             
             # Calculate new score and and/remove the correct fold spots
-            new_score, spots_to_add, spots_to_remove = get_score_iterative_and_spots(current_chain, current_chain.matrix, current_score)
+            new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(current_chain, current_chain.matrix, current_score)
             
-            # print(str(spots_to_add), str(spots_to_remove))
+            
+            # Remove the spots that are now filled by aminos.
+            current_chain.remove_fold_spots(spots_to_remove, "H")
+            current_chain.remove_fold_spots(spots_to_remove_C, "C")
 
-            current_chain.remove_fold_spots(spots_to_remove)
             # Change odd/even
             current_chain.odd = not current_chain.odd
-            # print(current_chain.odd)
-            current_chain.add_fold_spots(spots_to_add)
+            
+            # Add the spots that were newly created.
+            current_chain.add_fold_spots(spots_to_add, "H")
+            current_chain.add_fold_spots(spots_to_add_C, "C")
 
             
 
             
-
-            extra_score_possible, removed_even, removed_odd = current_chain.get_max_possible_extra_score(chars[1:])
-            # print("Max possible score =", end="")
+            # Calculate max extra score and prune spots that are too far away.
+            extra_score_possible, removed_even, removed_odd, removed_even_C, removed_odd_C = current_chain.get_max_possible_extra_score(chars[1:])
             max_possible = new_score + extra_score_possible
             
+            # Of a new best score cant be reached, abandon chain.
             if max_possible >= best_score:
-                current_chain.add_back_even(removed_even)
-                current_chain.add_back_odd(removed_odd)
 
-                current_chain.remove_fold_spots(spots_to_add)
+                # Undo all the changes that were made to the spots.
+                current_chain.add_back_even(removed_even, "H")
+                current_chain.add_back_odd(removed_odd, "H")
+                current_chain.add_back_even(removed_even_C, "C")
+                current_chain.add_back_odd(removed_odd_C, "C")
+                current_chain.remove_fold_spots(spots_to_add, "H")
+                current_chain.remove_fold_spots(spots_to_add_C, "C")
 
                 
                 # Change odd/even back
                 current_chain.odd = not current_chain.odd
 
                 # Reverse the fold spots
-                current_chain.add_fold_spots(spots_to_remove)
+                current_chain.add_fold_spots(spots_to_remove, "H")
+                current_chain.add_fold_spots(spots_to_remove_C, "C")
 
                 # Reverse the matrix and mirror status
                 current_chain.matrix[new_amino_y][new_amino_x] = " "
                 current_chain.update_mirror_status_reverse()
                 
-
+                # Remove the last amino
                 del current_chain.chain_list[-1]
+                continue
 
-                return None
             # print(str(new_score) + " + " + str(extra_score_possible) + " = " + str(max_possible))
             
           
@@ -207,18 +218,21 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             # The actual recursive function
             find_best_chain(current_chain, chars, ch_score, new_score)
 
-    
-            current_chain.add_back_even(removed_even)
-            current_chain.add_back_odd(removed_odd)
-
-            current_chain.remove_fold_spots(spots_to_add)
+            # Undo all the changed to the spots that were made before calling the recursive function.
+            current_chain.add_back_even(removed_even, "H")
+            current_chain.add_back_odd(removed_odd, "H")
+            current_chain.add_back_even(removed_even_C, "C")
+            current_chain.add_back_odd(removed_odd_C, "C")
+            current_chain.remove_fold_spots(spots_to_add, "H")
+            current_chain.remove_fold_spots(spots_to_add_C, "C")
 
             
             # Change odd/even back
             current_chain.odd = not current_chain.odd
 
             # Reverse the fold spots
-            current_chain.add_fold_spots(spots_to_remove)
+            current_chain.add_fold_spots(spots_to_remove, "H")
+            current_chain.add_fold_spots(spots_to_remove_C, "C")
 
             # Reverse the matrix and mirror status
             current_chain.matrix[new_amino_y][new_amino_x] = " "
