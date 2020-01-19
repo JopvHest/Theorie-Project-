@@ -213,3 +213,232 @@ def get_score_efficient(chain, matrix, xy_offset, ch_score):
                             elif amino.atype == "C" and matrix_amino.atype == "C":
                                 total_score -= 5
         return total_score
+
+
+
+# This function calculates and returns the score of the chain.
+# It takes the score of the chain before the last amino was added and only adds the score of the last amino
+def get_score_iterative(chain, matrix, last_score):
+
+    # Check if 3d mode.
+    mode_3d = is_chain_3d(chain)
+
+    total_score = last_score
+
+    amino = chain[-1]
+
+    # P has no effect on stability
+    if amino.atype == "P":
+        return total_score
+
+    # Creates a list with all coordinates that need to be checked.
+    xy_tocheck = []
+
+    # 3D
+    if mode_3d:
+        amino_x, amino_y, amino_z = amino.coordinates
+        xy_tocheck.append([amino_x + 1, amino_y, amino_z])
+        xy_tocheck.append([amino_x, amino_y + 1, amino_z])
+        xy_tocheck.append([amino_x - 1, amino_y, amino_z])
+        xy_tocheck.append([amino_x, amino_y - 1, amino_z])
+        xy_tocheck.append([amino_x, amino_y, amino_z - 1])
+        xy_tocheck.append([amino_x, amino_y, amino_z + 1])
+
+    # 2D
+    else:
+        amino_x, amino_y = amino.coordinates
+        xy_tocheck.append([amino_x + 1, amino_y])
+        xy_tocheck.append([amino_x, amino_y + 1])
+        xy_tocheck.append([amino_x - 1, amino_y])
+        xy_tocheck.append([amino_x, amino_y - 1])
+
+
+    # Aminos to and from that amino dont add to the score so remove them.
+    # Amino the amino folds to.
+    if amino.get_fold_coordinates() in xy_tocheck:
+        xy_tocheck.remove(amino.get_fold_coordinates())
+
+    if not len(chain) == 1:
+        # Amino the amino GOT folded from.
+        if chain[-2].coordinates in xy_tocheck:
+            xy_tocheck.remove(chain[-2].coordinates)
+
+    # Check all coordinates around it and adjust score if a H is next to it.
+    for coordinates in xy_tocheck:
+
+        if mode_3d:
+            x, y, z = coordinates
+        else:
+            x, y = coordinates
+
+
+        if mode_3d == True:
+            column = matrix[0]
+            row = matrix[0][0]
+            # Check if in correct z range.
+            if z >= len(matrix) or z < 0:
+                continue
+        # 2D
+        else:
+            column = matrix
+            row = matrix[0]
+
+        # Check if in correct y range
+        if y < len(column) and y >= 0:
+            # Check if in correct x range
+            if  x < len(row) and x >= 0:
+
+                if mode_3d:
+                    # Empty matrix spots are empty strings and shouldnt be considered
+
+
+                    # If it isnt an Amino, dont need to check
+                    if isinstance(matrix[z][y][x], Amino):
+
+                        # Subtract ch_score for C/H bonds
+                        if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
+                            total_score -= 1
+                        # Subtract 5 for C/C bonds
+                        elif amino.atype == "C" and matrix[z][y][x].atype == "C":
+                            total_score -= 5
+                        # Subtract 1 for H/H bonds
+                        elif amino.atype == "H" and matrix[z][y][x].atype == "H":
+                            total_score -= 1
+
+                # 2D
+                else:
+                    # Empty matrix spots are empty strings and shouldnt be considered
+                    if isinstance(matrix[y][x], Amino):
+
+                        # Subtract ch_score for C/H bonds
+                        if (matrix[y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[y][x].atype != amino.atype):
+                            total_score -= 1
+                        # Subtract 5 for C/C bonds
+                        elif amino.atype == "C" and matrix[y][x].atype == "C":
+                            total_score -= 5
+                        # Subtract 1 for H/H bonds
+                        elif amino.atype == "H" and matrix[y][x].atype == "H":
+                            total_score -= 1
+
+    return total_score
+
+
+# This function calculates and returns the score of the chain.
+# It takes the score of the chain before the last amino was added and only adds the score of the last amino.
+# Its also returns the available spots to add and delelte
+def get_score_iterative_and_spots(chain, matrix, last_score):
+
+    
+    # Check if 3d mode.
+    mode_3d = is_chain_3d(chain.chain_list)
+
+    total_score = last_score
+    available_spots_to_add = []
+    available_spots_to_remove = []
+
+
+    amino = chain.chain_list[-1]
+
+    # Creates a list with all coordinates that need to be checked.
+    xy_tocheck = []
+
+    # 3D
+    if mode_3d:
+        amino_x, amino_y, amino_z = amino.coordinates
+        xy_tocheck.append([amino_x + 1, amino_y, amino_z])
+        xy_tocheck.append([amino_x, amino_y + 1, amino_z])
+        xy_tocheck.append([amino_x - 1, amino_y, amino_z])
+        xy_tocheck.append([amino_x, amino_y - 1, amino_z])
+        xy_tocheck.append([amino_x, amino_y, amino_z - 1])
+        xy_tocheck.append([amino_x, amino_y, amino_z + 1])
+
+    # 2D
+    else:
+        amino_x, amino_y = amino.coordinates
+        xy_tocheck.append([amino_x + 1, amino_y])
+        xy_tocheck.append([amino_x, amino_y + 1])
+        xy_tocheck.append([amino_x - 1, amino_y])
+        xy_tocheck.append([amino_x, amino_y - 1])
+
+
+    # Aminos to and from that amino dont add to the score so remove them.
+    # Amino the amino folds to.
+    if amino.get_fold_coordinates() in xy_tocheck:
+        xy_tocheck.remove(amino.get_fold_coordinates())
+
+    if not len(chain.chain_list) == 1:
+        # Amino the amino GOT folded from.
+        if chain.chain_list[-2].coordinates in xy_tocheck:
+            xy_tocheck.remove(chain.chain_list[-2].coordinates)
+
+    # Check all coordinates around it and adjust score if a H is next to it.
+    for coordinates in xy_tocheck:
+
+        if mode_3d:
+            x, y, z = coordinates
+        else:
+            x, y = coordinates
+
+
+        if mode_3d == True:
+            column = matrix[0]
+            row = matrix[0][0]
+            # Check if in correct z range.
+            if z >= len(matrix) or z < 0:
+                continue
+        # 2D
+        else:
+            column = matrix
+            row = matrix[0]
+
+        # Check if in correct y range
+        if y < len(column) and y >= 0:
+            # Check if in correct x range
+            if  x < len(row) and x >= 0:
+
+                if mode_3d:
+                    # Empty matrix spots are empty strings and shouldnt be considered
+
+
+                    # If it isnt an Amino, dont need to check
+                    if isinstance(matrix[z][y][x], Amino):
+
+                        # Subtract ch_score for C/H bonds
+                        if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
+                            total_score -= 1
+                        # Subtract 5 for C/C bonds
+                        elif amino.atype == "C" and matrix[z][y][x].atype == "C":
+                            total_score -= 5
+                        # Subtract 1 for H/H bonds
+                        elif amino.atype == "H" and matrix[z][y][x].atype == "H":
+                            total_score -= 1
+
+                # 2D
+                else:
+                    # Empty matrix spots are empty strings and shouldnt be considered
+                    if isinstance(matrix[y][x], Amino):
+
+                        # Subtract ch_score for C/H bonds
+                        if (matrix[y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[y][x].atype != amino.atype):
+                            total_score -= 1
+                            continue
+
+                        # Subtract 5 for C/C bonds
+                        elif amino.atype == "C" and matrix[y][x].atype == "C":
+                            total_score -= 5
+                            continue
+
+                        # Subtract 1 for H/H bonds
+                        elif amino.atype == "H" and matrix[y][x].atype == "H":
+                            total_score -= 1
+                            available_spots_to_remove.append(amino.coordinates)
+                            continue
+
+                        elif amino.atype == "P" and matrix[y][x].atype == "H":
+                            available_spots_to_remove.append(amino.coordinates)
+                            continue
+                        
+                    elif amino.atype == "H":
+                        available_spots_to_add.append([x, y])
+
+    return total_score, available_spots_to_add, available_spots_to_remove

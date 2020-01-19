@@ -75,7 +75,7 @@ class Protein(object):
         if self.mode_3d == False:
             x_points, y_points, colors = [], [], []
             # Create lists of x/y coordinates of all amino's
-            for amino in self.chain:
+            for amino in self.chain.chain_list:
                 x_points.append(amino.coordinates[0])
                 y_points.append(amino.coordinates[1])
 

@@ -47,7 +47,7 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
             break
 
         # Adds amino to the protein chain.
-        protein.chain.chain_listappend(Amino(char, fold, amino_xy))
+        protein.chain.chain_list.append(Amino(char, fold, amino_xy))
 
         print("Char " + str(len(protein.chain.chain_list)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
         print("")
@@ -82,7 +82,7 @@ def fold_selector(chain, chars, max_lookahead, chain_length_goal, ch_score):
 
     # If the algo only found a partial best chain. returns only the next best move to take.
     if best_chain:
-        return False, best_chain[len(chain)].fold
+        return False, best_chain[len(chain.chain_list)].fold
 
 
     raise Exception("Couldn't find best chain")
