@@ -442,3 +442,121 @@ def get_score_iterative_and_spots(chain, matrix, last_score):
                         available_spots_to_add.append([x, y])
 
     return total_score, available_spots_to_add, available_spots_to_remove
+# def get_score_efficient_and_wasted_points(chain, matrix, xy_offset, ch_score, wasted_score):
+def get_score_efficient_and_wasted_points(chain, matrix, xy_offset, ch_score):
+
+        # Check if 3d mode.
+        mode_3d = is_chain_3d(chain)
+
+        total_score = 0
+        points_wasted = 0
+
+        if mode_3d:
+            x_offset, y_offset, z_offset = xy_offset
+
+        else:
+            x_offset, y_offset = xy_offset
+
+        # Iterate over all aminos and add the score of all of them.
+        for index, amino in enumerate(chain):
+
+            # P has no effect on stability
+            if amino.atype == "P":
+                continue
+
+            # Creates a list with all coordinates that need to be checked.
+            xy_tocheck = []
+            # amino_x = amino.coordinates[0] - x_offset
+            # amino_y = amino.coordinates[1] - y_offset
+
+            amino_x = amino.coordinates[0]
+            amino_y = amino.coordinates[1]
+
+            if mode_3d:
+                amino_z = amino.coordinates[2]
+
+
+            if mode_3d:
+                xy_tocheck.append([amino_x + 1, amino_y, amino_z])
+                xy_tocheck.append([amino_x, amino_y + 1, amino_z])
+                xy_tocheck.append([amino_x, amino_y, amino_z + 1])
+
+            else:
+                xy_tocheck.append([amino_x + 1, amino_y])
+                xy_tocheck.append([amino_x, amino_y + 1])
+
+
+            # Aminos to and from that amino dont add to the score so remove them.
+            if amino.get_fold_coordinates() in xy_tocheck:
+                xy_tocheck.remove(amino.get_fold_coordinates())
+
+            if not index == 0:
+                if chain[index - 1].coordinates in xy_tocheck:
+                    xy_tocheck.remove(chain[index - 1].coordinates)
+
+            for xy in xy_tocheck:
+                xy[0] -= x_offset
+                xy[1] -= y_offset
+                if mode_3d:
+                    xy[2] -= z_offset
+
+
+            # Check all coordinates around it and adjust score if a H is next to it.
+            for coordinates in xy_tocheck:
+
+                if mode_3d:
+                    x, y, z = coordinates
+                else:
+                    x, y = coordinates
+
+                if mode_3d == True:
+                    column = matrix[0]
+                    row = matrix[0][0]
+                    # Check if in correct z range.
+                    if z >= len(matrix) or z < 0:
+                        continue
+                # 2D
+                else:
+                    column = matrix
+                    row = matrix[0]
+
+                # Only check if in correct y range
+                if y < len(column) and y >= 0:
+                    # Dito for the y range
+                    if  x < len(row) and x >= 0:
+                        # Empty matrix spots are empty strings and shouldnt be considered
+
+                        if mode_3d:
+                            matrix_amino = matrix[z][y][x]
+
+                        else:
+                            matrix_amino = matrix[y][x]
+
+                        if isinstance(matrix_amino, Amino):
+
+                            # Subtract ch_score for C/H bonds
+                            if (matrix_amino.atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix_amino.atype != amino.atype):
+                                total_score -= ch_score
+                            # Subtract 5 for C/C bonds
+                            elif amino.atype == "H" and matrix_amino.atype == "H":
+                                total_score -= 1
+                            # Subtract 1 for H/H bonds
+                            elif amino.atype == "C" and matrix_amino.atype == "C":
+                                total_score -= 5
+
+
+                            # look at wasted points
+                            if matrix_amino.atype == "P" and amino.atype == "H":
+                                # points_wasted += wasted_score
+                                points_wasted += 1
+                            elif matrix_amino.atype == "P" and amino.atype == "C":
+                                # points_wasted += (wasted_score * 5)
+                                points_wasted += 5
+
+
+
+        # you could combine the scores inmediatly 
+        total_score = total_score - points_wasted                        
+
+
+        return total_score
