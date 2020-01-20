@@ -31,19 +31,19 @@ def breadth_search(protein, ch_score):
 
     # Get chain WITH first amino already in it.
     start_chain = protein.chain
-    # create queue and put the first amino in it
+    # Create queue and put the first amino in it
     queue = Queue(maxsize = 0)
     queue.put(start_chain)
 
     # Finished queues. Is this smart?
     finished_chains = []
 
-    # go trough the queue
+    # Go trough the queue
     while not queue.empty():
-        # get the first chain from the queue
+        # Get the first chain from the queue
         chain_actual = queue.get()
 
-        # get the index from the length of the chain
+        # Get the index from the length of the chain
         index = len(chain_actual.chain_list)
 
         # Last amino always has fold of 0.
@@ -59,22 +59,22 @@ def breadth_search(protein, ch_score):
             finished_chains.append(chain_actual)
 
 
-        # Determine fold and make new chain for every possibility
+        # Determine fold and make new chain for every possibility.
         else:
             legal_moves = get_legal_moves_nomirror(chain_actual.chain_list[-1].get_fold_coordinates(), chain_actual)
 
-            # if there are no legal moves chain ends here
+            # if there are no legal moves chain ends here.
             if legal_moves:
-                # go trough the legal moves and make a new_chain for every move, then put them in the queue
+                # Go trough the legal moves and make a new_chain for every move, then put them in the queue.
                 for move in legal_moves:
 
                     atype = protein.amino_string[index]
                     coordinates = chain_actual.chain_list[-1].get_fold_coordinates()
-                    # make a new amino and add it to the a new chain with deepcopy
+                    # Make a new amino and add it to the a new chain with deepcopy
                     amino = Amino(atype, move, coordinates)
                     new_chain = copy.deepcopy(chain_actual)
                     new_chain.chain_list.append(amino)
-                    # put the new chain in the queue
+                    # Put the new chain in the queue
                     queue.put(new_chain)
 
     # The best score and corresponding chain that has been found
@@ -84,11 +84,8 @@ def breadth_search(protein, ch_score):
     # Goes over all finished chains to find the one with the best score
     for chain in finished_chains:
 
-
-
         matrix, xy_offset = get_matrix_efficient(chain.chain_list)
         score = get_score_efficient(chain.chain_list, matrix, xy_offset, ch_score)
-
 
         # If the score is better than the best score, replace best_chains
         # if score is equal add chain to best_chains
@@ -161,11 +158,6 @@ def beam_search(protein, ch_score, selection_levels):
 
             # Save the chain to the finished chain list.
             finished_chains.append(chain_actual)
-            # for amino in chain_actual:
-            #     #print(str(amino), end="")
-            # matrix, offset = get_matrix_efficient(chain_actual)
-            # score = get_score_efficient(chain_actual, matrix, offset, 1)
-            # print(" " + str(score))
 
         # Determine fold and make new chain for every possibility
         else:
@@ -199,16 +191,11 @@ def beam_search(protein, ch_score, selection_levels):
 
     # Goes over all finished chains to find the one with the best score
     for chain in finished_chains:
-        #for amino in chain:
-            #print(amino, end="")
-        #print("score", end="")
         protein1 = Protein(protein.amino_string, "2d")
         protein1.matrix, protein1.chain = get_matrix(copy.deepcopy(chain).chain_list)
-        #print(str(protein1.get_score()))
 
         matrix, xy_offset = get_matrix_efficient(chain.chain_list)
         score = get_score_efficient(chain.chain_list, matrix, xy_offset, ch_score)
-        #print("score after xy ofset: " + str(score))
 
         # If the score is better than the best score, replace best_chains
         # if score is equal add chain to best_chains
