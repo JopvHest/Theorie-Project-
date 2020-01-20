@@ -6,8 +6,10 @@ from algorithms.RandomSearch import random_search
 from algorithms.DepthSearch import depth_search
 from algorithms.DepthSearchLookahead import depth_search_lookahead
 from algorithms.BreadthSearch import breadth_search
+from algorithms.BeamSearch import beam_search
 from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
+
 
 from functions.GetMatrix import get_matrix_efficient
 from functions.GetScore import get_score_efficient
@@ -28,16 +30,13 @@ if __name__ == "__main__":
     # matrix, offset = get_matrix_efficient(chain)
 
 
-    
-   
-    
 
-    
+
+
+
+
     # protein1 = Protein("HPPHHHPPHHPH", "2D")
     # depth_search(protein1, 0.5)
-    
+
 
     # start_time = time.clock()
-    
-
-
