@@ -80,3 +80,9 @@ wasted_x should be between 0 and 1 for H
 
 for c? idk. Maybe between 0-5. But that wouldnt make sense if there is for example only 1 C in a protein.
 
+Wat te doen?
+-   Branch and bound - lookahead.
+-   Branch and bound - as in paper with random throwaway.
+-   iterative -> hill cimbing
+-   heuristics -> compactness
+-   Branch and bound 3d mweh..
