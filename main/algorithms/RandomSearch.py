@@ -9,11 +9,10 @@ def random_search(protein):
 
     while protein.char_counter < len(protein.amino_string):
         
-        protein.chain = protein.chain.chain_list
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
-        amino_xy = protein.chain[-1].get_fold_coordinates()
+        amino_xy = protein.chain.chain_list[-1].get_fold_coordinates()
 
         # Last amino always has fold of 0.
         if protein.char_counter + 1 == len(protein.amino_string):
@@ -30,15 +29,15 @@ def random_search(protein):
                 continue
 
         # Adds amino to the protein chain.
-        protein.chain.append(Amino(char, fold, amino_xy))
+        protein.chain.chain_list.append(Amino(char, fold, amino_xy))
         protein.char_counter += 1
 
-    protein.matrix, protein.chain = get_matrix(protein.chain)
+    protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
 
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain, illegal_moves):
 
-    legal_moves = get_legal_moves(xy, chain)
+    legal_moves = get_legal_moves(xy, chain.chain_list)
 
     # Remove illegal moves from legal moves list.
     if illegal_moves:
@@ -55,11 +54,12 @@ def fold_selector(xy, char, chain, illegal_moves):
 
 def redo_last_fold(protein):
     # Store the illegal fold in the amino class.
-    last_amino = protein.chain[-1]
+    last_amino = protein.chain.chain_list[-1]
     last_amino.illegal_folds.append(last_amino.fold)
 
     # Get new move with illegal moves excluded.
-    fold = fold_selector(last_amino.coordinates, last_amino.atype, protein.chain[:-1], last_amino.illegal_folds)
+    protein.chain.chain_list[:-1]
+    fold = fold_selector(last_amino.coordinates, last_amino.atype, protein.chain, last_amino.illegal_folds)
 
     # Replace the previous illegal fold with a new fold
     last_amino.fold = fold
@@ -67,7 +67,7 @@ def redo_last_fold(protein):
 
     # If still no fold found, also redo move before that. Char loop in init needs to go back 1 step.
     if not fold:
-        protein.chain.remove(last_amino)
+        protein.chain.chain_list.remove(last_amino)
         protein.char_counter -= 1
         redo_last_fold(protein)
 

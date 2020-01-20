@@ -18,14 +18,14 @@ from functions.GetScore import get_score_efficient
 if __name__ == "__main__":
 
     # chain = [Amino("H", 2, [0,0]), Amino("H", 2, [0,1]), Amino("H", 1, [0,2]), Amino("P", -2, [1,2]), Amino('H', -2, [1,1]), Amino("H", 1, [1, 0]), Amino("P", 2, [2, 0]), Amino("H", 0, [2,1])]
-    # start_time = time.clock()
+    start_time = time.clock()
+    
+    protein1 = Protein("HHPHHPPHH", "2D")
 
-    protein1 = Protein("HHPPHHPPPHPHH", "2D")
-
-    beam_search(protein1, 1, [4,6,8])
-    # print(protein1.get_score())
-    # print("--- %s seconds ---" % (time.clock() - start_time))
-
+    random_search(protein1)
+    print(protein1.get_score())
+    print("--- %s seconds ---" % (time.clock() - start_time))
+    
 
     # matrix, offset = get_matrix_efficient(chain)
 
