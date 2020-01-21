@@ -10,6 +10,7 @@ best_score = 1
 best_chain = []
 current_lookahead = 0
 
+
 def depth_search_lookahead(protein, max_lookahead, ch_score):
     global best_chain
     global best_score
@@ -48,6 +49,7 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
 
         # Adds amino to the protein chain.
         protein.chain.chain_list.append(Amino(char, fold, amino_xy))
+        protein.chain.update_mirror_status()
 
         print("Char " + str(len(protein.chain.chain_list)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
         print("")

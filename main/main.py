@@ -9,6 +9,7 @@ from algorithms.BreadthSearch import breadth_search
 from algorithms.BeamSearch import beam_search
 from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
+from algorithms.BranchAndBoundLookahead import branch_and_bound_lookahead
 
 
 from functions.GetMatrix import get_matrix_efficient
@@ -20,10 +21,13 @@ if __name__ == "__main__":
     # chain = [Amino("H", 2, [0,0]), Amino("H", 2, [0,1]), Amino("H", 1, [0,2]), Amino("P", -2, [1,2]), Amino('H', -2, [1,1]), Amino("H", 1, [1, 0]), Amino("P", 2, [2, 0]), Amino("H", 0, [2,1])]
     start_time = time.clock()
     
-    protein1 = Protein("HHPHHPPHH", "2D")
-
-    random_search(protein1)
+    protein1 = Protein('HHPHPHPHPHHHHPH', "2D")
+                                                     
+    depth_search_lookahead(protein1, 10, 1)
+    # depth_search_lookahead(protein1, 6, 1)
+    
     print(protein1.get_score())
+    protein1.print_protein()
     print("--- %s seconds ---" % (time.clock() - start_time))
     
 
