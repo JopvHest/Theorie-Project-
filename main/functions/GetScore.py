@@ -408,12 +408,34 @@ def get_score_iterative_and_spots(chain, matrix, last_score):
                         # Subtract ch_score for C/H bonds
                         if (matrix[z][y][x].atype in ["H", "C"] and amino.atype in ["H", "C"]) and (matrix[z][y][x].atype != amino.atype):
                             total_score -= 1
+                            if amino.atype == "H":
+                                available_spots_to_remove_C.append(amino.coordinates)
+
+                            if amino.atype == "C":
+                                 available_spots_to_remove.append(amino.coordinates)
+                            continue
+
                         # Subtract 5 for C/C bonds
                         elif amino.atype == "C" and matrix[z][y][x].atype == "C":
                             total_score -= 5
+                            available_spots_to_remove_C.append(amino.coordinates)
+                            continue
+
                         # Subtract 1 for H/H bonds
                         elif amino.atype == "H" and matrix[z][y][x].atype == "H":
                             total_score -= 1
+                            available_spots_to_remove.append(amino.coordinates)
+                            continue
+
+                        elif amino.atype == "P" and matrix[z][y][x].atype == "H":
+                            available_spots_to_remove.append(amino.coordinates)
+                            continue
+                    
+                    elif amino.atype == "H":
+                        available_spots_to_add.append([x, y, z])
+                    
+                    elif amino.atype == "C":
+                        available_spots_to_add_C.append([x, y, z])
 
                 # 2D
                 else:
