@@ -37,7 +37,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     
     char_counter = 1
 
-    mode_3d = is_chain_3d(protein.chain.chain_list)
+    mode_3d = protein.mode_3d
     
     # Build up the partial energy list for every depth in the chain.
     global partial_energies

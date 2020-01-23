@@ -11,6 +11,8 @@ from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
 from algorithms.BranchAndBoundLookahead import branch_and_bound_lookahead
 from algorithms.BranchAndBoundRandom import branch_and_bound_random
+from algorithms.HillClimbing import hill_climbing
+from algorithms.HillClimbingAnnealing import hill_climbing_annealing
 
 
 from functions.GetMatrix import get_matrix_efficient
@@ -22,13 +24,15 @@ if __name__ == "__main__":
     # chain = [Amino("H", 2, [0,0]), Amino("H", 2, [0,1]), Amino("H", 1, [0,2]), Amino("P", -2, [1,2]), Amino('H', -2, [1,1]), Amino("H", 1, [1, 0]), Amino("P", 2, [2, 0]), Amino("H", 0, [2,1])]
     start_time = time.clock()
     
-    protein1 = Protein('PPHPPHHPPPPHHPPPPHHPPPPHH', "2D")
+    
+    protein1 = Protein('PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP', "3D")
 
-    depth_search_iterative(protein1, 1)                                           
+    hill_climbing_annealing(protein1, 100000)                                           
     #branch_and_bound_random(protein1, 1, 0, 0.6, 0.3)
     #depth_search_lookahead(protein1, 10, 1)
     
     print(protein1.get_score())
+    protein1.print_protein()
     print("--- %s seconds ---" % (time.clock() - start_time))
     
 
