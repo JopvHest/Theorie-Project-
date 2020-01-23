@@ -8,24 +8,43 @@ from functions.MinChainLenNeeded import chain_can_reach_spot
 from functions.GetScore import get_score_iterative_and_spots
 from functions.IsChain3d import is_chain_3d
 import copy
+import random
 
 best_score = 1
 best_chain = None
 best_matrix = None
 
-#depth_score_dict = {
-#    "1" : [[average_score, amount_of_scores], [best_score]]
-#   "2" : [[average_score, amount_of_scores], [best_score]]
-#}
 
-def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
+# The chance a chain gets rejected if its score is under the average for that deppth
+p_below_average = 0
+
+# The chance a chain gets rejected if its score is above the average for that depth
+p_above_average = 0
+
+# this saves the best score, average score, and amount of chains used for that avg at the index of the depth.
+# so at a depth of 6: partial_energies[6] = best_score, average_score, amount of chains tp calculate that average
+partial_energies = []
+
+
+def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     global best_score
+    global p_below_average
+    global p_above_average
+    p_below_average = p1
+    p_above_average = p2
+
     best_score = best_score_import
     
     char_counter = 1
 
-    mode_3d = is_chain_3d(protein.chain.chain_list)
- 
+    mode_3d = protein.mode_3d
+    
+    # Build up the partial energy list for every depth in the chain.
+    global partial_energies
+    partial_energies.append([])
+    for char in protein.amino_string:
+        partial_energies.append([0, 0, 0])
+
 
     if mode_3d:
         matrix_dimensions = 2 * len(protein.amino_string) + 1
@@ -183,8 +202,8 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             new_amino = Amino(chars[0], move, coordinates)
             current_chain.chain_list.append(new_amino)
 
-            skip_function = False
             
+            skip_function = False
 
             # Also add that amino to the matrix, and update the mirror starus
             if mode_3d:
@@ -218,18 +237,45 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             
             # Of a new best score cant be reached, abandon chain.
             if max_possible >= best_score:
+
                 skip_function = True
-
-            # print(str(new_score) + " + " + str(extra_score_possible) + " = " + str(max_possible))
             
-          
-            # print("max possible score: " + str(extra_score_possible + new_score))
-            # print(str(removed_even), str(removed_odd))
-            # print(new_score)
-            # print()
+            global partial_energies
+            current_depth = len(current_chain.chain_list)
+            
+            # If it is the new best score for that depth
+            if new_score <= partial_energies[current_depth][0]:
+                if new_score < partial_energies[current_depth][0]:
+                    partial_energies[current_depth][0] = new_score
+                
+                partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
+                partial_energies[current_depth][2] += 1
+            
 
-            # The actual recursive function
+            elif new_score <= partial_energies[current_depth][1]:
+                global p_below_average
+                random_number = random.uniform(0, 1)
+
+                if random_number > p_below_average:
+                    skip_function = True
+                
+                else:
+                    partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
+                    partial_energies[current_depth][2] += 1
+
+            else:
+                global p_above_average
+                random_number = random.uniform(0, 1)
+
+                if random_number > p_above_average:
+                    skip_function = True
+                
+                else:
+                    partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
+                    partial_energies[current_depth][2] += 1
+
             if not skip_function:
+                # The actual recursive function
                 find_best_chain(current_chain, chars, ch_score, new_score)
 
             # Undo all the changed to the spots that were made before calling the recursive function.
@@ -257,4 +303,9 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             
 
             del current_chain.chain_list[-1]
-            
+
+
+def calculate_average(average, average_amount, new_entry):
+    new_average = ( average * (average_amount)/(average_amount + 1)) + (new_entry * 1 / (average_amount + 1))
+    
+    return new_average

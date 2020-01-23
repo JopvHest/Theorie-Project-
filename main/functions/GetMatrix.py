@@ -67,11 +67,15 @@ def get_matrix(chain):
     # 3D
     if mode_3d:
         for amino in chain:
+            if isinstance(matrix[amino.coordinates[2]][amino.coordinates[1]][amino.coordinates[0]], Amino):
+                return False, False
             matrix[amino.coordinates[2]][amino.coordinates[1]][amino.coordinates[0]] = amino
 
     # 2D
     else:
         for amino in chain:
+            if isinstance(matrix[amino.coordinates[1]][amino.coordinates[0]], Amino):
+                return False, False
             matrix[amino.coordinates[1]][amino.coordinates[0]] = amino
 
     return matrix, chain

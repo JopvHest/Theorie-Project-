@@ -10,6 +10,11 @@ from algorithms.BeamSearch import beam_search
 from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
 from algorithms.IterativeAlgorithm import iterative_algorithm
+from algorithms.BranchAndBoundLookahead import branch_and_bound_lookahead
+from algorithms.BranchAndBoundRandom import branch_and_bound_random
+from algorithms.HillClimbing import hill_climbing
+from algorithms.HillClimbingAnnealing import hill_climbing_annealing
+
 
 from functions.GetMatrix import get_matrix_efficient
 from functions.GetScore import get_score_efficient
@@ -31,9 +36,22 @@ if __name__ == "__main__":
     # print("--- %s seconds ---" % (time.clock() - start_time))
     # protein1.print_protein()
     
+<<<<<<< HEAD
 
     pato, chain2 = iterative_algorithm(protein1.chain, 1)
     protein1.chain.chain_list = pato
+=======
+    
+#     protein1 = Protein('PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP', "3D")
+
+#     hill_climbing_annealing(protein1, 100000)                                           
+#     #branch_and_bound_random(protein1, 1, 0, 0.6, 0.3)
+#     #depth_search_lookahead(protein1, 10, 1)
+    
+#     print(protein1.get_score())
+#     protein1.print_protein()
+#     print("--- %s seconds ---" % (time.clock() - start_time))
+# >>>>>>> 1594a7e2f751ef02eba4276acac08202e92c488b
     
     for amino in protein1.chain.chain_list:
         print(amino)

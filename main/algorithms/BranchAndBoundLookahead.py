@@ -6,25 +6,24 @@ from functions.GetScore import get_score_efficient, get_score, get_score_iterati
 from functions.GetLegalMoves import get_legal_moves, get_legal_moves_nomirror
 from functions.MinChainLenNeeded import chain_can_reach_spot
 from functions.GetScore import get_score_iterative_and_spots
-from functions.IsChain3d import is_chain_3d
 import copy
 
 best_score = 1
-best_chain = None
+best_chain = []
 best_matrix = None
+current_lookahead = 0
 
 #depth_score_dict = {
 #    "1" : [[average_score, amount_of_scores], [best_score]]
 #   "2" : [[average_score, amount_of_scores], [best_score]]
 #}
 
-def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
+def branch_and_bound_lookahead(protein, ch_score, best_score_import, max_lookahead):
     global best_score
+    global best_chain
     best_score = best_score_import
-    
-    char_counter = 1
 
-    mode_3d = is_chain_3d(protein.chain.chain_list)
+    mode_3d = is_chain_3d(chain)
  
 
     if mode_3d:
@@ -37,8 +36,8 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
                 for j in range(matrix_dimensions + 1):
                     row.append(" ")
                 layer.append(row)
-            protein.chain.matrix.append(layer)
-        print(len(protein.chain.matrix), len(protein.chain.matrix[1]), len(protein.chain.matrix[1][1]))
+            protein.matrix.append(layer)
+
         protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1, len(protein.amino_string) + 1]
         protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
@@ -56,16 +55,17 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
         protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1]
         protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
-
     new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(protein.chain, protein.chain.matrix, 0)
-    protein.chain.add_fold_spots(spots_to_add, "H")
-    protein.chain.remove_fold_spots(spots_to_remove, "H")
-    protein.chain.add_fold_spots(spots_to_add_C, "C")
-    protein.chain.remove_fold_spots(spots_to_remove_C, "C")
-        
 
+    
+    protein.chain.add_fold_spots(spots_to_add, "H")
+    protein.chain.add_fold_spots(spots_to_add_C, "C")
+    
+    current_score = 0
     # Skips the first char the index.
     while protein.char_counter < len(protein.amino_string):
+
+        
 
         # print(str(self.char_counter))
         char = protein.amino_string[protein.char_counter]
@@ -78,10 +78,10 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
         if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
 
+        
         # Determine which fold to pick
         else:
-            illegal_folds = None
-            ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string, ch_score)
+            ideal_chain, fold = fold_selector(amino_xy, char, protein.chain, protein.amino_string[protein.char_counter - 1:], ch_score, max_lookahead, current_score)
 
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
@@ -92,40 +92,113 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 
-
+        new_amino = Amino(char, fold, amino_xy)
         # Adds amino to the protein chain.
-        protein.chain.chain_list.append(Amino(char, fold, amino_xy))
+        protein.chain.chain_list.append(new_amino)
         
-        char_counter += 1
+        protein.chain.update_mirror_status()
+
+        if mode_3d:
+            protein.chain.matrix[amino_xy[0]][amino_xy[1]][amino_xy[2]] = new_amino
+        else:
+            # Also add that amino to the matrix, and update the mirror starus
+            protein.chain.matrix[amino_xy[0]][amino_xy[1]] = new_amino
+   
+        
+        # Calculate new score and and/remove the correct fold spots
+        new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(protein.chain, protein.chain.matrix, current_score)
+        
+        current_score = new_score
+      
+        
+        # Remove the spots that are now filled by aminos.
+        protein.chain.remove_fold_spots(spots_to_remove, "H")
+        protein.chain.remove_fold_spots(spots_to_remove_C, "C")
+
+        # Change odd/even
+        protein.chain.odd = not protein.chain.odd
+        
+        # Add the spots that were newly created.
+        if protein.chain.chain_list[-1].atype == "H":
+            spots_to_add.append(protein.chain.chain_list[-1].get_fold_coordinates())
+        if protein.chain.chain_list[-1].atype == "C":
+            spots_to_add_C.append(protein.chain.chain_list[-1].get_fold_coordinates())
+
+        protein.chain.add_fold_spots(spots_to_add, "H")
+        protein.chain.add_fold_spots(spots_to_add_C, "C")
+        protein.chain.get_max_possible_extra_score(protein.amino_string[protein.char_counter:])
+
+
+        protein.char_counter += 1
+
+        for amino in protein.chain.chain_list:
+            print(amino, end='')
+        print()
+
+
+        best_chain = []
+        best_score = 1
+        current_lookahead = 0
+        
+        print(protein.chain.available_bonds_odd_H)
+        print(protein.chain.available_bonds_odd_C)
+        print(protein.chain.available_bonds_even_H)
+        print(protein.chain.available_bonds_even_C)
+
+
+    
+    protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
 
 
 
 # The actual algo for selecting the fold the chain will make.
-def fold_selector(xy, char, chain, illegal_moves, chars, ch_score):
+def fold_selector(xy, char, chain, chars, ch_score, max_lookahead, current_score):
 
+    print("fold selector status:")
+    for amino in chain.chain_list:
+        print(amino, end = '')
+    print()
+    print(chars)
+    print(xy)
+    print(chain.odd)
+    print(chain.available_bonds_odd_H)
+    print(chain.available_bonds_odd_C)
+    print(chain.available_bonds_even_H)
+    print(chain.available_bonds_even_C)
+
+    print()
     # This is the recursive functions which does the depth search.
-    find_best_chain(chain, chars, ch_score, 0)
+    find_best_chain(chain, chars, ch_score, 0, max_lookahead)
+
+    global current_lookahead
+    current_lookahead = 0
 
     # IF the algo has actually found the best chain (which it should), return the best chain.
-    if best_chain:
-        return (True)
+    if len(best_chain) == len(chars):
+        print('found best chain.')
+        return True, None
 
+    # If the algo only found a partial best chain. returns only the next best move to take.
+    if best_chain:
+        return False, best_chain[len(chain.chain_list)].fold
 
     raise Exception("Couldn't find best chain")
 
 # The recursive function which accepts the variables: the current chain of aminos, and the string of the aminos it has yet to process.
-def find_best_chain(current_chain, chars, ch_score, current_score):
+def find_best_chain(current_chain, chars, ch_score, current_score, max_lookahead):
+
 
     global best_score
+    global current_lookahead
+    
 
     # The first char has to be popped because it processes that char in the last loop
     # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
 
-    mode_3d = is_chain_3d(current_chain.chain_list)
-
+    mode_3d = is_chain_3d(current_chain)
     # If there is only 1 char left we've arrived at the end of a chain.
-    if len(chars) == 1:
+    if len(chars) == 1 or current_lookahead == max_lookahead:
         # Add the last char to the amino chain AND the recusrive chain matrix
         last_amino = current_chain.chain_list[-1]
         coordinates = last_amino.get_fold_coordinates()
@@ -150,24 +223,27 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             print("New best score: " + str(score))
             best_score = score
             best_chain = copy.deepcopy(current_chain.chain_list)
+            for amino in current_chain.chain_list:
+                print(amino, end='')
+            print()
 
 
         # Abort that chain if it isnt the best score. also remove it from the matrix
+        
         if mode_3d:
             current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]] = " "
         else:
             current_chain.matrix[coordinates[1]][coordinates[0]] = " "
-
         del current_chain.chain_list[-1]
         return None
 
     # Get legal moves on the position of that amino
     legal_moves = get_legal_moves_nomirror(current_chain.chain_list[-1].get_fold_coordinates(), current_chain)
 
-
     # If no legals move left, abort the chain. The protein got "stuck"
     if not legal_moves:
         return None
+    
 
     # Go recursively through all legal moves and its child legal moves etc.
     else:
@@ -183,7 +259,9 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             new_amino = Amino(chars[0], move, coordinates)
             current_chain.chain_list.append(new_amino)
 
-            skip_function = False
+            current_lookahead += 1
+
+            
             
 
             # Also add that amino to the matrix, and update the mirror starus
@@ -196,10 +274,25 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             
             # Calculate new score and and/remove the correct fold spots
             new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(current_chain, current_chain.matrix, current_score)
-            
-            
+
+
             # Remove the spots that are now filled by aminos.
-            current_chain.remove_fold_spots(spots_to_remove, "H")
+            try:
+                current_chain.remove_fold_spots(spots_to_remove, "H")
+                
+            except:
+                print(spots_to_remove)
+                print(spots_to_remove)
+
+                print(current_chain.available_bonds_odd_H)
+                print(current_chain.available_bonds_odd_C)
+                print(current_chain.available_bonds_even_H)
+                print(current_chain.available_bonds_even_C)
+                for amino in current_chain.chain_list:
+                    print(amino, end="")
+                    print(amino.coordinates)
+
+                raise Exception()
             current_chain.remove_fold_spots(spots_to_remove_C, "C")
 
             # Change odd/even
@@ -214,11 +307,41 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             
             # Calculate max extra score and prune spots that are too far away.
             extra_score_possible, removed_even, removed_odd, removed_even_C, removed_odd_C = current_chain.get_max_possible_extra_score(chars[1:])
+            
+           
             max_possible = new_score + extra_score_possible
             
             # Of a new best score cant be reached, abandon chain.
             if max_possible >= best_score:
-                skip_function = True
+
+                # Undo all the changes that were made to the spots.
+                current_chain.add_back_even(removed_even, "H")
+                current_chain.add_back_odd(removed_odd, "H")
+                current_chain.add_back_even(removed_even_C, "C")
+                current_chain.add_back_odd(removed_odd_C, "C")
+                
+                current_chain.remove_fold_spots(spots_to_add, "H")
+                current_chain.remove_fold_spots(spots_to_add_C, "C")
+
+                
+                # Change odd/even back
+                current_chain.odd = not current_chain.odd
+
+                # Reverse the fold spots
+                current_chain.add_fold_spots(spots_to_remove, "H")
+                current_chain.add_fold_spots(spots_to_remove_C, "C")
+
+                # Reverse the matrix and mirror status
+                if mode_3d:
+                    current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]]
+                else:
+                    current_chain.matrix[coordinates[1]][coordinates[0]] = " "
+
+                current_chain.update_mirror_status_reverse()
+                
+                # Remove the last amino
+                del current_chain.chain_list[-1]
+                continue
 
             # print(str(new_score) + " + " + str(extra_score_possible) + " = " + str(max_possible))
             
@@ -229,8 +352,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             # print()
 
             # The actual recursive function
-            if not skip_function:
-                find_best_chain(current_chain, chars, ch_score, new_score)
+            find_best_chain(current_chain, chars, ch_score, new_score, max_lookahead)
 
             # Undo all the changed to the spots that were made before calling the recursive function.
             current_chain.add_back_even(removed_even, "H")
@@ -239,15 +361,16 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.add_back_odd(removed_odd_C, "C")
             current_chain.remove_fold_spots(spots_to_add, "H")
             current_chain.remove_fold_spots(spots_to_add_C, "C")
-
             
+                    
             # Change odd/even back
             current_chain.odd = not current_chain.odd
 
             # Reverse the fold spots
             current_chain.add_fold_spots(spots_to_remove, "H")
             current_chain.add_fold_spots(spots_to_remove_C, "C")
-
+            
+            
             # Reverse the matrix and mirror status
             if mode_3d:
                 current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]]
@@ -255,6 +378,5 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                 current_chain.matrix[coordinates[1]][coordinates[0]] = " "
             current_chain.update_mirror_status_reverse()
             
-
+            current_lookahead -= 1
             del current_chain.chain_list[-1]
-            
