@@ -61,7 +61,7 @@ def breadth_search(protein, ch_score):
 
         # Determine fold and make new chain for every possibility.
         else:
-            legal_moves = get_legal_moves_nomirror(chain_actual.chain_list[-1].get_fold_coordinates(), chain_actual)
+            legal_moves = get_legal_moves(chain_actual.chain_list[-1].get_fold_coordinates(), chain_actual.chain_list)
 
             # if there are no legal moves chain ends here.
             if legal_moves:
@@ -102,6 +102,7 @@ def breadth_search(protein, ch_score):
         print(str(len(chain.chain_list)))
         protein1 = Protein(protein.amino_string, "2d")
         protein1.matrix, protein1.chain.chain_list = get_matrix(chain.chain_list)
+        protein1.print_protein()
         print(str(protein1.get_score()))
         for amino in protein1.chain.chain_list:
             print(amino, end="")

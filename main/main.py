@@ -26,9 +26,6 @@ if __name__ == "__main__":
     # start_time = time.clock()
     
     protein1 = Protein("HHHPHHPH", "2D")
-    protein1.chain.chain_list = chain
-    for amino in protein1.chain.chain_list:
-        print(amino)
     # protein
 
     # random_search(protein1)
@@ -36,18 +33,14 @@ if __name__ == "__main__":
     # print("--- %s seconds ---" % (time.clock() - start_time))
     # protein1.print_protein()
     
-    protein1 = Protein('PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP', "2D")
+    protein1 = Protein('CPPCHPPCHPP', "2D")
 
-    depth_search_lookahead(protein1, 12, 0.49)                                           
+    breadth_search(protein1, 1)                                           
 
-    
+    print(protein1.get_score())
     for amino in protein1.chain.chain_list:
         print(amino)
     # protein1.print_protein()
-    protein1.chain.chain_list = chain2
-
-    for amino in protein1.chain.chain_list:
-        print(amino)
 
     # matrix, offset = get_matrix_efficient(chain)
 
