@@ -25,9 +25,9 @@ if __name__ == "__main__":
     start_time = time.clock()
     
     
-    protein1 = Protein('PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP', "3D")
+    protein1 = Protein('PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP', "2D")
 
-    hill_climbing_annealing(protein1, 100000)                                           
+    depth_search_lookahead(protein1, 12, 0.49)                                           
     #branch_and_bound_random(protein1, 1, 0, 0.6, 0.3)
     #depth_search_lookahead(protein1, 10, 1)
     
