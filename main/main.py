@@ -33,9 +33,9 @@ if __name__ == "__main__":
     # print("--- %s seconds ---" % (time.clock() - start_time))
     # protein1.print_protein()
     
-    protein1 = Protein('CPPCHPPCHPP', "2D")
+    protein1 = Protein('HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH', "2D")
 
-    breadth_search(protein1, 1)                                           
+    hill_climbing_annealing(protein1, 100000)                                           
 
     print(protein1.get_score())
     for amino in protein1.chain.chain_list:
