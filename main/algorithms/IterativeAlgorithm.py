@@ -6,10 +6,10 @@ from functions.GetLegalMoves import get_legal_moves
 import random
 
 
-def iterative_algorithm(chain, iterations):
+def iterative_algorithm(protein, iterations):
 
     # take the chain
-    chain_actual = chain.chain_list
+    chain_actual = protein.chain.chain_list
     chain_actual_copy = copy.deepcopy(chain_actual)
 
     # determine max index and make list of all possible indexes

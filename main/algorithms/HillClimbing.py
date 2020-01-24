@@ -20,7 +20,7 @@ def hill_climbing(protein, iterations):
 
     # The amount of turns the score hasnt improved.
     times_not_improved = 0
-    times_not_improved_limit = 1000
+    times_not_improved_limit = 500
 
     # The overal best score and chain is saved here
     best_score = 0

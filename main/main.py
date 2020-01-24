@@ -44,8 +44,13 @@ if __name__ == "__main__":
 
     hill_climbing(protein1, 10000)
     
-    for amino in protein1.chain.chain_list:
-        print(amino)
+    # protein1 = Protein('HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH', "2D")
+
+    # hill_climbing_annealing(protein1, 100000)                                           
+
+    # print(protein1.get_score())
+    # for amino in protein1.chain.chain_list:
+    #     print(amino)
     
     
     

@@ -153,6 +153,9 @@ def get_score_efficient(chain, matrix, xy_offset, ch_score):
             else:
                 xy_tocheck.append([amino_x + 1, amino_y])
                 xy_tocheck.append([amino_x, amino_y + 1])
+                xy_tocheck.append([amino_x - 1, amino_y])
+                xy_tocheck.append([amino_x, amino_y - 1])
+
 
 
             # Aminos to and from that amino dont add to the score so remove them.
@@ -212,6 +215,7 @@ def get_score_efficient(chain, matrix, xy_offset, ch_score):
                             # Subtract 1 for H/H bonds
                             elif amino.atype == "C" and matrix_amino.atype == "C":
                                 total_score -= 5
+        total_score = total_score // 2
         return total_score
 
 

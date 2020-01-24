@@ -22,7 +22,12 @@ def hill_climbing_annealing(protein, iterations):
     best_score = 0
     best_chain = []
 
-    temperature = 0.5
+    temperature_start =  10
+    temperature_end = 0.2
+    temp_step = (temperature_start - temperature_end) / iterations
+    temperature = temperature_start
+
+
 
     while total_iterations < iterations:
 
@@ -77,6 +82,8 @@ def hill_climbing_annealing(protein, iterations):
         # Abbandon iteration
         else:
             protein.chain.chain_list = old_chain
+        
+        temperature =  temperature - temp_step
     
     protein.chain.chain_list = best_chain
     protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
