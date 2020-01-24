@@ -9,13 +9,13 @@ import random
 
 
 
-def hill_climbing(protein, iterations):
+def hill_climbing(protein, iterations, max_non_imporvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
-    print("start protein:")
-    for amino in protein.chain.chain_list:
-            print(amino)
+    # print("start protein:")
+    # for amino in protein.chain.chain_list:
+    #         print(amino)
 
     # Save the score at every iteration (Not yet implemented)
     scores = []
@@ -23,11 +23,12 @@ def hill_climbing(protein, iterations):
 
     # The amount of turns the score hasnt improved.
     times_not_improved = 0
-    times_not_improved_limit = 1000
+    times_not_improved_limit = max_non_imporvements
 
     # The overal best score and chain is saved here
     best_score = 1
     best_chain = protein.chain.chain_list
+    revert_chain = copy.deepcopy(protein.chain.chain_list)
 
     while total_iterations < iterations:
 
@@ -150,6 +151,13 @@ def hill_climbing(protein, iterations):
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
+        # print(protein.chain.chain_list)
+        if protein.chain.chain_list is False:
+            protein.chain.chain_list = old_chain
+            print("error:")
+            for amino in old_chain:
+                print(amino)
+            continue
 
         # Calculate score of new chain
         score = get_score(protein.chain.chain_list, protein.matrix)
@@ -184,7 +192,7 @@ def hill_climbing(protein, iterations):
             
             # abandon that chain.
             else:
-                protein.chain.chain_list = old_chain
+                protein.chain.chain_list = revert_chain
     
     # Save the best score and chain in the protein
     protein.chain.chain_list = best_chain

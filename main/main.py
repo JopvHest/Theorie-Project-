@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # pato, chain2 = iterative_algorithm(protein1.chain, 1)
     # protein1.chain.chain_list = pato
 
-    hill_climbing(protein1, 10000)
+    hill_climbing(protein1, 100, 50)
     
     # protein1 = Protein('HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH', "2D")
 
