@@ -9,7 +9,7 @@ import random
 
 
 
-def hill_climbing(protein, iterations, max_non_imporvements):
+def hill_climbing_2(protein, iterations, max_non_imporvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
@@ -152,7 +152,8 @@ def hill_climbing(protein, iterations, max_non_imporvements):
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
         # print(protein.chain.chain_list)
-        if protein.chain.chain_list is False:
+        if protein.chain.chain_list == False:
+            print(protein.chain.chain_list)
             protein.chain.chain_list = old_chain
             print("error:")
             for amino in old_chain:
@@ -161,6 +162,7 @@ def hill_climbing(protein, iterations, max_non_imporvements):
 
         # Calculate score of new chain
         score = get_score(protein.chain.chain_list, protein.matrix)
+      
         
         # Continue with new chain if same or better score
         if score <= protein.chain.score:
@@ -192,7 +194,7 @@ def hill_climbing(protein, iterations, max_non_imporvements):
             
             # abandon that chain.
             else:
-                protein.chain.chain_list = revert_chain
+                protein.chain.chain_list = old_chain
     
     # Save the best score and chain in the protein
     protein.chain.chain_list = best_chain
@@ -249,6 +251,8 @@ def rebuild_chain(protein, index_to_start_from):
         
         if new_coordinates in coordinates_list:
             return False
+        
+        coordinates_list.append(new_coordinates)
         
         old_amino.coordinates = new_coordinates
         index += 1

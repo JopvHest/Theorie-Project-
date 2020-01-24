@@ -9,7 +9,7 @@ from algorithms.BreadthSearch import breadth_search
 from algorithms.BeamSearch import beam_search
 from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
-from algorithms.IterativeAlgorithm2 import hill_climbing
+from algorithms.IterativeAlgorithm2 import hill_climbing_2
 from algorithms.IterativeAlgorithm import iterative_algorithm
 from algorithms.BranchAndBoundLookahead import branch_and_bound_lookahead
 from algorithms.BranchAndBoundRandom import branch_and_bound_random
@@ -26,11 +26,11 @@ if __name__ == "__main__":
     
        
     start_time = time.clock()
-    protein1 = Protein('HPHPPHHPHPPHPHHPPHPH', "3D")
+    protein1 = Protein('HPHPPHHPHPPHPHHPPHPH', "2D")
     # depth_search_lookahead(protein1, 8, 1) 
     # branch_and_bound_random(protein1, 1, 0, 0.8, 0.5) 
     
-    hill_climbing(protein1, 50000)  
+    hill_climbing_2(protein1, 50, 50)  
     # branch_and_bound_random(protein1, 1, 0, 0.5, 0.1)
     print(protein1.get_score())
     
