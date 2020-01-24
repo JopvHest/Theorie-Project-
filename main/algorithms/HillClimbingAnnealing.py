@@ -22,8 +22,8 @@ def hill_climbing_annealing(protein, iterations):
     best_score = 0
     best_chain = []
 
-    temperature_start =  10
-    temperature_end = 0.2
+    temperature_start =  5
+    temperature_end = 0.5
     temp_step = (temperature_start - temperature_end) / iterations
     temperature = temperature_start
 

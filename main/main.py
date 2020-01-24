@@ -23,35 +23,16 @@ from functions.GetScore import get_score_efficient
 if __name__ == "__main__":
 
     
-    # start_time = time.clock()
+       
+    start_time = time.clock()
+    protein1 = Protein('HPHPPHHPHPPHPHHPPHPH', "3D")
+    # depth_search_lookahead(protein1, 8, 1) 
+    # branch_and_bound_random(protein1, 1, 0, 0.8, 0.5) 
     
-    protein1 = Protein("HHHPHHPH", "2D")
-    # protein
-
-    # random_search(protein1)
-    # print(protein1.get_score())
-    # print("--- %s seconds ---" % (time.clock() - start_time))
-    # protein1.print_protein()
-    
-    protein1 = Protein('HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH', "2D")
-
-    hill_climbing_annealing(protein1, 100000)                                           
-
+    hill_climbing(protein1, 50000)  
+    # branch_and_bound_random(protein1, 1, 0, 0.5, 0.1)
     print(protein1.get_score())
-    for amino in protein1.chain.chain_list:
-        print(amino)
+    
+    print("--- %s seconds ---" % (time.clock() - start_time))
     # protein1.print_protein()
-
-    # matrix, offset = get_matrix_efficient(chain)
-
-
-
-
-
-
-
-    # protein1 = Protein("HPPHHHPPHHPH", "2D")
-    # depth_search(protein1, 0.5)
-
-
-    # start_time = time.clock()
+    
