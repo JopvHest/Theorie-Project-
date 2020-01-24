@@ -13,9 +13,6 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
-    # print("start protein:")
-    # for amino in protein.chain.chain_list:
-    #         print(amino)
 
     # Save the score at every iteration (Not yet implemented)
     scores = []
@@ -28,21 +25,14 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
     # The overal best score and chain is saved here
     best_score = 1
     best_chain = protein.chain.chain_list
-    revert_chain = copy.deepcopy(protein.chain.chain_list)
 
     while total_iterations < iterations:
-
-    # max_index = len(protein.amino_string) - 1
-
-    # for index in range(1, max_index):
-
-        # print(index)
 
         # pick random index for chain and that amino.
         max_index = len(protein.amino_string) - 1
         chosen_index = random.randint(1, max_index - 1)
-        # print("chosen_index", end="")
-        # print(chosen_index)
+        
+        # get the amino and his fold with the random index
         chosen_amino = protein.chain.chain_list[chosen_index]
         chosen_amino_fold = chosen_amino.fold
         
@@ -51,87 +41,51 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
 
         # Also pick random move and apply.
         moves = get_legal_moves(chosen_amino.coordinates, protein.chain.chain_list)
-        # print("legal moves: ", end="")
-        # print(moves)
+       
+        # remove initial move from the moves
         if chosen_amino_fold in moves:
             moves.remove(chosen_amino_fold)
-            # print("move removes: ", end="")
-            # print(chosen_amino_fold)
-            # print(moves)
         
-
+        # if there a no possible new moves for this amino loop again
         if not moves:
             continue
         
+        # choose random fold and adjust fold of amino
         chosen_move = random.choice(moves)
-        # print("chosen_move", end="")
-        # print(chosen_move)
         chosen_amino.fold = chosen_move
 
+        # get the amino thereafter from the chain
         next_amino = protein.chain.chain_list[chosen_index + 1]
 
+        # If the chosen amino is the one before the last only this amino needed to change
         if chosen_index == max_index - 1:
-            # change coordinated last amino
-            # print("no next")
             pass
-
         
-        
-        
-
+        # if the there need to be changed only 2 aminos
         elif chosen_move == next_amino.fold or chosen_index + 2 >= max_index:
-            # print("only next")
             next_amino.fold = chosen_amino_fold
-            # chain is correct from here
-        # print("check * -1")
-        # print(chosen_move * -1)
-        # print(chosen_amino_fold)
+
+        # skip if new move is 180 degrees to the other side, rearanging gets very difficult  
         elif chosen_move * -1 == chosen_amino_fold:
-            # print("to difficult")
             protein.chain.chain_list = old_chain
             continue
-            # to complicated continue
-
-
-        # elif chosen_move * -1 == next_amino.fold:
+            
         else:
-            # print("else")
+            # change next fold and the fold after that
             next_amino.fold = chosen_amino_fold
-
             after_next_amino = protein.chain.chain_list[chosen_index + 2]
-
-
             after_next_amino.fold = chosen_move * -1
 
-            # pull chain
-
+            # pull rest of the chain by changing position of aminos thereafter 2 places
             for i in range(chosen_index + 1, max_index - 2):
-                amino_changed = old_chain[i]
-                # print("index: " + str(i))
-                # print("amino changed: ", end="")
-                # print(amino_changed)
+                amino_changed = old_chain[i] 
                 amino_pulled = protein.chain.chain_list[i + 2]
-                # print("amino_pulled: ", end="")
-                # print(amino_pulled)
-
                 amino_pulled.fold = amino_changed.fold
-                # print(amino_pulled.atype)
-                # print(amino_pulled.fold)
-                # print("amino_pulled2: ", end="")
-                # print(amino_pulled)
+                
 
-
+        # Make sure last amino gets a fold of 0
         last_amino = protein.chain.chain_list[-1]
         last_amino.fold = 0
-
-        # else:
-        #     print("error")
-        #     protein.chain.chain_list = old_chain 
-        #     continue
-        # print("end protein:")
-        # for amino in protein.chain.chain_list:
-        #     print(amino)
-
 
         # Rebuild the chain/matrix.
         legal_chain = rebuild_chain(protein, chosen_index + 1)
@@ -141,23 +95,20 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
         if not legal_chain:
             protein.chain.chain_list = old_chain
             continue
-        
-        # protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-        # protein.print_protein()
-        # protein.chain.chain_list = old_chain
 
         total_iterations += 1
-        print(str(total_iterations) + "/" + str(iterations))
+
+        # to check the progress by printing
+        if total_iterations % 1000 == 0:
+            print(str(total_iterations) + "/" + str(iterations))
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-        # print(protein.chain.chain_list)
+        
+        # check for errror and revert to old chain
         if protein.chain.chain_list == False:
-            print(protein.chain.chain_list)
             protein.chain.chain_list = old_chain
-            print("error:")
-            for amino in old_chain:
-                print(amino)
+            print("error: false chain")
             continue
 
         # Calculate score of new chain

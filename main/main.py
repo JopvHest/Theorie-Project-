@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # depth_search_lookahead(protein1, 8, 1) 
     # branch_and_bound_random(protein1, 1, 0, 0.8, 0.5) 
     
-    hill_climbing_2(protein1, 50, 50)  
+    hill_climbing_2(protein1, 500, 50)  
     # branch_and_bound_random(protein1, 1, 0, 0.5, 0.1)
     print(protein1.get_score())
     
