@@ -16,13 +16,14 @@ def iterative_algorithm(protein, iterations):
     max_index = len(chain_actual) - 1
     
     # skip last because does not fold to a new one
-    indexes = list(range(0, max_index - 1))
+    indexes = list(range(1, max_index - 1))
     changes = 0
     # do n iterations
     while changes != iterations:
 
         # get random amino by randomizing indexes
-        random_index = random.choice(indexes)
+        # random_index = random.choice(indexes)
+        random_index = 5
         print("index: " + str(random_index))
         amino_actual = chain_actual[random_index]
         print("amino actual: ", amino_actual)
@@ -32,17 +33,30 @@ def iterative_algorithm(protein, iterations):
         coordinates = amino_actual.coordinates
         legal_moves = get_legal_moves(coordinates, chain_actual)
 
+
+        print("legal moves:")
+        print(legal_moves)
+
         # for i in range(0, random_index - 1):
         #     chain_new.append(chain_actual[i])
 
         # remove the current fold fromm possibilities
         current_fold = amino_actual.fold
+        print("current fold: ", end="")
+        print(current_fold)
         if current_fold in legal_moves:
+            
             legal_moves.remove(current_fold)
+            print("legal moves: ", end="")
+            print(legal_moves)
+
+        print("legal moves2:", end='')
+        print(legal_moves)
         
         # if there are no legal moves start again
         if not legal_moves:
             chain_actual = chain_actual_copy
+            print("no legal moves")
             continue
         else:
             # change fold of the amino
@@ -70,9 +84,14 @@ def iterative_algorithm(protein, iterations):
                 amino_next.fold = current_fold
                 # chain_new.append(amino_next)
 
+            print("folds:")
+            print(new_fold)
+            print(new_fold * -1)
+            print(current_fold)
 
-            elif abs(new_fold) == abs(current_fold):
+            if new_fold * -1 == current_fold:
                 chain_actual = chain_actual_copy
+                print("abs = abs")
                 continue
             
             else:
@@ -84,6 +103,7 @@ def iterative_algorithm(protein, iterations):
                     if coordinates_to_check == amino.coordinates:
                         # amino_next.fold = fold_next
                         chain_actual = chain_actual_copy
+                        print("coordinates overlap")
                         continue
                 
                 amino_after_next = chain_actual[random_index + 2]
