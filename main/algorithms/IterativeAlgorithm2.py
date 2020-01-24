@@ -40,8 +40,8 @@ def hill_climbing(protein, iterations):
         # pick random index for chain and that amino.
         max_index = len(protein.amino_string) - 1
         chosen_index = random.randint(1, max_index - 1)
-        print("chosen_index", end="")
-        print(chosen_index)
+        # print("chosen_index", end="")
+        # print(chosen_index)
         chosen_amino = protein.chain.chain_list[chosen_index]
         chosen_amino_fold = chosen_amino.fold
         
@@ -50,41 +50,43 @@ def hill_climbing(protein, iterations):
 
         # Also pick random move and apply.
         moves = get_legal_moves(chosen_amino.coordinates, protein.chain.chain_list)
-        print("legal moves: ", end="")
-        print(moves)
+        # print("legal moves: ", end="")
+        # print(moves)
         if chosen_amino_fold in moves:
             moves.remove(chosen_amino_fold)
-            print("move removes: ", end="")
-            print(chosen_amino_fold)
-            print(moves)
+            # print("move removes: ", end="")
+            # print(chosen_amino_fold)
+            # print(moves)
         
 
         if not moves:
             continue
         
         chosen_move = random.choice(moves)
-        print("chosen_move", end="")
-        print(chosen_move)
+        # print("chosen_move", end="")
+        # print(chosen_move)
         chosen_amino.fold = chosen_move
+
+        next_amino = protein.chain.chain_list[chosen_index + 1]
 
         if chosen_index == max_index - 1:
             # change coordinated last amino
-            print("no next")
+            # print("no next")
             pass
 
         
         
-        next_amino = protein.chain.chain_list[chosen_index + 1]
+        
 
-        if chosen_move == next_amino.fold or chosen_index + 2 >= max_index:
-            print("only next")
+        elif chosen_move == next_amino.fold or chosen_index + 2 >= max_index:
+            # print("only next")
             next_amino.fold = chosen_amino_fold
             # chain is correct from here
-        print("check * -1")
-        print(chosen_move * -1)
-        print(chosen_amino_fold)
-        if chosen_move * -1 == chosen_amino_fold:
-            ("to difficult")
+        # print("check * -1")
+        # print(chosen_move * -1)
+        # print(chosen_amino_fold)
+        elif chosen_move * -1 == chosen_amino_fold:
+            # print("to difficult")
             protein.chain.chain_list = old_chain
             continue
             # to complicated continue
@@ -92,7 +94,7 @@ def hill_climbing(protein, iterations):
 
         # elif chosen_move * -1 == next_amino.fold:
         else:
-            print("else")
+            # print("else")
             next_amino.fold = chosen_amino_fold
 
             after_next_amino = protein.chain.chain_list[chosen_index + 2]
@@ -103,19 +105,19 @@ def hill_climbing(protein, iterations):
             # pull chain
 
             for i in range(chosen_index + 1, max_index - 2):
-                amino_changed = old_chain[i + 1]
-                print("index: " + str(i))
-                print("amino changed: ", end="")
-                print(amino_changed)
-                amino_pulled = protein.chain.chain_list[i + 3]
-                print("amino_pulled: ", end="")
-                print(amino_pulled)
+                amino_changed = old_chain[i]
+                # print("index: " + str(i))
+                # print("amino changed: ", end="")
+                # print(amino_changed)
+                amino_pulled = protein.chain.chain_list[i + 2]
+                # print("amino_pulled: ", end="")
+                # print(amino_pulled)
 
                 amino_pulled.fold = amino_changed.fold
-                print(amino_pulled.atype)
-                print(amino_pulled.fold)
-                print("amino_pulled2: ", end="")
-                print(amino_pulled)
+                # print(amino_pulled.atype)
+                # print(amino_pulled.fold)
+                # print("amino_pulled2: ", end="")
+                # print(amino_pulled)
 
 
         last_amino = protein.chain.chain_list[-1]
@@ -125,9 +127,9 @@ def hill_climbing(protein, iterations):
         #     print("error")
         #     protein.chain.chain_list = old_chain 
         #     continue
-        print("end protein:")
-        for amino in protein.chain.chain_list:
-            print(amino)
+        # print("end protein:")
+        # for amino in protein.chain.chain_list:
+        #     print(amino)
 
 
         # Rebuild the chain/matrix.
@@ -139,11 +141,12 @@ def hill_climbing(protein, iterations):
             protein.chain.chain_list = old_chain
             continue
         
-        protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-        protein.print_protein()
+        # protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
+        # protein.print_protein()
         # protein.chain.chain_list = old_chain
 
         total_iterations += 1
+        print(str(total_iterations) + "/" + str(iterations))
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)

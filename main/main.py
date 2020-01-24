@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # pato, chain2 = iterative_algorithm(protein1.chain, 1)
     # protein1.chain.chain_list = pato
 
-    hill_climbing(protein1, 10)
+    hill_climbing(protein1, 10000)
     
     for amino in protein1.chain.chain_list:
         print(amino)
