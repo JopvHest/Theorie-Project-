@@ -1,5 +1,8 @@
 # Protein pow(d)er
-In de case proteine pow(d)er is het de bedoeling dat je een proteïne, een ketting van aminozuren, vouwt op een manier waarop de stabiliteit van die ketting zo hoog mogelijk is. Een hoge stabiliteit betekent een zo laag mogelijke stabiliteitsscore. Het blijkt dat een verkeerde vouwing van proteïnen kan zorgen voor kanker, Alzheimer, en taaislijmziekte. Hierdoor is het erg belangrijk om de precieze vouwing van een proteïne te kunnen bepalen. Elke vouwing is een 90 graden hoek, waardoor het probleem op een grid werkt. Er bestaan P, H, en C aminozuren. P (polaire) aminozuren voegen niks toe aan de stabiliteit. H (hydrofobe) aminozuren zorgen voor -1 stabiliteitsscore, wanneer ze naast elkaar liggen maar niet direct verbonden zijn in de ketting. C (cysteïne) aminozuren zorgen voor -5 stabiliteitsscore wanneer ze op deze zelfde manier naast elkaar liggen, terwijl een C en H aminozuur samen zorgen voor -1 stabiliteitsscore.
+In de case proteine pow(d)er is het de bedoeling dat je een proteïne, een ketting van aminozuren, vouwt op een manier waarop de stabiliteit van die ketting zo hoog mogelijk is. Een hoge stabiliteit betekent een zo laag mogelijke stabiliteitsscore. Het blijkt dat een verkeerde vouwing van proteïnen kan zorgen voor kanker, Alzheimer, en taaislijmziekte. Hierdoor is het erg belangrijk om de precieze vouwing van een proteïne te kunnen bepalen. Elke vouwing is een 90 graden hoek, waardoor het probleem op een grid werkt. Er bestaan P, H, en C aminozuren. P (polaire) aminozuren voegen niks toe aan de stabiliteit. H (hydrofobe) aminozuren zorgen voor -1 stabiliteitsscore, wanneer ze naast elkaar liggen maar niet direct verbonden zijn in de ketting. C (cysteïne) aminozuren zorgen voor -5 stabiliteitsscore wanneer ze op deze zelfde manier naast elkaar liggen, terwijl een C en H aminozuur samen zorgen voor -1 stabiliteitsscore.\
+
+![Protein visualizaion](doc/proteins.png)
+
 
 # Aan de slag
 
@@ -36,6 +39,7 @@ Print een output zoals vereist vanuit de opdracht.
     protein.get_output_list()
 
 
+
 # Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
 
@@ -45,6 +49,7 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
     - /main/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van code
     - /main/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
     - /main/unfinished/ : Contains the current unfinished/ not working code of the project
+
 
 
 # Algorithmes
@@ -124,13 +129,12 @@ beschrijving:
 
 iterations:
 
+
+
 ## TODO/ To improve
 Where to go from here:
 
 - Add 3D support to all functions
 - Improve the score lower bound function for brand and bound.
 - Instead of the manhatten distance, use a A* algorithm for figuring out which connections spots can still be reached in banch and bround.
-
-
-## What we could have done better.
-- Function abstraction by represeting them as classes.
+- Algorithm functions abstracting by implementing them as classes.
