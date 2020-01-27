@@ -19,6 +19,8 @@ Vervolgens kan je de chain van het proteine opbouwen met een search functie van 
     
     search_type__function(protein1, parameter1, parameter2).
 
+#### Output/ visualisatie
+
 Nu de chain is opgebouwd kan je op verschillende manieren een output krijgen. Namelijk:
     
 Print de score die dit proteine heeft gehaald:
@@ -48,21 +50,81 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 # Algorithmes
 We zullen van elke geimplementeerde search uitleggen wat die doet, en hoe deze aangeroepen moet worden. Ook wordt voor elke functie aangegeven of deze wordt gesupport in 2d EN 3d, of alleen in 2d.
 
-### Depth search first
+### Depth search first.
+
+    depth_search(protein, c-h_score)
+beschrijving depth search.
+
 ##### Lookahead
-##### Iterative
-## Branch bound
-### Lookahead
-### Random throwaway'
-## Breadth_search
-### Beam search
-## iterative
-### Hill climbing single
-### Hill climbing multi
-### Simulated annealing
 
+    depth_search_lookahead(protein, c-h_score, max_lookahead)
+beschrijving
 
-# TODO
+max_lookahead:
+
+### Branch & bound
+
+    branch_and_bound(protein, c-h_score, best_score_import)
+beschrijving
+
+best_score_import:
+
+#### Lookahead
+
+beschrijving
+located in /unfinished/.
+
+#### Brand & bound random throwaway
+
+    branch_and_bound_random(protein, c-h_score, best_score_import, p1, p2)
+
+beschrijving.
+
+best_score_import:
+
+p1:
+
+p2:
+
+### Breadth_search
+
+    breadth_search(protein, c-h_score)
+beschrijving
+
+#### Beam search
+
+    beam_search(protein, c-h_score, selection_levels
+
+beschrijving
+
+selection_levels:
+
+### iterative
+
+describe iterative algos.
+
+#### Hill climbing single
+
+    hill_climbing_single_fold(protein, iterations)
+beschrijving
+
+iterations: 
+#### Hill climbing caterpillar
+
+    hill_climbing_caterpillar(protein, iterations)
+
+beschrijving;
+iterations:
+
+#### Simulated annealing
+
+    simulated_annealing(protein, iterations)
+
+beschrijving:
+
+iterations:
+
+# TODO/ To improve
 Where to go from here:
 
 - Add 3D support to all functions
