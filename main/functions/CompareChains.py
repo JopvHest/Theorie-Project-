@@ -1,3 +1,5 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
 
 from classes.amino import Amino
 from classes.chain import Chain

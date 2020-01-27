@@ -1,3 +1,6 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
+
 from functions.MinChainLenNeeded import chain_can_reach_spot
 
 # Chain is an object used to store amino chains inside search functions and inside the Protein object.

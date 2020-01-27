@@ -1,3 +1,7 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries
+# Heuristics programming project: Protein pow(d)er
+# This file implements a depth search algorithm
+
 import copy
 import random
 

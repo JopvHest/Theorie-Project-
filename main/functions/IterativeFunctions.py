@@ -1,3 +1,5 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
 
 # This function builds a straight protein which only has folds of 2 (up)
 def build_straight_protein(protein):

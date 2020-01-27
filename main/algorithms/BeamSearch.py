@@ -1,3 +1,7 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
+# This file implements a beam search algorithm based on the breadth search algorithm.
+
 import copy
 from queue import Queue
 

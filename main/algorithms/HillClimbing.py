@@ -1,11 +1,15 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
+# This file implements an iterative algorithm which randomly refolds 1 fold and checks if this improves the score.
 
-
-from classes.amino import Amino
-from functions.GetMatrix import get_matrix
-from functions.GetLegalMoves import get_legal_moves
-from functions.GetScore import get_score
 import copy
 import random
+
+from classes.amino import Amino
+from functions.GetLegalMoves import get_legal_moves
+from functions.GetMatrix import get_matrix
+from functions.GetScore import get_score
+
 
 
 # This search tries to find a best protein by using Hill climbing

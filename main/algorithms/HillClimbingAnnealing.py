@@ -1,3 +1,8 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
+# This file implements an iterative algorithm which randomly refolds 1 fold.
+# It lowers the chance to accept folds which do not improve the score when "temperature" drops.
+
 import copy
 import random
 

@@ -1,3 +1,5 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
 
 # Determines if a remaining chain can reach a particular spot of an available fold based on the manhatten distance.
 def chain_can_reach_spot(amino_coordinates, spot_coordinates, remaining_aminos):

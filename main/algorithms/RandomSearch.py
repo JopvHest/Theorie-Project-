@@ -1,3 +1,7 @@
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries.
+# Heuristics programming project: Protein pow(d)er.
+# This file implements an random algorithm which randomly builds up the protein chain.
+
 import random
 
 from classes.amino import Amino
