@@ -9,6 +9,7 @@ from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient
 
 
+# This is a Breadth first search which discards chains with subpar scors at specific depths.
 def beam_search(protein, ch_score, selection_levels):
 
     # Get chain WITH first amino already in it.
@@ -33,6 +34,7 @@ def beam_search(protein, ch_score, selection_levels):
         index = len(chain_actual.chain_list)
         print(index)
 
+        # Specifies if we are at a level before or at the level for selecting chains to abandon
         saving_score = False
         selecting = False
 

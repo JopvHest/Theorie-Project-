@@ -1,6 +1,8 @@
 from classes.amino import Amino
 from functions.IsChain3d import is_chain_3d
 
+# This functions returns a list of all the connections a chain and matrix has.
+# Is used to visualize the connections using MatPlotLib
 def get_connections(chain, matrix):
 
         # Check if 3d mode.

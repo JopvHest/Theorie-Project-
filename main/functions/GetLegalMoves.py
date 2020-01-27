@@ -7,12 +7,10 @@ def get_legal_moves(xy, chain):
 
     mode_3d = is_chain_3d(chain)
 
-
+    # These are lists of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
     if mode_3d:
         moves_xydelta = [[1, (1, 0, 0)], [-1, (-1, 0, 0)], [2, (0, 1, 0)], [-2, (0, -1, 0)], [3, (0, 0, 1)], [-3, (0, 0, -1)]]
-
     else:
-        # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
         moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
 
     # Check if the legal moves interfere with any of the current amino coordinates.
@@ -43,23 +41,17 @@ def get_legal_moves(xy, chain):
 
     return legal_moves
 
-
+# This is a version of the legal moves which removes the moves which lead to a mirror version.
 def get_legal_moves_nomirror(xy, chain):
 
     mode_3d = is_chain_3d(chain.chain_list)
 
-
+    # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
     if mode_3d:
-
         moves_xydelta = [[1, (1, 0, 0)], [-1, (-1, 0, 0)], [2, (0, 1, 0)], [-2, (0, -1, 0)], [3, (0, 0, 1)], [-3, (0, 0, -1)]]
-
-
     else:
-        # This is a list of tuples with 1: the move, 2: the coordinates delta that cant exist yet.
         if chain.can_still_mirror:
             moves_xydelta = [[1, (1, 0)], [2, (0, 1)], [-2, (0, -1)]]
-
-        
         else:
             moves_xydelta = [[1, (1, 0)], [-1, (-1, 0)], [2, (0, 1)], [-2, (0, -1)]]
 

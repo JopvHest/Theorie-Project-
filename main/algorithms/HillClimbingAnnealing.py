@@ -7,7 +7,7 @@ from functions.GetLegalMoves import get_legal_moves
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
 
-
+# This functions tries to find a best protein by using simulated annealing
 def hill_climbing_annealing(protein, iterations):
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
@@ -24,8 +24,6 @@ def hill_climbing_annealing(protein, iterations):
     temperature_end = 0.5
     temp_step = (temperature_start - temperature_end) / iterations
     temperature = temperature_start
-
-
 
     while total_iterations < iterations:
 

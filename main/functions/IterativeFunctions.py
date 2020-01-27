@@ -5,13 +5,13 @@ def build_straight_protein(protein):
 
     if mode_3d:
         protein.chain.chain_list[0].coordinates = [0, 0, 0]
-
-
     else:
         protein.chain.chain_list[0].coordinates = [0, 0]
     
-    
+    # Build a chain with all folds at 2
     for index, char in enumerate(protein.amino_string):
+        
+        # The first amino is already there
         if index == 0:
             continue
         

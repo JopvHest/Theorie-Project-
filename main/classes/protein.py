@@ -11,7 +11,7 @@ from functions.GetScore import get_score
 from functions.Visualize import get_connections
 
 
-# Represents a chain of amino acids and orders them.
+# Represents a chain of amino acids and its properties.
 class Protein(object):
 
     def __init__(self, amino_string, mode):
@@ -47,8 +47,10 @@ class Protein(object):
         else:
             self.chain.chain_list.append(Amino(self.amino_string[0], 2, [0,0]))
 
+        # Used to store the FINISHED matrix.
         self.matrix = []
 
+        # Some functions use this to determine the char that is being "calculated"
         self.char_counter = 1
 
     # Prints the matrix of the protein.
@@ -67,7 +69,9 @@ class Protein(object):
                 # Print matrix using pandas
                 print(DataFrame(layer))
 
+    # Prints a 2d or 3d represenation of the protein using MatPlotLib
     def print_protein(self):
+        
         # Get list of bonds
         connections = get_connections(self.chain.chain_list, self.matrix)
 
@@ -173,5 +177,6 @@ class Protein(object):
             print(str(amino.get_amino_output()))
         print("")
 
+    # Returns the score
     def get_score(self):
         return get_score(self.chain.chain_list, self.matrix)

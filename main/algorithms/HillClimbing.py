@@ -8,7 +8,7 @@ import copy
 import random
 
 
-
+# This search tries to find a best protein by using Hill climbing
 def hill_climbing(protein, iterations):
     
     # We start with a straight protein, you could replace this with a search (random for example)
@@ -38,7 +38,6 @@ def hill_climbing(protein, iterations):
         # Also pick random move and apply.
         moves = get_legal_moves(chosen_amino.coordinates, protein.chain.chain_list)
         
-
         if not moves:
             continue
         

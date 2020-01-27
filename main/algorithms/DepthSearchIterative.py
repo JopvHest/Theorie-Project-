@@ -12,10 +12,6 @@ best_score = 1
 best_chain = None
 best_matrix = None
 
-#depth_score_dict = {
-#    "1" : [[average_score, amount_of_scores], [best_score]]
-#   "2" : [[average_score, amount_of_scores], [best_score]]
-#}
 
 # This function is a implementation of the depth search algo in which the score and the matric get iteratively improve instead of being build from scratch
 def depth_search_iterative(protein, ch_score):
@@ -43,7 +39,6 @@ def depth_search_iterative(protein, ch_score):
         # Note: an index of -1 gets the last object in a list.
         amino_xy = protein.chain.chain_list[-1].get_fold_coordinates()
 
-
         # Last amino always has fold of 0.
         if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
@@ -53,7 +48,6 @@ def depth_search_iterative(protein, ch_score):
             illegal_folds = None
             ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string, ch_score)
 
-
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
             for amino in best_chain:
@@ -62,11 +56,9 @@ def depth_search_iterative(protein, ch_score):
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 
-
         # Adds amino to the protein chain.
         protein.chain.chain_list.append(Amino(char, fold, amino_xy))
         char_counter += 1
-
 
 
 # The actual algo for selecting the fold the chain will make.
@@ -78,7 +70,6 @@ def fold_selector(xy, char, chain, illegal_moves, chars, ch_score):
     # IF the algo has actually found the best chain (which it should), return the best chain.
     if best_chain:
         return (True)
-
 
     raise Exception("Couldn't find best chain")
 
@@ -110,13 +101,11 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         global best_score
         global best_chain
 
-
         # IF this score is the best score, save this score + chain as a global.
         if score < best_score:
             print("New best score: " + str(score))
             best_score = score
             best_chain = copy.deepcopy(current_chain.chain_list)
-
 
         # Abort that chain if it isnt the best score. also remove it from the matrix
         current_chain.matrix[new_amino_y][new_amino_x] = " "
@@ -125,7 +114,6 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
     # Get legal moves on the position of that amino
     legal_moves = get_legal_moves_nomirror(current_chain.chain_list[-1].get_fold_coordinates(), current_chain)
-
 
     # If no legals move left, abort the chain. The protein got "stuck"
     if not legal_moves:
@@ -154,5 +142,4 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.matrix[new_amino_y][new_amino_x] = " "
             current_chain.update_mirror_status_reverse()
             
-
             del current_chain.chain_list[-1]
