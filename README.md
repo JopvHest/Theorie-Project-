@@ -1,5 +1,5 @@
 # Protein pow(d)er
-intro stukje protein powder.
+In de case proteine pow(d)er is het de bedoeling dat je een proteïne, een ketting van aminozuren, vouwt op een manier waarop de stabiliteit van die ketting zo hoog mogelijk is. Een hoge stabiliteit betekent een zo laag mogelijke stabiliteitsscore. Het blijkt dat een verkeerde vouwing van proteïnen kan zorgen voor kanker, Alzheimer, en taaislijmziekte. Hierdoor is het erg belangrijk om de precieze vouwing van een proteïne te kunnen bepalen. Elke vouwing is een 90 graden hoek, waardoor het probleem op een grid werkt. Er bestaan P, H, en C aminozuren. P (polaire) aminozuren voegen niks toe aan de stabiliteit. H (hydrofobe) aminozuren zorgen voor -1 stabiliteitsscore, wanneer ze naast elkaar liggen maar niet direct verbonden zijn in de ketting. C (cysteïne) aminozuren zorgen voor -5 stabiliteitsscore wanneer ze op deze zelfde manier naast elkaar liggen, terwijl een C en H aminozuur samen zorgen voor -1 stabiliteitsscore.
 
 ## Aan de slag
 
@@ -10,23 +10,23 @@ De Codebase is geschreven in python 3.7 en volledig compatible met 3.8. De requi
 
 ### Gebruik
 De applicatie wordt uitgeovoerd vanuit main/main.py, waarin de imports van alle bruikbare functies al staan. Ten eersten maak je een nieuw ongeorderde proteine aan met de volgende functie:
-    
+
     protein1 = Protein(amino_string, dimension_mode)
 amino_string: De string van het proteine dat je wil representeren en sorten. (voorbeeld: " CHHCPHPHPHP")
 dimensions_mode: De string van de dimensie mode die je wil uitvoeren.("2D" of "3D")
 
 Vervolgens kan je de chain van het proteine opbouwen met een search functie van jouw keuze. Zie XXX voor de algorithmes die beschikbaar zijn. de paramaters verschillen met algorithme. Deze wordt opgeroepen op een protein object alsvolgens.
-    
+
     search_type__function(protein1, parameter1, parameter2).
 
 Nu de chain is opgebouwd kan je op verschillende manieren een output krijgen. Namelijk:
-    
+
 Print de score die dit proteine heeft gehaald:
 
     print(protein1.get_score())
 
 Dit print een representatie van het protein in 2d of 3d doormiddel van MatPlotLib.
-    
+
     protein1.print_protein()
 
 Print een output zoals vereist vanuit de opdracht.
@@ -72,4 +72,3 @@ Where to go from here:
 
 # What we could have done better.
 - Function abstraction by represeting them as classes.
-
