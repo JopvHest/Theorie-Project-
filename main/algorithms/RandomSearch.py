@@ -1,8 +1,10 @@
 import random
+
 from classes.amino import Amino
+from functions.GetLegalMoves import get_legal_moves
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
-from functions.GetLegalMoves import get_legal_moves
+
 
 
 def random_search(protein):

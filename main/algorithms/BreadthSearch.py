@@ -1,30 +1,16 @@
-# pseudocode
+# Authors: Brent van Dodewaard, Jop van Hest, Luitzen de Vries
+# Heuristics programming project: Protein pow(d)er
+# This file implements a breadth search algorithm
 
-# stack = list with all current chains.
-# Only has 1 chain at the start. a chain with the start move.
-
-# While True:
-#   for chain in stack:
-#       remove chain from stack
-#       for move in legal_moves(chain):
-#           add chain+move to the chain. At the place of the original chain (That got removed)
-# When every chain in the stack arrived at the end of the amino_string. Compare the scores of ALL chains.
-
-# For beam search we compare all the chains every x turns and remove the worst x procent.
-
+import copy
+from queue import Queue
 
 from classes.amino import Amino
 from classes.chain import Chain
-
-from queue import Queue
-import copy
 from classes.protein import Protein
-from classes.chain import Chain
-
-
+from functions.GetLegalMoves import get_legal_moves, get_legal_moves_nomirror
 from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient
-from functions.GetLegalMoves import get_legal_moves, get_legal_moves_nomirror
 
 
 def breadth_search(protein, ch_score):

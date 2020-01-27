@@ -1,9 +1,9 @@
-
 import copy
+import random
+
 from classes.amino import Amino
 from classes.chain import Chain
 from functions.GetLegalMoves import get_legal_moves
-import random
 
 
 def iterative_algorithm(protein, iterations):
