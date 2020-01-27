@@ -13,7 +13,6 @@ def get_matrix(chain):
     if mode_3d:
         z_range = [0, 0]
 
-    
     # Define min/max x and y values over all aminos.
     for amino in chain:
         if amino.coordinates[0] > x_range[1]:
@@ -93,8 +92,6 @@ def get_matrix_efficient(chain):
     if mode_3d:
         z_range = [0, 0]
 
-    
-
     # Define min/max x and y values over all aminos.
     for amino in chain:
         if amino.coordinates[0] > x_range[1]:
@@ -144,9 +141,9 @@ def get_matrix_efficient(chain):
         for amino in chain:
             matrix[amino.coordinates[1] - y_range[0]][amino.coordinates[0] - x_range[0]] = amino
 
+    # We also return the offsets used for making the matrix.
     if mode_3d:
         offset = [x_range[0], y_range[0], z_range[0]]
-
     else:
         offset = [x_range[0], y_range[0]]
 

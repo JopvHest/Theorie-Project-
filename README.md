@@ -10,40 +10,44 @@ see algorithmes for the algos available
 - get_output()
 
 # Classes
+## Protein()
+## Amino()
+## Chain()
 
-    ## Protein()
-    ## Amino()
-    ## Chain()
-
-# Algorithmes?
-
-    ## Depth search first
-        ### Lookahead
-        ### Iterative
-    ## Branch bound
-        ### Lookahead
-        ### Random throwaway
-    ## Breadth_search
-        ### Beam search
-    ## iterative
-        ### Hill climbing
+# Algorithmes
+### Depth search first
+##### Lookahead
+##### Iterative
+## Branch bound
+### Lookahead
+### Random throwaway'
+## Breadth_search
+### Beam search
+## iterative
+### Hill climbing single
+### Hill climbing multi
+### Simulated annealing
 
 
 # Functions
-    ## Get_score()
-    ## Get_matrix()
-    ## is_chain_3d()
-    ## chain_can_reach_spots
+## Get_score()
+### get_score efficient
+### 
+## Get_matrix()
+### get_matrix_efficient
+## is_chain_3d()
+## chain_can_reach_spots
 
 # Heuristics/pruning
-    ## Pruning
-        ### Ignore mirror
-        ### Brand and bound
-        ### Force first move
-    ## Heuristics
-        ### c-h score
-        ### Compactness
-        ### Current score (< or > than average and or best.)
+## Pruning
+### Ignore mirror
+### Brand and bound
+### Force first move
+    
+## Heuristics
+### c-h score
+### Compactness
+### Current score (< or > than average and or best.)
 
 # What could be improved / Where to go from here
 - improve function x by x
@@ -52,6 +56,7 @@ see algorithmes for the algos available
 - add x pruning
 
 # What we could have done better.
-- Idk, class / function absctracting could be better??  
+- Idk, class / function absctracting could be better?? 
+- 
 
 

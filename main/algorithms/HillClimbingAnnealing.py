@@ -9,7 +9,7 @@ import copy
 import random
 
 
-
+# This functions tries to find a best protein by using simulated annealing
 def hill_climbing_annealing(protein, iterations):
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
@@ -26,8 +26,6 @@ def hill_climbing_annealing(protein, iterations):
     temperature_end = 0.2
     temp_step = (temperature_start - temperature_end) / iterations
     temperature = temperature_start
-
-
 
     while total_iterations < iterations:
 

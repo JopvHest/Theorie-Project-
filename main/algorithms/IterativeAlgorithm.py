@@ -48,10 +48,6 @@ def iterative_algorithm(protein, iterations):
             # change fold of the amino
             new_fold = random.choice(legal_moves)
             amino_actual.fold = new_fold
-            # chain_new.append(amino_actual)
-            
-            
-
             
             # get the amino after the selected amino and get fold and coordinates
             amino_next = chain_actual[random_index + 1]
@@ -70,13 +66,11 @@ def iterative_algorithm(protein, iterations):
                 amino_next.fold = current_fold
                 # chain_new.append(amino_next)
 
-
             elif abs(new_fold) == abs(current_fold):
                 chain_actual = chain_actual_copy
                 continue
             
             else:
-                
                 # inverse folds
                 amino_next.fold = current_fold
                 coordinates_to_check = amino_next.get_fold_coordinates()
@@ -89,32 +83,12 @@ def iterative_algorithm(protein, iterations):
                 amino_after_next = chain_actual[random_index + 2]
                 amino_after_next.coordinates = coordinates_to_check
                 
-                
-                
                 # is the opposite of the first new fold
                 amino_after_next.fold = new_fold * -1
-
-
-                # chain_new.append(amino_after_next)
-                
-                
-                # chain_actual = pull_chain(chain_actual, chain_actual_copy, 2, random_index)
 
                 for j in range(0, random_index + 2):
                     chain_new.append(chain_actual[j])
 
-
-                # go trough all aminos in te chain until aminos left equal to number of changes - 1 to cenvert length list to index length
-                # for i in range(random_index + 1, len(chain_actual) - 2):
-                #     amino_changed = chain_actual_copy[i]
-                #     amino_pulled = chain_actual[i + 2]
-
-                #     amino_pulled.coordinates = amino_changed.coordinates
-                #     if amino_pulled.fold == 0:
-                #         amino_pulled.fold = 0
-                #     else:
-                #         amino_pulled.fold = amino_changed.fold
-                #     chain_new.append(amino_pulled)
                 amino_last = chain_actual[-1]
                 amino_last.fold = 0
                 
@@ -138,12 +112,3 @@ def pull_chain(chain, chain_copy, number_changes, index):
         else:
             amino_pulled.fold = amino_changed.fold
     return chain
-
-
-# def pull_chain(chain, number_changes, index)
-
-#     new_chain = []
-
-#     for i in range(0, index)
-#         new_chain.append(chain[index])
-#     for i in range(index + 1, len(chain) - number_changes - 1):

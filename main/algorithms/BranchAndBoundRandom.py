@@ -33,6 +33,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     p_below_average = p1
     p_above_average = p2
 
+    # You could import a score to start at (if you know the score to be at least that amount)
     best_score = best_score_import
     
     char_counter = 1
@@ -47,6 +48,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
 
 
     if mode_3d:
+        # Build a matrix with dimensions of 2 * length of the protein +1
         matrix_dimensions = 2 * len(protein.amino_string) + 1
         
         for k in range(matrix_dimensions + 1):
@@ -61,7 +63,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
         protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1, len(protein.amino_string) + 1]
         protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
-
+    # 2D
     else:
         # Build a matrix with dimensions of 2 * length of the protein +1
         matrix_dimensions = 2 * len(protein.amino_string) + 1
@@ -75,7 +77,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
         protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1]
         protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
-
+    # Perform all functions to add corrent spots.
     new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(protein.chain, protein.chain.matrix, 0)
     protein.chain.add_fold_spots(spots_to_add, "H")
     protein.chain.remove_fold_spots(spots_to_remove, "H")
@@ -251,7 +253,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                 partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
                 partial_energies[current_depth][2] += 1
             
-
+            # The score is below average (so better) for that depth
             elif new_score <= partial_energies[current_depth][1]:
                 global p_below_average
                 random_number = random.uniform(0, 1)
@@ -263,6 +265,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                     partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
                     partial_energies[current_depth][2] += 1
 
+            # The score is above average (so worse) for that depth
             else:
                 global p_above_average
                 random_number = random.uniform(0, 1)
@@ -301,11 +304,13 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                 current_chain.matrix[coordinates[1]][coordinates[0]] = " "
             current_chain.update_mirror_status_reverse()
             
-
+            # Undo the added amino
             del current_chain.chain_list[-1]
 
-
+# This functions calculates a new average based on the average, the amount of entries used to calculate this average, and a new enrty.
 def calculate_average(average, average_amount, new_entry):
+
+    # Maths
     new_average = ( average * (average_amount)/(average_amount + 1)) + (new_entry * 1 / (average_amount + 1))
     
     return new_average

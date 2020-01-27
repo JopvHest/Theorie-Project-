@@ -1,14 +1,19 @@
 from functions.MinChainLenNeeded import chain_can_reach_spot
 
+# Chain is an object used to store amino chains inside search functions and inside the Protein object.
 class Chain(object):
     def __init__(self, chain):
         
+        # The list containing the aminos in the correct order of the chain.
         self.chain_list = chain
 
+        # Used to represent if the chain is in the pre mirror state or post mirror state.
         self.can_still_mirror = True
 
+        # The amount of "de-mirror" moves this chain has made. Used in determining mirror state.
         self.non_mirror_moves = 0
 
+        # Contains the same aminos as the chain, but in a matrix.
         self.matrix = []
 
         self.score = 0

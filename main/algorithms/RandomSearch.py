@@ -4,7 +4,7 @@ from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
 from functions.GetLegalMoves import get_legal_moves
 
-
+# This functions build a protein with random fods (but always legal)
 def random_search(protein):
 
     while protein.char_counter < len(protein.amino_string):
@@ -64,7 +64,6 @@ def redo_last_fold(protein):
 
     # Replace the previous illegal fold with a new fold
     last_amino.fold = fold
-
 
     # If still no fold found, also redo move before that. Char loop in init needs to go back 1 step.
     if not fold:
