@@ -7,10 +7,11 @@ from algorithms.BreadthSearch import breadth_search
 from algorithms.BeamSearch import beam_search
 from algorithms.DepthSearchIterative import depth_search_iterative
 from algorithms.DepthSearchFoldSpots import depth_search_iterative_and_spots
+from algorithms.IterativeAlgorithm2 import hill_climbing_2
 from algorithms.IterativeAlgorithm import iterative_algorithm
 from algorithms.BranchAndBoundRandom import branch_and_bound_random
-from algorithms.HillClimbing import hill_climbing
-from algorithms.HillClimbingAnnealing import hill_climbing_annealing
+# from algorithms.HillClimbing import hill_climbing
+# cfrom algorithms.HillClimbingAnnealing import hill_climbing_annealing
 
 if __name__ == "__main__":
 
