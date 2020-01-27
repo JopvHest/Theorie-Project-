@@ -1,14 +1,14 @@
 # Protein pow(d)er
 In de case proteine pow(d)er is het de bedoeling dat je een proteïne, een ketting van aminozuren, vouwt op een manier waarop de stabiliteit van die ketting zo hoog mogelijk is. Een hoge stabiliteit betekent een zo laag mogelijke stabiliteitsscore. Het blijkt dat een verkeerde vouwing van proteïnen kan zorgen voor kanker, Alzheimer, en taaislijmziekte. Hierdoor is het erg belangrijk om de precieze vouwing van een proteïne te kunnen bepalen. Elke vouwing is een 90 graden hoek, waardoor het probleem op een grid werkt. Er bestaan P, H, en C aminozuren. P (polaire) aminozuren voegen niks toe aan de stabiliteit. H (hydrofobe) aminozuren zorgen voor -1 stabiliteitsscore, wanneer ze naast elkaar liggen maar niet direct verbonden zijn in de ketting. C (cysteïne) aminozuren zorgen voor -5 stabiliteitsscore wanneer ze op deze zelfde manier naast elkaar liggen, terwijl een C en H aminozuur samen zorgen voor -1 stabiliteitsscore.
 
-## Aan de slag
+# Aan de slag
 
-### Vereisten
+#### Vereisten
 
 De Codebase is geschreven in python 3.7 en volledig compatible met 3.8. De requirements staan in requirements.txt en zijn met de volgende comment te installeren.
     pip install -r requirements.txt
 
-### Gebruik
+#### Gebruik
 De applicatie wordt uitgeovoerd vanuit main/main.py, waarin de imports van alle bruikbare functies al staan. Ten eersten maak je een nieuw ongeorderde proteine aan met de volgende functie:
 
     protein1 = Protein(amino_string, dimension_mode)
@@ -36,7 +36,7 @@ Print een output zoals vereist vanuit de opdracht.
     protein.get_output_list()
 
 
-## Structuur
+# Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
 
 - /main/ : Bevat alle code van dit project.
@@ -50,7 +50,7 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 # Algorithmes
 We zullen van elke geimplementeerde search uitleggen wat die doet, en hoe deze aangeroepen moet worden. Ook wordt voor elke functie aangegeven of deze wordt gesupport in 2d EN 3d, of alleen in 2d.
 
-### Depth search first.
+## Depth search first.
 
     depth_search(protein, c-h_score)
 beschrijving depth search.
@@ -62,7 +62,7 @@ beschrijving
 
 max_lookahead:
 
-### Branch & bound
+## Branch & bound
 
     branch_and_bound(protein, c-h_score, best_score_import)
 beschrijving
@@ -86,7 +86,7 @@ p1:
 
 p2:
 
-### Breadth_search
+## Breadth_search
 
     breadth_search(protein, c-h_score)
 beschrijving
@@ -99,7 +99,7 @@ beschrijving
 
 selection_levels:
 
-### iterative
+## iterative
 
 describe iterative algos.
 
@@ -124,7 +124,7 @@ beschrijving:
 
 iterations:
 
-# TODO/ To improve
+## TODO/ To improve
 Where to go from here:
 
 - Add 3D support to all functions
@@ -132,5 +132,5 @@ Where to go from here:
 - Instead of the manhatten distance, use a A* algorithm for figuring out which connections spots can still be reached in banch and bround.
 
 
-# What we could have done better.
+## What we could have done better.
 - Function abstraction by represeting them as classes.
