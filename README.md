@@ -10,11 +10,13 @@ De Codebase is geschreven in python 3.7 en volledig compatible met 3.8. De requi
 
 ### Gebruik
 De applicatie wordt uitgeovoerd vanuit main/main.py, waarin de imports van alle bruikbare functies al staan. Ten eersten maak je een nieuw ongeorderde proteine aan met de volgende functie:
+    
     protein1 = Protein(amino_string, dimension_mode)
 amino_string: De string van het proteine dat je wil representeren en sorten. (voorbeeld: " CHHCPHPHPHP")
 dimensions_mode: De string van de dimensie mode die je wil uitvoeren.("2D" of "3D")
 
 Vervolgens kan je de chain van het proteine opbouwen met een search functie van jouw keuze. Zie XXX voor de algorithmes die beschikbaar zijn. Deze wordt opgeroepen op een protein object alsvolgens.
+    
     search_type__function(protein1, parameter1, parameter2)
 
 de paramaters verschillen met algorithme.
@@ -34,11 +36,11 @@ Print een output zoals vereist vanuit de opdracht.
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
 
 - /main/ : Bevat alle code van dit project.
--   /main/main.py : De applicatie wordt gerund vanuit deze file.
-- /main/classes/ : Bevat de classes voor de gebruikte objecten.
-- /main/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van de code
-- /main/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
-- /main/unfinished/ : Contains the current unfinished/ not working code of the project
+    - /main/main.py : De applicatie wordt gerund vanuit deze file.
+    - /main/classes/ : Bevat de classes voor de gebruikte objecten.
+    - /main/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van code
+    - /main/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
+    - /main/unfinished/ : Contains the current unfinished/ not working code of the project
 
 
 # Algorithmes
