@@ -3,6 +3,7 @@ In de case proteine pow(d)er is het de bedoeling dat je een proteïne, een ketti
 
 ![Protein visualizaion](doc/proteins.png)
 
+
 # Aan de slag
 
 #### Vereisten
@@ -38,6 +39,7 @@ Print een output zoals vereist vanuit de opdracht.
     protein.get_output_list()
 
 
+
 # Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
 
@@ -47,6 +49,7 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
     - /main/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van code
     - /main/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
     - /main/unfinished/ : Contains the current unfinished/ not working code of the project
+
 
 
 # Algorithmes
@@ -126,13 +129,12 @@ beschrijving:
 
 iterations:
 
+
+
 ## TODO/ To improve
 Where to go from here:
 
 - Add 3D support to all functions
 - Improve the score lower bound function for brand and bound.
 - Instead of the manhatten distance, use a A* algorithm for figuring out which connections spots can still be reached in banch and bround.
-
-
-## What we could have done better.
-- Function abstraction by represeting them as classes.
+- Algorithm functions abstracting by implementing them as classes.
