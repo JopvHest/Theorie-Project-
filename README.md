@@ -15,22 +15,24 @@ De applicatie wordt uitgeovoerd vanuit main/main.py, waarin de imports van alle 
 amino_string: De string van het proteine dat je wil representeren en sorten. (voorbeeld: " CHHCPHPHPHP")
 dimensions_mode: De string van de dimensie mode die je wil uitvoeren.("2D" of "3D")
 
-Vervolgens kan je de chain van het proteine opbouwen met een search functie van jouw keuze. Zie XXX voor de algorithmes die beschikbaar zijn. Deze wordt opgeroepen op een protein object alsvolgens.
+Vervolgens kan je de chain van het proteine opbouwen met een search functie van jouw keuze. Zie XXX voor de algorithmes die beschikbaar zijn. de paramaters verschillen met algorithme. Deze wordt opgeroepen op een protein object alsvolgens.
     
-    search_type__function(protein1, parameter1, parameter2)
-
-de paramaters verschillen met algorithme.
+    search_type__function(protein1, parameter1, parameter2).
 
 Nu de chain is opgebouwd kan je op verschillende manieren een output krijgen. Namelijk:
     
-    print(protein1.get_score())
-Dit print de score die dit proteine heeft gehaald.
+Print de score die dit proteine heeft gehaald:
 
+    print(protein1.get_score())
+
+Dit print een representatie van het protein in 2d of 3d doormiddel van MatPlotLib.
+    
     protein1.print_protein()
-Dit print een representatie van het protein in 2d of 3d doormiddel van MatPlotLib
+
+Print een output zoals vereist vanuit de opdracht.
 
     protein.get_output_list()
-Print een output zoals vereist vanuit de opdracht.
+
 
 ## Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
