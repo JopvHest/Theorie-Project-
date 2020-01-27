@@ -12,7 +12,7 @@ from functions.GetScore import get_score
 
 
 # iterative algorithm which selects a random amino and reforlds 1-3 folds from there
-def hill_climbing_2(protein, iterations, max_non_imporvements):
+def hill_climbing_2(protein, iterations, max_non_improvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
@@ -23,7 +23,7 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
 
     # The amount of turns the score hasnt improved.
     times_not_improved = 0
-    times_not_improved_limit = max_non_imporvements
+    times_not_improved_limit = max_non_improvements
 
     # The overal best score and chain is saved here
     best_score = 1
