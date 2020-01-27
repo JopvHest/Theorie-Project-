@@ -1,13 +1,11 @@
-
-
-from classes.amino import Amino
-from functions.GetMatrix import get_matrix
-from functions.GetLegalMoves import get_legal_moves
-from functions.GetScore import get_score
-from algorithms.DepthSearchLookahead import depth_search_lookahead
 import copy
 import random
 
+from algorithms.DepthSearchLookahead import depth_search_lookahead
+from classes.amino import Amino
+from functions.GetLegalMoves import get_legal_moves
+from functions.GetMatrix import get_matrix
+from functions.GetScore import get_score
 
 # This functions tries to find a best protein by using simulated annealing
 def hill_climbing_annealing(protein, iterations):

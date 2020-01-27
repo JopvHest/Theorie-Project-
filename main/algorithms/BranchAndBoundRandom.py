@@ -1,14 +1,14 @@
-import random
-from classes.amino import Amino
-from classes.chain import Chain
-from functions.GetMatrix import get_matrix_efficient, get_matrix
-from functions.GetScore import get_score_efficient, get_score, get_score_iterative
-from functions.GetLegalMoves import get_legal_moves, get_legal_moves_nomirror
-from functions.MinChainLenNeeded import chain_can_reach_spot
-from functions.GetScore import get_score_iterative_and_spots
-from functions.IsChain3d import is_chain_3d
 import copy
 import random
+
+from classes.amino import Amino
+from classes.chain import Chain
+from functions.GetLegalMoves import get_legal_moves, get_legal_moves_nomirror
+from functions.GetMatrix import get_matrix_efficient, get_matrix
+from functions.GetScore import get_score_efficient, get_score, get_score_iterative, get_score_iterative_and_spots
+from functions.IsChain3d import is_chain_3d
+from functions.MinChainLenNeeded import chain_can_reach_spot
+
 
 best_score = 1
 best_chain = None

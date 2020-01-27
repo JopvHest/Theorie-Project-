@@ -1,7 +1,4 @@
-# pseudo code
-# take all chains
-# go trough the chains
-# make dictionary in a dictionary and store move per amino with int
+
 from classes.amino import Amino
 from classes.chain import Chain
 

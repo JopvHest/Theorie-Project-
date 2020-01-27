@@ -13,7 +13,7 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
-
+    protein.print_protein()
     # Save the score at every iteration (Not yet implemented)
     scores = []
     total_iterations = 0
@@ -104,7 +104,8 @@ def hill_climbing_2(protein, iterations, max_non_imporvements):
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-        
+        protein.print_protein()
+
         # check for errror and revert to old chain
         if protein.chain.chain_list == False:
             protein.chain.chain_list = old_chain

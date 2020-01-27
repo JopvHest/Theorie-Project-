@@ -1,15 +1,15 @@
+import string
+
 from pandas import DataFrame
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+from classes.amino import Amino
+from classes.chain import Chain
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
 from functions.Visualize import get_connections
 
-from classes.amino import Amino
-from classes.chain import Chain
-
-import string
-
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # Represents a chain of amino acids and its properties.
 class Protein(object):
