@@ -7,6 +7,6 @@ def is_chain_3d(chain):
         return False
     return True
 
-def check_dimension(chain):
+def check_dimensions(chain):
     if is_chain_3d(chain):
         Exception("Error: Algo doesn't support 3d mode")

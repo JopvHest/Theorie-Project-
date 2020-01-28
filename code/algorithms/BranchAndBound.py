@@ -19,7 +19,7 @@ best_chain = None
 best_matrix = None
 
 # A depth search search which check if the best score can still be achieved.
-def brand_and_bound(protein, ch_score, best_score_import):
+def branch_and_bound(protein, ch_score, best_score_import):
     global best_score
     
     # Check if unsupported 3d mode.

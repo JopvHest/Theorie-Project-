@@ -18,7 +18,7 @@ best_matrix = None
 
 
 # This function is a implementation of the depth search algo in which the score and the matric get iteratively improve instead of being build from scratch
-def depth_search(protein, ch_score):
+def depth_search_iterative(protein, ch_score):
     char_counter = 1
 
     # Build a matrix with dimensions of 2 * length of the protein +1
