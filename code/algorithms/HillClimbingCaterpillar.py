@@ -19,13 +19,8 @@ def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
 
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
-<<<<<<< HEAD:code/algorithms/HillClimberCaterpillar.py
-    protein.print_protein()
     
-=======
-    # Save the score at every iteration (Not yet implemented)
-    scores = []
->>>>>>> cffe0bee5145afba7d4adb4ee22041d449fb61ec:code/algorithms/HillClimbingCaterpillar.py
+    # take count of the number of iterations
     total_iterations = 0
 
     # The amount of turns the score hasnt improved.

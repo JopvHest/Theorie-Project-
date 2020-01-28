@@ -23,16 +23,7 @@ def get_legal_moves(xy, chain):
         for move in moves_xydelta:
 
            # If the move delta plus current xy is equal to another amino's xy remove it from the legal moves list.
-            if mode_3d:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
-                coordinates_sum.append(move[1][2] + xy[2])
-
-            else:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
+            coordinates_sum = sum_of_coordinates(move, xy, mode_3d)
 
             if coordinates_sum == list(amino.coordinates):
                 moves_xydelta.remove(move)
@@ -65,16 +56,7 @@ def get_legal_moves_nomirror(xy, chain):
         for move in moves_xydelta:
 
            # If the move delta plus current xy is equal to another amino's xy remove it from the legal moves list.
-            if mode_3d:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
-                coordinates_sum.append(move[1][2] + xy[2])
-
-            else:
-                coordinates_sum = []
-                coordinates_sum.append(move[1][0] + xy[0])
-                coordinates_sum.append(move[1][1] + xy[1])
+            coordinates_sum = sum_of_coordinates(move, xy, mode_3d)
 
             if coordinates_sum == list(amino.coordinates):
                 moves_xydelta.remove(move)
@@ -85,3 +67,19 @@ def get_legal_moves_nomirror(xy, chain):
         legal_moves.append(moves[0])
 
     return legal_moves
+
+# make a list of the move delta plus current xy
+def sum_of_coordinates(move, xy, dimension):
+    # check if is 3D
+    if dimension is True:
+        coordinates_sum = []
+        coordinates_sum.append(move[1][0] + xy[0])
+        coordinates_sum.append(move[1][1] + xy[1])
+        coordinates_sum.append(move[1][2] + xy[2])
+    # 2D
+    else:
+        coordinates_sum = []
+        coordinates_sum.append(move[1][0] + xy[0])
+        coordinates_sum.append(move[1][1] + xy[1])
+
+    return coordinates_sum
