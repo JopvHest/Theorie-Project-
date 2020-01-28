@@ -56,12 +56,18 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 We zullen van elke geimplementeerde search uitleggen wat die doet, en hoe deze aangeroepen moet worden. Ook wordt voor elke functie aangegeven of deze wordt gesupport in 2d EN 3d, of alleen in 2d.
 
 ## vaste variabelen in de functies:
+
 c-h_score:
 Dit wordt in de meeste algoritme functies gebruikt. Deze c-h_score geef je als waarde mee aan de functie.
 Het is een int en geeft aan hoeveel punten er tijdens het zoeken wordt gegeven voor een C-H bond. Hierdoor kan ervoor gezorgd worden dat het algorithm minder snel een C-H bond legt en zo C aminos overhoud om met elkaar te binden. Bij het berekenen van de uiteindelijke score wordt er nog steeds -1 voor elke C-H bond gerekend. De score wordt automatisch omgezet naar een negatief nummer. Je moet dus een positief nummer invoeren. Wil je de normale score functie gebruiken tijdens het zoeken vul dan voor c-h_score een 1 in.
 
 protein:
-Dit is het protein object dat in elke algoritme functie meegegeven moet worden. Hierin staan de aminozurenvolgorde opgeslagen. .............
+Dit is het proteine object dat in elke algoritme functie meegegeven moet worden. Hierin staat de volgorde van de aminozuren opgeslagen. Er is een chain object in opgeslagen waar de gevormde chain in wordt opgeslagen. Op deze manier maak je een proteine aan:
+
+    protein1 = Protein(amino_string, dimension_mode)
+
+Daarna kan je deze proteine meegeven aan de algoritme functie.
+
 
 ## Depth search first.
 
@@ -117,7 +123,7 @@ De breadth search verlengd the chain steeds door één nieuwe amino te leggen. H
 beschrijving:
 De beam search werkt volgens hetzelfde principe en initiele structuur als de breadth_search. Het verschil is dat je op verschillende zelf te bepalen levels een selectie kan doen. Deze selectie vergelijkt alle scores op dat niveau en bepaald het gemiddelde. Hij gaat dan alleen verder met de scores die beter zijn dan het gemiddelde, dus de chains met een lagere negatieve score. Vind niet altijd de beste score
 
-Er moet 1 level tussen selection levels zitten ivm errors????????????????????
+Er moet 1 level tussen selection levels zitten omdat het algoritme 2 levels gebruikt om te selecteren. Eerst houdt hij de scores bij van de chains en slaat deze op in de chain en in een lijst om het gemiddelde te bepalen. In het volgende level haalt hij alle chains uit de queue en kijkt hij naar de scoreen gaat alleen verder met de chains die beter of gelijk aan het gemiddelde zijn. Je kan dus selecteren op level 2 en 4 maar niet op level 2, 3 en 4
 
 selection_levels:
 Hier kun je in een list de levels meegeven waarop je een selectie wil doen.
