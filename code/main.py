@@ -16,10 +16,10 @@ from algorithms.SimulatedAnnealing import simulated_annealing
 if __name__ == "__main__":
 
     # Create a new protein.
-    protein1 = Protein('HPPHPHPHPH', "2D")
+    protein1 = Protein('HPHHPP', "2D")
     
     # Create the protein's chain and matrix by using the depth search algo.
-    simulated_annealing(protein1, 20000, 5, 0.5)
+    beam_search(protein1, 10, 5)
 
     # Print the score.
     print("Final score: " + str(protein1.get_score()))
