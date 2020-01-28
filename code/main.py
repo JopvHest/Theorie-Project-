@@ -1,52 +1,11 @@
 from classes.protein import Protein
-
-from algorithms.RandomSearch import random_search
-from algorithms.DepthSearch import depth_search
 from algorithms.DepthSearchLookahead import depth_search_lookahead
-from algorithms.BreadthSearch import breadth_search
-from algorithms.BeamSearch import beam_search
-from algorithms.DepthSearchIterative import depth_search_iterative
-from algorithms.BranchAndBound import branch_and_bound
-from algorithms.HillClimbingCaterpillar import hill_climbing_caterpillar
-from algorithms.HillClimbing import hill_climbing
-from algorithms.BranchAndBoundRandom import branch_and_bound_random
-from algorithms.SimulatedAnnealing import simulated_annealing
-
-
-def get_arguments(input_string):
-    function_parameters = {
-        "beam_search" : ["c-h score", "selection_levels"],
-        "depth_search" : ["c-h score"],
-        "breadth_search" : ["c-h score"],
-        "depth_search_lookahead" : ["c-h score", "max_lookahead"],
-        "hill_climbing" : ["iterations", "max non improve turns"],
-        "hill_climbing_caterpillar" : ["iterations", "max non improve turns"],
-        "simulated_annealing" : ["iterations", "start temp", "end temp"],
-        "branch_and_bound" : ["c-h score", "best score import"],
-        "branch_and_bound_random" : ["c-h score", "best score import", "p1", "p2"],
-    }
-
-    return function_parameters[input_string]
-
-def execute_search(algo_string, parameter_list, protein):
-    if protein_string == "depth_search":
-        depth_search(protein, *parameter_list)
-
-def execute_visualisation(vis_type, protein):
-    if vis_type == "Standard output list":
-        protein.get_output_list()
-    if vis_type == "Interactive protein visualisation":
-        protein.print_protein()
-    if vis_type == "Final score":
-        print("Final score: " + str(protein.get_score()))
-
-def print_question_dict(dict):
-    for key, value in dict.items():
-        print(key + ": " + value)
-
+from functions.InterfaceFunctions import get_arguments, execute_visualisation, execute_search, print_question_dict
+from timeit import default_timer as timer
 
 if __name__ == "__main__":
-
+    
+    # Contains the options the user has.
     dimension_dict = {
         "1": "2D",
         "2": "3D"
@@ -54,34 +13,61 @@ if __name__ == "__main__":
 
     dimension_mode = False
     while not dimension_mode:
+        print()
         print("Please enter the number of the desired dimension mode")
+        
+        # Prints all possible options.
         print_question_dict(dimension_dict)
         string_input = input()
+        print()
+
         if string_input in dimension_dict:
             dimension_mode = dimension_dict[string_input]
     
+    # Contains the options the user has.
     protein_dict = {
-        "1": "HHPHPHH",
-        "2": "Custom",
+        "1": "HHPHHHPHPHHHPH",
+        "2": "HPHPPHHPHPPHPHHPPHPH",
+        "3": "PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP",
+        "4": "HHPHPHPHPHHHHPHPPPHPPPHPPPPHPPPHPPPHPHHHHPHPHPHPHH",
+        "5": "PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP",
+        "6": "CPPCHPPCHPPCPPHHHHHHCCPCHPPCPCHPPHPC",
+        "7": "HCPHPCPHPCHCHPHPPPHPPPHPPPPHPCPHPPPHPHHHCCHCHCHCHH",
+        "8": "HCPHPHPHCHHHHPCCPPHPPPHPPPPCPPPHPPPHPHHHHCHPHPHPHH",
+        "9": "Custom"
         }
+    
     protein_string = False
     while not protein_string:
         print("Please enter the number of your desired protein string.")
         print_question_dict(protein_dict)
         string_input = input()
+        print()
 
         if string_input in protein_dict:
+
+            # User wants a custom, non preset, string.
             if protein_dict[string_input] == "Custom":
                 print("Please enter your custom protein string. (Using 'P', 'H', 'C')")
                 protein_string = input()
             else:
                 protein_string = protein_dict[string_input]
     
+    # Try to create the protein.
     protein = Protein(protein_string, dimension_mode)
-    
+
+    # Contains the algos the user can chose from.
     algo_dict = {
-        "1": "depth_search",
-        
+        "1": "random_search",
+        "2": "depth_search",
+        "3": "depth_search_lookahead",
+        "4": "breadth_search",
+        "5": "beam_search",
+        "6": "branch_and_bound",
+        "7": "branch_and_bound_random",
+        "8": "hill_climbing",
+        "9": "hill_climbing_caterpillar",
+        "10": "simulated_annealing"
         }
 
     protein_string = False
@@ -89,31 +75,49 @@ if __name__ == "__main__":
         print("Please enter the number of your desired search algorithm.")
         print_question_dict(algo_dict)
         string_input = input()
+        print()
         if string_input in algo_dict:
             protein_string = algo_dict[string_input]
-        
+
+    # Get the arguments that are needed for this particular search
     arguments_to_ask = get_arguments(protein_string)
 
+    # Question the user one by one for all the paramters and add them to the list.
     parameter_list = []
     for argument in arguments_to_ask:
         print("Please specify the value for the parameter: " + argument)
-        parameter_list.append(input())
+        parameter_list.append(float(input()))
+        print()
     
+    start = timer()
+    # Execute the actual search algo.
     execute_search(protein_string, parameter_list, protein)
+    end = timer()
+    
+    print()
     print("Final score: " + str(protein.get_score()))
+    print("Time elapsed: " + str(end - start) + " sec")
+    print()
+
+    # Algo containing the to chose from visualisations
     vis_dict = {
         "1": "Interactive protein visualisation",
         "2": "Standard output list",
-        "3": "Final score"}
+        "3": "Final score",
+        "4": "Exit"}
 
+    # Loops untill user choses "Exit"
     leave = False
     while not leave:
-        print("Please enter the number of you desired visualization")
+        print("Please enter the number of your desired visualization")
         print_question_dict(vis_dict)
         visualization = input()
+        print()
 
         if visualization in vis_dict:
             if vis_dict[visualization] == "Exit":
                 leave = True
+
+            # Execute the correct visualisation.
             else:
                 execute_visualisation(vis_dict[visualization], protein)

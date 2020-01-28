@@ -4,6 +4,7 @@
 
 import copy
 import random
+import sys
 
 from classes.amino import Amino
 from classes.chain import Chain
@@ -19,7 +20,7 @@ best_chain = []
 current_lookahead = 0
 
 # This is a search which calculates the best next move at every amino by looking "max_lookahead" ahead at each amino using depth_search.
-def depth_search_lookahead(protein, max_lookahead, ch_score):
+def depth_search_lookahead(protein, ch_score, max_lookahead):
     global best_chain
     global best_score
     chars = protein.amino_string
@@ -55,7 +56,7 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
         protein.chain.chain_list.append(Amino(char, fold, amino_xy))
         protein.chain.update_mirror_status()
 
-        print("Char " + str(len(protein.chain.chain_list)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score))
+        print("Char " + str(len(protein.chain.chain_list)) +"/" + str(len(protein.amino_string)) + ". Beste score: " + str(best_score), file=sys.stdout)
         print("")
 
         # Pop the first char from the string. That one has been processed now

@@ -159,7 +159,7 @@ class Protein(object):
     # Outputs a list like the excercise requires
     def get_output_list(self):
 
-        print("amino, fold")
+        print("amino, fold, coordinates")
         for amino in self.chain.chain_list:
             print(str(amino.get_amino_output()))
         print("")
