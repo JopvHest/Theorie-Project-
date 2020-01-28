@@ -1,6 +1,7 @@
 from classes.protein import Protein
 from algorithms.DepthSearchLookahead import depth_search_lookahead
 from functions.InterfaceFunctions import get_arguments, execute_visualisation, execute_search, print_question_dict
+from algorithms.BranchAndBoundRandom import branch_and_bound_random
 from timeit import default_timer as timer
 
 if __name__ == "__main__":

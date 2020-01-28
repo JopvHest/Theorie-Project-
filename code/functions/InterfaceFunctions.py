@@ -13,7 +13,7 @@ from algorithms.SimulatedAnnealing import simulated_annealing
 
 def get_arguments(input_string):
     function_parameters = {
-        "beam_search" : ["c-h score", "selection_levels"],
+        "beam_search" : ["c-h score"],
         "depth_search" : ["c-h score"],
         "breadth_search" : ["c-h score"],
         "depth_search_lookahead" : ["c-h score", "max_lookahead"],
@@ -50,11 +50,14 @@ def execute_search(protein_string, parameter_list, protein):
     if protein_string == "branch_and_bound":
         branch_and_bound(protein, *parameter_list)
     
-    if protein_string == "brand_and_bound_random":
+    if protein_string == "branch_and_bound_random":
         branch_and_bound_random(protein, *parameter_list)
     
     if protein_string == "random_search":
         random_search(protein)
+
+    if protein_string == "beam_search":
+        beam_search(protein, *parameter_list)
 
 def execute_visualisation(vis_type, protein):
     if vis_type == "Standard output list":

@@ -11,6 +11,7 @@ from classes.amino import Amino
 from functions.GetLegalMoves import get_legal_moves
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
+from functions.IterativeFunctions import rebuild_chain, build_straight_protein
 
 # This functions tries to find a best protein by using simulated annealing
 def simulated_annealing(protein, iterations, temp_start, temp_end):

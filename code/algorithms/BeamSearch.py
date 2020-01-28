@@ -13,16 +13,19 @@ from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient
 from functions.IsChain3d import check_dimensions
 
+# global values
+avg_scores = 0
+# start with 1 to skip the first amino
+global_index = 1
 
 # This is a Breadth first search which discards chains with subpar scors at specific depths.
-def beam_search(protein, ch_score, selection_levels):
+def beam_search(protein, ch_score):
 
     # Check if unsupported 3d mode.
     check_dimensions(protein.chain.chain_list)
 
     # Get chain WITH first amino already in it.
     start_chain = protein.chain
-
     # Create queue and put the first amino in it.
     queue = Queue(maxsize = 0)
     queue.put(start_chain)
@@ -33,6 +36,7 @@ def beam_search(protein, ch_score, selection_levels):
     # Keeps track of scores in 1 layer.
     scores = []
 
+
     # Go trough the queue.
     while not queue.empty():
         # Get the first chain from the queue.
@@ -41,23 +45,24 @@ def beam_search(protein, ch_score, selection_levels):
         # Get the index from the length of the chain.
         index = len(chain_actual.chain_list)
 
-        # Specifies if we are at a level before or at the level for selecting chains to abandon.
-        saving_score = False
-        selecting = False
+        # get the globals
+        global global_index
+        global avg_scores
 
-        if index + 1 in selection_levels:
-            saving_score = True
-        elif index in selection_levels:
-            cutoff_score = sum(scores)/len(scores)
-            selecting = True
-        elif index - 1 in selection_levels:
+        # check for level change level change by comparing global index with actual index
+        if index == global_index + 1:
+            # change global index to new level
+            global_index = index
+            
+            # update global avg score and reset scores
+            sum_scores = sum(scores)/len(scores)
+            avg_scores = sum_scores
             scores = []
 
         # Remove chain from queue if score is worse than cutoff score.
-        if selecting:
-            chain_score = chain_actual.score
-            if chain_score > cutoff_score:
-                continue
+        chain_score = chain_actual.score
+        if chain_score > avg_scores:
+            continue
 
         # Last amino always has fold of 0.
         if  index + 1 == len(protein.amino_string):
@@ -87,17 +92,15 @@ def beam_search(protein, ch_score, selection_levels):
                     new_chain = copy.deepcopy(chain_actual)
                     new_chain.chain_list.append(amino)
 
-                    # Put the new chain in the queue.
-                    if not saving_score:
-                        queue.put(new_chain)
-                    # If saving score, set chain's score variable to its score, and add score to this layer's score list.
-                    else:
-                        matrix, offset = get_matrix_efficient(new_chain.chain_list)
-                        score = get_score_efficient(new_chain.chain_list, matrix, offset, 1)
-                        new_chain.score = score
+                    # Put the new chain in the queue, set chain's score variable to its score, and add score to this layer's score list.
+                    
+                    matrix, offset = get_matrix_efficient(new_chain.chain_list)
+                    score = get_score_efficient(new_chain.chain_list, matrix, offset, 1)
+                    new_chain.score = score
+                    queue.put(new_chain)
 
-                        queue.put(new_chain)
-                        scores.append(score)
+                    # add score to the list which tracks all scores in this level
+                    scores.append(score)
 
     # The best score and corresponding chain that has been found.
     best_score = 1
