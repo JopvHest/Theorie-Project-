@@ -44,7 +44,6 @@ def branch_and_bound(protein, ch_score, best_score_import):
                     row.append(" ")
                 layer.append(row)
             protein.chain.matrix.append(layer)
-        print(len(protein.chain.matrix), len(protein.chain.matrix[1]), len(protein.chain.matrix[1][1]))
         protein.chain.chain_list[0].coordinates = [len(protein.amino_string) + 1 , len(protein.amino_string) + 1, len(protein.amino_string) + 1]
         protein.chain.matrix[len(protein.amino_string) + 1][len(protein.amino_string) + 1][len(protein.amino_string) + 1] = protein.chain.chain_list[0]
 
@@ -89,9 +88,6 @@ def branch_and_bound(protein, ch_score, best_score_import):
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-            for amino in best_chain:
-                print(amino)
-
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 

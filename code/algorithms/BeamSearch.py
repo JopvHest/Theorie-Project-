@@ -40,7 +40,6 @@ def beam_search(protein, ch_score, selection_levels):
 
         # Get the index from the length of the chain.
         index = len(chain_actual.chain_list)
-        print(index)
 
         # Specifies if we are at a level before or at the level for selecting chains to abandon.
         saving_score = False
@@ -117,19 +116,9 @@ def beam_search(protein, ch_score, selection_levels):
         if score < best_score:
             best_score = score
             best_chains = []
+            print("New best score: " + str(score))
             best_chains.append(chain)
         elif score == best_score:
             best_chains.append(chain)
-
-    print("length best chains:" + str(len(best_chains)))
     
-    # Return best chains and matrixes to the protein.
-    for chain in best_chains:
-        print(str(len(chain.chain_list)))
-        protein1 = Protein(protein.amino_string, "2d")
-        protein1.matrix, protein1.chain.chain_list = get_matrix(chain.chain_list)
-        print(str(protein1.get_score()))
-        for amino in protein1.chain.chain_list:
-            print(amino, end="")
-        print()
-        protein1.print_protein()
+    protein.matrix, protein.chain.chain_list = get_matrix(best_chains[0].chain_list)

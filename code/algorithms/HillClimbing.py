@@ -68,13 +68,13 @@ def hill_climbing(protein, iterations, max_non_improvements):
         if score <= protein.chain.score:
             # New "local" best score
             if score < protein.chain.score:
-                print("new best score: ", end="")
-                print(score)
                 # Reset times not improved
                 times_not_improved = 0
 
                 # Actual new best score
                 if score < best_score:
+                    print("new best score: ", end="")
+                    print(score)
                     best_score = score
                     best_chain = copy.deepcopy(protein.chain.chain_list)
 

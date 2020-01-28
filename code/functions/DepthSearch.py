@@ -23,7 +23,6 @@ def depth_search(protein, ch_score):
     # Skips the first char the index.
     while protein.char_counter < len(protein.amino_string):
 
-        # print(str(self.char_counter))
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -41,9 +40,7 @@ def depth_search(protein, ch_score):
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-            for amino in best_chain:
-                print(amino)
-
+            
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 

@@ -30,11 +30,11 @@ Print de score die dit proteine heeft gehaald:
 
     print(protein1.get_score())
 
-Dit print een representatie van het protein in 2d of 3d doormiddel van MatPlotLib.
+Dit print een representatie van het protein in 2d of 3d doormiddel van MatPlotLib:
 
     protein1.print_protein()
 
-Print een output zoals vereist vanuit de opdracht.
+Print een output zoals vereist vanuit de opdracht", we hebben naast de amino type en het fold number ook de coordinaten van elk amino toegevoegd:
 
     protein.get_output_list()
 
@@ -151,9 +151,13 @@ Dit algoritme verlegd de fold van een random geselecteerd amino en past de daaro
 
 #### Simulated annealing
 
-    simulated_annealing(protein, iterations)
+    simulated_annealing(protein, iterations, start_temp, end_temp)
 
-Het hill climbing single algoritme die is aangepast door een variabele kans op acceptatie die gebasseerd is op de score te implementeren. Deze kans is gebasseerd op een variabele temperatuur.
+Het hill climbing single algoritme die is aangepast door een variabele kans op acceptatie die gebasseerd is op de score te implementeren. Deze kans is gebasseerd op een variabele temperatuur. De temperatuur neemt lineair af van de start temperatuur naar de end temperatuur naarmate je door de iteraties heen gaat.
+
+start_temp: De temperatuur waar het algoritme mee begint.
+
+end_temp: De temperatuur waar het algoritme mee eindigt.
 
 ## Random
 ...
