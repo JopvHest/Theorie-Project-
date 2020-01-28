@@ -24,6 +24,7 @@ if __name__ == "__main__":
     # Print the score.
     print("Final score: " + str(protein1.get_score()))
 
+
     # Visualize the protein using MatPlotLib
     protein1.print_protein()
 
