@@ -43,12 +43,12 @@ Print een output zoals vereist vanuit de opdracht.
 # Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
 
-- /main/ : Bevat alle code van dit project.
-    - /main/main.py : De applicatie wordt gerund vanuit deze file.
-    - /main/classes/ : Bevat de classes voor de gebruikte objecten.
-    - /main/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van code
-    - /main/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
-    - /main/unfinished/ : Contains the current unfinished/ not working code of the project
+- /code/ : Bevat alle code van dit project.
+    - /code/main.py : De applicatie wordt gerund vanuit deze file.
+    - /code/classes/ : Bevat de classes voor de gebruikte objecten.
+    - /code/functions/ : Bevat alle helper functies die worden hergebruikt in andere delen van code
+    - /code/algorithms/ : Bevat de algorithms die de folds van de aminos bepalen.
+    - /code/unfinished/ : Contains the current unfinished/ not working code of the project
 
 
 

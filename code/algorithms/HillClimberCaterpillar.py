@@ -9,11 +9,14 @@ from classes.amino import Amino
 from functions.GetLegalMoves import get_legal_moves
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
-
+from functions.IsChain3d import check_dimensions
 
 # iterative algorithm which selects a random amino and reforlds 1-3 folds from there
 def hill_climbing_2(protein, iterations, max_non_improvements):
     
+    # Check if unsupported 3d mode.
+    check_dimensions(protein.chain.chain_list)
+
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
     protein.print_protein()
