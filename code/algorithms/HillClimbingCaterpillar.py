@@ -6,6 +6,7 @@ import copy
 import random
 
 from classes.amino import Amino
+from classes.protein import Protein
 from functions.GetLegalMoves import get_legal_moves
 from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
@@ -70,7 +71,7 @@ def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
         elif chosen_move == next_amino.fold or chosen_index + 2 >= max_index:
             next_amino.fold = chosen_amino_fold
 
-        # skip if new move is 180 degrees to the other side, rearanging gets very difficult  
+        # skip if new move is 180 degrees to the other side, rearanging gets very difficult 
         elif chosen_move * -1 == chosen_amino_fold:
             protein.chain.chain_list = old_chain
             continue
@@ -109,6 +110,8 @@ def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
+
+        protein.print_protein()
 
         # check for errror and revert to old chain
         if protein.chain.chain_list == False:
