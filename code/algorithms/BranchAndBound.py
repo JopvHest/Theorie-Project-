@@ -12,16 +12,19 @@ from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient, get_score, get_score_iterative, get_score_iterative_and_spots
 from functions.IsChain3d import is_chain_3d
 from functions.MinChainLenNeeded import chain_can_reach_spot
-
+from functions.IsChain3d import check_dimensions
 
 best_score = 1
 best_chain = None
 best_matrix = None
 
-# a Depth search search which check if the best score can still be achieved
-def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
+# A depth search search which check if the best score can still be achieved.
+def brand_and_bound(protein, ch_score, best_score_import):
     global best_score
     
+    # Check if unsupported 3d mode.
+    check_dimensions(protein.chain.chain_list)
+
     # A best score can be imported if you know a score to be that amount at least.
     best_score = best_score_import
     
@@ -29,7 +32,7 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
 
     mode_3d = is_chain_3d(protein.chain.chain_list)
  
-    # Build a matrix with dimensions of 2 * length of the protein +1
+    # Build a matrix with dimensions of 2 * length of the protein + 1.
     if mode_3d:
         matrix_dimensions = 2 * len(protein.amino_string) + 1
         
@@ -47,7 +50,7 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
 
     # 2D
     else:
-        # Build a matrix with dimensions of 2 * length of the protein +1
+        # Build a matrix with dimensions of 2 * length of the protein + 1.
         matrix_dimensions = 2 * len(protein.amino_string) + 1
         for i in range(matrix_dimensions + 1):
             row = []
@@ -70,7 +73,6 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
     # Skips the first char the index.
     while protein.char_counter < len(protein.amino_string):
 
-        # print(str(self.char_counter))
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -80,7 +82,7 @@ def depth_search_iterative_and_spots(protein, ch_score, best_score_import):
         if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
 
-        # Determine which fold to pick
+        # Determine which fold to pick.
         else:
             illegal_folds = None
             ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string, ch_score)
@@ -115,7 +117,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
     global best_score
 
-    # The first char has to be popped because it processes that char in the last loop
+    # The first char has to be popped because it processes that char in the last loop.
     # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
 
@@ -123,7 +125,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
     # If there is only 1 char left we've arrived at the end of a chain.
     if len(chars) == 1:
-        # Add the last char to the amino chain AND the recusrive chain matrix
+        # Add the last char to the amino chain AND the recusrive chain matrix.
         last_amino = current_chain.chain_list[-1]
         coordinates = last_amino.get_fold_coordinates()
         new_amino = Amino(chars[0], 0, coordinates)
@@ -136,7 +138,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         
         new_score = get_score_iterative(current_chain.chain_list, current_chain.matrix, current_score)
 
-        # Calculate the matrix (needed for the score.) and the score
+        # Calculate the matrix (needed for the score.) and the score.
         score = new_score
 
         global best_chain
@@ -147,7 +149,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             best_score = score
             best_chain = copy.deepcopy(current_chain.chain_list)
 
-        # Abort that chain if it isnt the best score. also remove it from the matrix
+        # Abort that chain if it isnt the best score. also remove it from the matrix.
         if mode_3d:
             current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]] = " "
         else:
@@ -156,10 +158,10 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         del current_chain.chain_list[-1]
         return None
 
-    # Get legal moves on the position of that amino
+    # Get legal moves on the position of that amino.
     legal_moves = get_legal_moves_nomirror(current_chain.chain_list[-1].get_fold_coordinates(), current_chain)
 
-    # If no legals move left, abort the chain. The protein got "stuck"
+    # If no legals move left, abort the chain. The protein got "stuck".
     if not legal_moves:
         return None
 
@@ -176,7 +178,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             skip_function = False
             
 
-            # Also add that amino to the matrix, and update the mirror starus
+            # Also add that amino to the matrix, and update the mirror status.
             if mode_3d:
                 current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]] = new_amino
             else:
@@ -184,14 +186,14 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
             current_chain.update_mirror_status()
             
-            # Calculate new score and and/remove the correct fold spots
+            # Calculate new score and and/remove the correct fold spots.
             new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(current_chain, current_chain.matrix, current_score)
             
             # Remove the spots that are now filled by aminos.
             current_chain.remove_fold_spots(spots_to_remove, "H")
             current_chain.remove_fold_spots(spots_to_remove_C, "C")
 
-            # Change odd/even
+            # Change odd/even.
             current_chain.odd = not current_chain.odd
             
             # Add the spots that were newly created.
@@ -206,7 +208,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             if max_possible >= best_score:
                 skip_function = True
 
-            # The actual recursive function
+            # The actual recursive function.
             if not skip_function:
                 find_best_chain(current_chain, chars, ch_score, new_score)
 
@@ -218,14 +220,14 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.remove_fold_spots(spots_to_add, "H")
             current_chain.remove_fold_spots(spots_to_add_C, "C")
 
-            # Change odd/even back
+            # Change odd/even back.
             current_chain.odd = not current_chain.odd
 
-            # Reverse the fold spots
+            # Reverse the fold spots.
             current_chain.add_fold_spots(spots_to_remove, "H")
             current_chain.add_fold_spots(spots_to_remove_C, "C")
 
-            # Reverse the matrix and mirror status
+            # Reverse the matrix and mirror status.
             if mode_3d:
                 current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]]
             else:

@@ -12,24 +12,24 @@ from functions.GetMatrix import get_matrix_efficient, get_matrix
 from functions.GetScore import get_score_efficient, get_score, get_score_iterative, get_score_iterative_and_spots
 from functions.IsChain3d import is_chain_3d
 from functions.MinChainLenNeeded import chain_can_reach_spot
-
+from functions.IsChain3d import check_dimensions
 
 best_score = 1
 best_chain = None
 best_matrix = None
 
 
-# The chance a chain gets rejected if its score is under the average for that deppth
+# The chance a chain gets rejected if its score is under the average for that depth.
 p_below_average = 0
 
-# The chance a chain gets rejected if its score is above the average for that depth
+# The chance a chain gets rejected if its score is above the average for that depth.
 p_above_average = 0
 
-# this saves the best score, average score, and amount of chains used for that avg at the index of the depth.
-# so at a depth of 6: partial_energies[6] = best_score, average_score, amount of chains tp calculate that average
+# This saves the best score, average score, and amount of chains used for that avg at the index of the depth.
+# So at a depth of 6: partial_energies[6] = best_score, average_score, amount of chains tp calculate that average
 partial_energies = []
 
-
+# This is a version of the branch and bound random which randomsly throws away chains based on average score on a depth.
 def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     global best_score
     global p_below_average
@@ -37,7 +37,10 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     p_below_average = p1
     p_above_average = p2
 
-    # You could import a score to start at (if you know the score to be at least that amount)
+    # Check if unsupported 3d mode.
+    check_dimensions(protein.chain.chain_list)
+
+    # You could import a score to start at (if you know the score to be at least that amount).
     best_score = best_score_import
     
     char_counter = 1
@@ -52,7 +55,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
 
 
     if mode_3d:
-        # Build a matrix with dimensions of 2 * length of the protein +1
+        # Build a matrix with dimensions of 2 * length of the protein + 1.
         matrix_dimensions = 2 * len(protein.amino_string) + 1
         
         for k in range(matrix_dimensions + 1):
@@ -69,7 +72,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
 
     # 2D
     else:
-        # Build a matrix with dimensions of 2 * length of the protein +1
+        # Build a matrix with dimensions of 2 * length of the protein +1.
         matrix_dimensions = 2 * len(protein.amino_string) + 1
         for i in range(matrix_dimensions + 1):
             row = []
@@ -92,7 +95,6 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
     # Skips the first char the index.
     while protein.char_counter < len(protein.amino_string):
 
-        # print(str(self.char_counter))
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -103,7 +105,7 @@ def branch_and_bound_random(protein, ch_score, best_score_import, p1, p2):
         if protein.char_counter + 1 == len(protein.amino_string):
             fold = 0
 
-        # Determine which fold to pick
+        # Determine which fold to pick.
         else:
             illegal_folds = None
             ideal_chain = fold_selector(amino_xy, char, protein.chain, illegal_folds, protein.amino_string, ch_score)
@@ -143,7 +145,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
     global best_score
 
-    # The first char has to be popped because it processes that char in the last loop
+    # The first char has to be popped because it processes that char in the last loop.
     # Note: popping the first loop is also valid because the first char is build before loading the fold_selector.
     chars = chars[1:]
 
@@ -164,7 +166,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         
         new_score = get_score_iterative(current_chain.chain_list, current_chain.matrix, current_score)
 
-        # Calculate the matrix (needed for the score.) and the score
+        # Calculate the matrix (needed for the score.) and the score.
         score = new_score
 
         global best_chain
@@ -177,7 +179,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             best_chain = copy.deepcopy(current_chain.chain_list)
 
 
-        # Abort that chain if it isnt the best score. also remove it from the matrix
+        # Abort that chain if it isnt the best score. also remove it from the matrix.
         if mode_3d:
             current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]] = " "
         else:
@@ -186,22 +188,18 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
         del current_chain.chain_list[-1]
         return None
 
-    # Get legal moves on the position of that amino
+    # Get legal moves on the position of that amino.
     legal_moves = get_legal_moves_nomirror(current_chain.chain_list[-1].get_fold_coordinates(), current_chain)
 
 
-    # If no legals move left, abort the chain. The protein got "stuck"
+    # If no legals move left, abort the chain. The protein got "stuck".
     if not legal_moves:
         return None
 
     # Go recursively through all legal moves and its child legal moves etc.
     else:
         for move in legal_moves:
-            # for amino in current_chain.chain_list:
-            #     print(amino, end="")
-            # print()
-            
-            # print(str(current_chain.available_bonds_even_H), str(current_chain.available_bonds_odd_H))
+
             # Find best chain needs a new updated chain, but the old chain also needs to be remembered.
             last_amino = current_chain.chain_list[-1]
             coordinates = last_amino.get_fold_coordinates()
@@ -211,7 +209,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             
             skip_function = False
 
-            # Also add that amino to the matrix, and update the mirror starus
+            # Also add that amino to the matrix, and update the mirror status.
             if mode_3d:
                 current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]] = new_amino
             else:
@@ -219,7 +217,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
 
             current_chain.update_mirror_status()
             
-            # Calculate new score and and/remove the correct fold spots
+            # Calculate new score and and/remove the correct fold spots.
             new_score, spots_to_add, spots_to_remove, spots_to_add_C, spots_to_remove_C = get_score_iterative_and_spots(current_chain, current_chain.matrix, current_score)
             
             
@@ -227,7 +225,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.remove_fold_spots(spots_to_remove, "H")
             current_chain.remove_fold_spots(spots_to_remove_C, "C")
 
-            # Change odd/even
+            # Change odd/even.
             current_chain.odd = not current_chain.odd
             
             # Add the spots that were newly created.
@@ -249,7 +247,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             global partial_energies
             current_depth = len(current_chain.chain_list)
             
-            # If it is the new best score for that depth
+            # If it is the new best score for that depth.
             if new_score <= partial_energies[current_depth][0]:
                 if new_score < partial_energies[current_depth][0]:
                     partial_energies[current_depth][0] = new_score
@@ -257,7 +255,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                 partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
                 partial_energies[current_depth][2] += 1
             
-            # The score is below average (so better) for that depth
+            # The score is below average (so better) for that depth.
             elif new_score <= partial_energies[current_depth][1]:
                 global p_below_average
                 random_number = random.uniform(0, 1)
@@ -269,7 +267,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                     partial_energies[current_depth][1] = calculate_average(partial_energies[current_depth][1], partial_energies[current_depth][2], new_score)
                     partial_energies[current_depth][2] += 1
 
-            # The score is above average (so worse) for that depth
+            # The score is above average (so worse) for that depth.
             else:
                 global p_above_average
                 random_number = random.uniform(0, 1)
@@ -282,7 +280,7 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
                     partial_energies[current_depth][2] += 1
 
             if not skip_function:
-                # The actual recursive function
+                # The actual recursive function.
                 find_best_chain(current_chain, chars, ch_score, new_score)
 
             # Undo all the changed to the spots that were made before calling the recursive function.
@@ -294,27 +292,27 @@ def find_best_chain(current_chain, chars, ch_score, current_score):
             current_chain.remove_fold_spots(spots_to_add_C, "C")
 
             
-            # Change odd/even back
+            # Change odd/even back.
             current_chain.odd = not current_chain.odd
 
-            # Reverse the fold spots
+            # Reverse the fold spots.
             current_chain.add_fold_spots(spots_to_remove, "H")
             current_chain.add_fold_spots(spots_to_remove_C, "C")
 
-            # Reverse the matrix and mirror status
+            # Reverse the matrix and mirror status.
             if mode_3d:
                 current_chain.matrix[coordinates[2]][coordinates[1]][coordinates[0]]
             else:
                 current_chain.matrix[coordinates[1]][coordinates[0]] = " "
             current_chain.update_mirror_status_reverse()
             
-            # Undo the added amino
+            # Undo the added amino.
             del current_chain.chain_list[-1]
 
 # This functions calculates a new average based on the average, the amount of entries used to calculate this average, and a new enrty.
 def calculate_average(average, average_amount, new_entry):
 
-    # Maths
+    # Maths..
     new_average = ( average * (average_amount)/(average_amount + 1)) + (new_entry * 1 / (average_amount + 1))
     
     return new_average
