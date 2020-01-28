@@ -67,13 +67,13 @@ Dit is het protein object dat in elke algoritme functie meegegeven moet worden. 
 
     depth_search(protein, c-h_score)
 beschrijving depth search:
-De depth search 
+Dit is een implementatie van het Depth First algoritme die alle mogelijke combinaties van legal folds afgaat. Vind altijd de beste score.
 
 ##### Lookahead
 
     depth_search_lookahead(protein, c-h_score, max_lookahead)
 beschrijving:
-Dit is een variatie van de depth search die een x aantal stappen diep vooruit kijkt. De volgende stap zet op hij naar de fold die over deze x stappen de beste score opleverde. Bij de volgende stap kijkt hij weer x stappen vooruit en kiest de fold die over deze x stappen de beste score opleverde.
+Dit is een variatie van de depth search die een x aantal stappen diep vooruit kijkt. De volgende stap zet op hij naar de fold die over deze x stappen de beste score opleverde. Bij de volgende stap kijkt hij weer x stappen vooruit en kiest de fold die over deze x stappen de beste score opleverde. Vind niet altijd de beste score
 
 max_lookahead:
 Dit is een int die aangeeft hoeveel stappen de lookadhead vooruit moet kijken.
@@ -81,32 +81,33 @@ Dit is een int die aangeeft hoeveel stappen de lookadhead vooruit moet kijken.
 ## Branch & bound
 
     branch_and_bound(protein, c-h_score, best_score_import)
-beschrijving
+
+Het branch and bound algortime is een aangepast depth first algoritme die voor elke chain bekijkt of deze de beste score nog kan verbeteren, doormiddel van de upper bound van de score. Hij houdt ook alle spots bij waar potentieel nog bonds kunnen connecten, en verwijdert deze weer als ze niet meer reachable zijn. Dit gebeurt doormiddel van de manhatten distance. Vind altijd de beste score.
+
 
 best_score_import:
+Als je zeker weet dat de beste score onder een bepaalde score ligt, kan je deze specificeren om alle chains onder deze score te abandonen.
 
 #### Lookahead
 
-beschrijving
-located in /unfinished/.
+Aangezien een brand and bound algoritme veel sneller is dan een normale depth first search, wilde we nog een een lookahead algoritme maken met de B&B. Helaas hebben we niet genoeg tijd gehad om deze volledig te implementeren.
 
-#### Brand & bound random throwaway
+aanwezig in /unfinished/.
+
+#### Branch & bound random throwaway
 
     branch_and_bound_random(protein, c-h_score, best_score_import, p1, p2)
 
-beschrijving.
+Zie branch & bound. Dit is een toevoeging aan dit algoritme. Hij houdt de gemiddelde score op elke depth bij, en stopt willekeurig met chains na ze te vergelijken met de gemiddelde score. De kans dat deze wordt geabandond is gebasseerd op het feit of de score onder of boven het gemiddelde ligt. Vindt niet altijd de beste score
 
-best_score_import:
-
-p1:
-
-p2:
+p1: De kans dat een chain wordt geabandoned als hij een score lager heeft dan het gemiddelde (dus beter).
+p2: De kans dat een chain wordt geabandoned als hij een hogere score heeft dan het gemiddelde (dus slechter).
 
 ## Breadth_search
 
     breadth_search(protein, c-h_score)
 beschrijving:
-De breadth search verlengd the chain steeds door één nieuwe amino te leggen. Hij begint met het leggen van de eerste Amino met een fold in vastgestelde richting (dit voorkomt dubbel werk omdat de eerste richting niet uitmaakt ivm spiegelingen). Hij voegt deze als chain object toe aan de queue. Hij haalt de eerst toegevoegde chain uit de queue kijkt naar alle mogelijke folds en maakt voor elke mogelijke fold een chain aan van de chain tot dan toe plus de nieuwe fold. Hierbij wordt een deepcopy gemaakt van de chian die net uit de queue is gehaald. Daarna stopt hij de nieuw gemaakte chains weer in de queue en zo gaat hij steeds door totdat hij alle aminos heeft gehad.
+De breadth search verlengd the chain steeds door één nieuwe amino te leggen. Hij begint met het leggen van de eerste Amino met een fold in vastgestelde richting (dit voorkomt dubbel werk omdat de eerste richting niet uitmaakt ivm spiegelingen). Hij voegt deze als chain object toe aan de queue. Hij haalt de eerst toegevoegde chain uit de queue kijkt naar alle mogelijke folds en maakt voor elke mogelijke fold een chain aan van de chain tot dan toe plus de nieuwe fold. Hierbij wordt een deepcopy gemaakt van de chian die net uit de queue is gehaald. Daarna stopt hij de nieuw gemaakte chains weer in de queue en zo gaat hij steeds door totdat hij alle aminos heeft gehad. Vind altijd de beste score
 
 
 #### Beam search
@@ -114,7 +115,7 @@ De breadth search verlengd the chain steeds door één nieuwe amino te leggen. H
     beam_search(protein, c-h_score, selection_levels
 
 beschrijving:
-De beam search werkt volgens hetzelfde principe en initiele structuur als de breadth_search. Het verschil is dat je op verschillende zelf te bepalen levels een selectie kan doen. Deze selectie vergelijkt alle scores op dat niveau en bepaald het gemiddelde. Hij gaat dan alleen verder met de scores die beter zijn dan het gemiddelde, dus de chains met een lagere negatieve score.
+De beam search werkt volgens hetzelfde principe en initiele structuur als de breadth_search. Het verschil is dat je op verschillende zelf te bepalen levels een selectie kan doen. Deze selectie vergelijkt alle scores op dat niveau en bepaald het gemiddelde. Hij gaat dan alleen verder met de scores die beter zijn dan het gemiddelde, dus de chains met een lagere negatieve score. Vind niet altijd de beste score
 
 Er moet 1 level tussen selection levels zitten ivm errors????????????????????
 
@@ -124,32 +125,41 @@ bijv.: [2,5,7]
 
 ## iterative
 
-describe iterative algos.
 
 #### Hill climbing single
 
     hill_climbing_single_fold(protein, iterations)
-beschrijving
+Een hill climbing algo die een enkele fold verlegt, en deze vervolgens houdt als het leidt tot een betere, of gelijke score. Hij kan een score met een negatieve score accepteren als hij een bepaalt aantal turns niet is verbeterd.
 
-iterations: 
+iterations:
+iterations is een int die aangeeft hoevaak een verandering aan de chain wordt uitgevoerd alvorens het programma stopt.
+
+max_non_improvements:
+Dit is een int die aangeeft hoe vaak een random fold tot een verbetering moet leiden. Dus als de fold geen verbetering in score geeft wordt de oude staat van de chain hersteld. Als dit net zo vaak is gebeurd als max_non_improvements gaat hij verder met deze chain ongeacht dat het geen betere score geeft. 
 #### Hill climbing caterpillar
 
     hill_climbing_caterpillar(protein, iterations, max_non_improvements)
 
 beschrijving:
 Dit algoritme verlegd de fold van een random geselecteerd amino en past de daarop volgende folds aan zodat de amino daarna of de amino 2 daarna weer op een plek in de begin chain uitkomt. Als er hierdoor ruimte in de chain ontstaat worden de aminos na deze van plek gewisseld zodat de chain weer aansluit.
-iterations:
-iterations is een int die aangeeft hoevaak een verandering aan de chain wordt uitgevoerd alvorens het programma stopt.
-max_non_improvements:
-Dit is een int die aangeeft hoe vaak een random fold tot een verbetering moet leiden. Dus als de fold geen verbetering in score geeft wordt de oude staat van de chain hersteld. Als dit net zo vaak is gebeurd als max_non_improvements gaat hij verder met deze chain ongeacht dat het geen betere score geeft. 
 
 #### Simulated annealing
 
     simulated_annealing(protein, iterations)
 
-beschrijving:
+Het hill climbing single algoritme die is aangepast door een variabele kans op acceptatie die gebasseerd is op de score te implementeren. Deze kans is gebasseerd op een variabele temperatuur.
 
-iterations:
+## Random
+...
+
+# Advanced: 3D
+Helaas hebben we niet de tijd gehad om elk algoritme compatible te maken met een 3d protein-structuur. De volgende algortimes werken in 3d:
+- Random
+- Depth search
+- Depth search Lookahead
+- Hill climbing single
+- Simulated annealing
+
 
 
 

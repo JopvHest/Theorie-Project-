@@ -25,4 +25,3 @@ if __name__ == "__main__":
 
     # Visualize the protein using MatPlotLib
     protein1.print_protein()
-
