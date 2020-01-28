@@ -23,7 +23,7 @@ def simulated_annealing(protein, iterations, temp_start, temp_end):
     total_iterations = 0
 
     # The overal best score and chain is saved here
-    best_score = 0
+    best_score = 1
     best_chain = []
 
     temperature_start =  temp_start
@@ -67,6 +67,8 @@ def simulated_annealing(protein, iterations, temp_start, temp_end):
 
         # New best score
         if score < best_score:
+            if len(best_chain) == 0:
+                best_chain = copy.deepcopy(protein.chain.chain_list)
             print("new best score: ", end="")
             print(score)
             best_score = score

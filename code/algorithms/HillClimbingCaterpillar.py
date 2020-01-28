@@ -31,7 +31,7 @@ def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
 
     # The overal best score and chain is saved here
     best_score = 1
-    best_chain = protein.chain.chain_list
+    best_chain = []
 
     while total_iterations < iterations:
 
@@ -120,6 +120,8 @@ def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
         
         # Continue with new chain if same or better score
         if score <= protein.chain.score:
+            if len(best_chain) == 0:
+                best_chain = copy.deepcopy(protein.chain.chain_list)
             # New "local" best score
             if score < protein.chain.score:
                 print("new best score: ", end="")

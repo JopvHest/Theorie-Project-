@@ -19,8 +19,7 @@ def hill_climbing(protein, iterations, max_non_improvements):
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
 
-    # Save the score at every iteration (Not yet implemented)
-    scores = []
+    # Save the score at every iteration.
     total_iterations = 0
 
     # The amount of turns the score hasnt improved.
@@ -28,7 +27,7 @@ def hill_climbing(protein, iterations, max_non_improvements):
     times_not_improved_limit = max_non_improvements
 
     # The overal best score and chain is saved here
-    best_score = 0
+    best_score = 1
     best_chain = []
 
     while total_iterations < iterations:
@@ -67,6 +66,9 @@ def hill_climbing(protein, iterations, max_non_improvements):
         
         # Continue with new chain if same or better score
         if score <= protein.chain.score:
+            if len(best_chain) == 0:
+                best_chain = copy.deepcopy(protein.chain.chain_list)
+            
             # New "local" best score
             if score < protein.chain.score:
                 # Reset times not improved
