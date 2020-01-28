@@ -3,6 +3,7 @@
 
 from classes.amino import Amino
 from functions.IsChain3d import is_chain_3d
+from functions.CoordinatesToCheck import check_coordinates
 
 # This functions returns a list of all the connections a chain and matrix has.
 # Is used to visualize the connections using MatPlotLib
@@ -21,25 +22,7 @@ def get_connections(chain, matrix):
                 continue
 
             # Creates a list with all coordinates that need to be checked.
-            xy_tocheck = []
-
-            # 3D
-            if mode_3d:
-                amino_x, amino_y, amino_z = amino.coordinates
-                xy_tocheck.append([amino_x + 1, amino_y, amino_z])
-                xy_tocheck.append([amino_x, amino_y + 1, amino_z])
-                xy_tocheck.append([amino_x - 1, amino_y, amino_z])
-                xy_tocheck.append([amino_x, amino_y - 1, amino_z])
-                xy_tocheck.append([amino_x, amino_y, amino_z - 1])
-                xy_tocheck.append([amino_x, amino_y, amino_z + 1])
-
-            # 2D
-            else:
-                amino_x, amino_y = amino.coordinates
-                xy_tocheck.append([amino_x + 1, amino_y])
-                xy_tocheck.append([amino_x, amino_y + 1])
-                xy_tocheck.append([amino_x - 1, amino_y])
-                xy_tocheck.append([amino_x, amino_y - 1])
+            xy_tocheck = check_coordinates(amino, mode_3d)
 
             # Aminos to and from that amino dont add to the score so remove them.
             # Amino the amino folds to.

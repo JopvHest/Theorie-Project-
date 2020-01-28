@@ -20,8 +20,7 @@ def hill_climbing_2(protein, iterations, max_non_improvements):
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
     protein.print_protein()
-    # Save the score at every iteration (Not yet implemented)
-    scores = []
+    
     total_iterations = 0
 
     # The amount of turns the score hasnt improved.

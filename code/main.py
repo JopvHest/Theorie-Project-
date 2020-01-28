@@ -3,13 +3,15 @@ from classes.protein import Protein
 from algorithms.RandomSearch import random_search
 from algorithms.DepthSearch import depth_search
 from algorithms.DepthSearchLookahead import depth_search_lookahead
-from algorithms.BreadthSearch import breadth_search
-from algorithms.BeamSearch import beam_search
-from algorithms.DepthSearchIterative import depth_search_iterative
-from algorithms.BrandAndBound import branch_and_bound
-from algorithms.HillClimbingCaterpillar import hill_climbing_2
-from algorithms.BranchAndBoundRandom import branch_and_bound_random
-from algorithms.SimulatedAnnealing import simulated_annealing
+# from algorithms.BreadthSearch import breadth_search
+# from algorithms.BeamSearch import beam_search
+# from algorithms.DepthSearchIterative import depth_search_iterative
+# from algorithms.BrandAndBound import branch_and_bound
+# from algorithms.HillClimbingCaterpillar import hill_climbing_2
+# from algorithms.BranchAndBoundRandom import branch_and_bound_random
+# from algorithms.SimulatedAnnealing import simulated_annealing
+
+from functions.GetScore import get_score
 
 
 if __name__ == "__main__":
@@ -21,7 +23,7 @@ if __name__ == "__main__":
     depth_search(protein1, 1)
 
     # Print the score.
-    print("Final score: " + protein1.get_score())
+    print("Final score: " + str(protein1.get_score()))
 
     # Visualize the protein using MatPlotLib
     protein1.print_protein()
