@@ -13,7 +13,7 @@ from functions.GetScore import get_score
 
 
 # This search tries to find a best protein by using Hill climbing
-def hill_climbing(protein, iterations):
+def hill_climbing(protein, iterations, max_non_improvements):
     
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
@@ -24,7 +24,7 @@ def hill_climbing(protein, iterations):
 
     # The amount of turns the score hasnt improved.
     times_not_improved = 0
-    times_not_improved_limit = 1000
+    times_not_improved_limit = max_non_improvements
 
     # The overal best score and chain is saved here
     best_score = 0
@@ -68,13 +68,13 @@ def hill_climbing(protein, iterations):
         if score <= protein.chain.score:
             # New "local" best score
             if score < protein.chain.score:
-                print("new best score: ", end="")
-                print(score)
                 # Reset times not improved
                 times_not_improved = 0
 
                 # Actual new best score
                 if score < best_score:
+                    print("new best score: ", end="")
+                    print(score)
                     best_score = score
                     best_chain = copy.deepcopy(protein.chain.chain_list)
 

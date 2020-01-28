@@ -12,15 +12,20 @@ from functions.GetScore import get_score
 from functions.IsChain3d import check_dimensions
 
 # iterative algorithm which selects a random amino and reforlds 1-3 folds from there
-def hill_climbing_2(protein, iterations, max_non_improvements):
+def hill_climbing_caterpillar(protein, iterations, max_non_improvements):
     
     # Check if unsupported 3d mode.
     check_dimensions(protein.chain.chain_list)
 
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
+<<<<<<< HEAD:code/algorithms/HillClimberCaterpillar.py
     protein.print_protein()
     
+=======
+    # Save the score at every iteration (Not yet implemented)
+    scores = []
+>>>>>>> cffe0bee5145afba7d4adb4ee22041d449fb61ec:code/algorithms/HillClimbingCaterpillar.py
     total_iterations = 0
 
     # The amount of turns the score hasnt improved.
@@ -109,7 +114,6 @@ def hill_climbing_2(protein, iterations, max_non_improvements):
 
         # Load matrix of new chain
         protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-        protein.print_protein()
 
         # check for errror and revert to old chain
         if protein.chain.chain_list == False:

@@ -31,7 +31,6 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
     # Skips the first char the index.
     while True:
 
-        # print(str(self.char_counter))
         char = chars[0]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -72,9 +71,6 @@ def depth_search_lookahead(protein, max_lookahead, ch_score):
     best_score = 1
     best_chain = []
 
-    for amino in protein.chain.chain_list:
-        print(amino, end="")
-
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(chain, chars, max_lookahead, chain_length_goal, ch_score):
 
@@ -83,7 +79,6 @@ def fold_selector(chain, chars, max_lookahead, chain_length_goal, ch_score):
 
     # IF the algo has actually found the FULL best chain , return the best chain.
     if len(best_chain) == chain_length_goal:
-        print('found best chain.')
         return True, None
 
     # If the algo only found a partial best chain. returns only the next best move to take.

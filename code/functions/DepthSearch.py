@@ -40,7 +40,7 @@ def depth_search(protein, ch_score):
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-
+            
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 

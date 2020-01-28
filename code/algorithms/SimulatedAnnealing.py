@@ -13,7 +13,7 @@ from functions.GetMatrix import get_matrix
 from functions.GetScore import get_score
 
 # This functions tries to find a best protein by using simulated annealing
-def simulated_annealing(protein, iterations):
+def simulated_annealing(protein, iterations, temp_start, temp_end):
     # We start with a straight protein, you could replace this with a search (random for example)
     build_straight_protein(protein)
 
@@ -25,8 +25,8 @@ def simulated_annealing(protein, iterations):
     best_score = 0
     best_chain = []
 
-    temperature_start =  5
-    temperature_end = 0.5
+    temperature_start =  temp_start
+    temperature_end = temp_end
     temp_step = (temperature_start - temperature_end) / iterations
     temperature = temperature_start
 

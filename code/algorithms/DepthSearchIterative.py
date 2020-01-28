@@ -18,7 +18,7 @@ best_matrix = None
 
 
 # This function is a implementation of the depth search algo in which the score and the matric get iteratively improve instead of being build from scratch
-def depth_search(protein, ch_score):
+def depth_search_iterative(protein, ch_score):
     char_counter = 1
 
     # Build a matrix with dimensions of 2 * length of the protein +1
@@ -37,7 +37,6 @@ def depth_search(protein, ch_score):
     # Skips the first char the index.
     while protein.char_counter < len(protein.amino_string):
 
-        # print(str(self.char_counter))
         char = protein.amino_string[protein.char_counter]
         # Get the location the last amino folded to.
         # Note: an index of -1 gets the last object in a list.
@@ -54,9 +53,7 @@ def depth_search(protein, ch_score):
 
         # Ideal chain is already found, replace chain with ideal chain and break loop.
         if ideal_chain:
-            for amino in best_chain:
-                print(amino)
-
+        
             protein.matrix, protein.chain.chain_list = get_matrix(best_chain)
             break
 

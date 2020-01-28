@@ -39,8 +39,7 @@ def random_search(protein):
         protein.char_counter += 1
 
     protein.matrix, protein.chain.chain_list = get_matrix(protein.chain.chain_list)
-    print(get_score(protein.chain.chain_list, protein.matrix))
-
+    
 # The actual algo for selecting the fold the chain will make.
 def fold_selector(xy, char, chain, illegal_moves):
 

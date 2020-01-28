@@ -56,22 +56,6 @@ class Protein(object):
         # Some functions use this to determine the char that is being "calculated"
         self.char_counter = 1
 
-    # Prints the matrix of the protein.
-    def print_map(self):
-
-        if self.mode_3d == False:
-            matrix = self.matrix
-            # Print matrix using pandas
-            print(DataFrame(matrix))
-
-        if self.mode_3d == True:
-            matrix = self.matrix
-
-            # go through each layer and print it
-            for layer in matrix:
-                # Print matrix using pandas
-                print(DataFrame(layer))
-
     # Prints a 2d or 3d represenation of the protein using MatPlotLib
     def print_protein(self):
         
